@@ -1,0 +1,29 @@
+﻿++ my PM Wiki
+* WikiSettings
+	
++++Переработать материалы
+ * [rel://files/Концепция.txt]
+ * [rel://files/СобытияИзменения_GTVJUINEMG.txt]
+ * [rel://files/Readme.txt]
+ * [rel://files/Балансировка_SNNJAO6UEA.txt]
+ * [rel://files/Вопросы_UVOHFSJ9UW.txt]
+ * [rel://files/Глоссарий_3G8XP7DOQJ.txt]
+ * [rel://files/КопияИдея.txt]
+ * [rel://files/Материалы-1_PCK7EKJHIN.txt]
+ * [rel://files/ПирамидаЗадачПроцессов_7EKVSQ6B22.txt]
+ * [rel://files/ПоказателиОценки_B3OOPN50UZ.txt]
+ * [rel://files/СобытияИзменения.txt]
+ * [rel://files/Балансировка.txt]
+ * [rel://files/Вопросы.txt]
+ * [rel://files/Глоссарий.txt]
+ * [rel://files/Материалы-1.txt]
+ * [rel://files/ПирамидаЗадачПроцессов.txt]
+ * [rel://files/ПоказателиОценки.txt]
+
+
+
+
+
+
+
+

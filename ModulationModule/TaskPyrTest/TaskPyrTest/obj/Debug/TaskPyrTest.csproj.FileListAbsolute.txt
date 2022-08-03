@@ -1,0 +1,6 @@
+C:\Users\1\Documents\Visual Studio 2019\Projects\TaskPyrTest\TaskPyrTest\bin\Debug\TaskPyrTest.exe
+C:\Users\1\Documents\Visual Studio 2019\Projects\TaskPyrTest\TaskPyrTest\bin\Debug\TaskPyrTest.pdb
+C:\Users\1\Documents\Visual Studio 2019\Projects\TaskPyrTest\TaskPyrTest\obj\Debug\TaskPyrTest.csproj.AssemblyReference.cache
+C:\Users\1\Documents\Visual Studio 2019\Projects\TaskPyrTest\TaskPyrTest\obj\Debug\TaskPyrTest.csproj.CoreCompileInputs.cache
+C:\Users\1\Documents\Visual Studio 2019\Projects\TaskPyrTest\TaskPyrTest\obj\Debug\TaskPyrTest.exe
+C:\Users\1\Documents\Visual Studio 2019\Projects\TaskPyrTest\TaskPyrTest\obj\Debug\TaskPyrTest.pdb
