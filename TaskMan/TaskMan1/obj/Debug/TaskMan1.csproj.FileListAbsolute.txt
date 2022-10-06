@@ -1,0 +1,13 @@
+C:\Users\1\source\repos\TaskMan\TaskMan1\obj\Debug\TaskMan1.csproj.AssemblyReference.cache
+C:\Users\1\source\repos\TaskMan\TaskMan1\obj\Debug\TaskMan1.csproj.CoreCompileInputs.cache
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\TaskMan1.exe
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\TaskMan1.pdb
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\TaskEngine.dll
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\System.Data.SQLite.dll
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\TaskEngine.pdb
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\System.Data.SQLite.pdb
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\System.Data.SQLite.xml
+C:\Users\1\source\repos\TaskMan\TaskMan1\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\1\source\repos\TaskMan\TaskMan1\obj\Debug\TaskMan1.csproj.CopyComplete
+C:\Users\1\source\repos\TaskMan\TaskMan1\obj\Debug\TaskMan1.exe
+C:\Users\1\source\repos\TaskMan\TaskMan1\obj\Debug\TaskMan1.pdb
