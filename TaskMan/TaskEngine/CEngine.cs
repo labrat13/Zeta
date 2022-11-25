@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TaskEngine
 {
-    internal class Group
+    public class CEngine
     {
     }
 }

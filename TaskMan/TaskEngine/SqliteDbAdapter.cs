@@ -11,7 +11,6 @@ namespace TaskEngine
     /// </summary>
     public class SqliteDbAdapter
     {
-        //DONE: ported from Java to CS
 
         #region *** Fields ***
 

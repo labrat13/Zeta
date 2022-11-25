@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TaskEngine.SqliteDbAdapter" Collapsed="true">
+    <Position X="275.25" Y="267" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAADAMAAAoSAECAgAAEBAAIMAEEIBICAAMgCCAAg=</HashCode>
+      <FileName>SqliteDbAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.StringUtility" Collapsed="true">
+    <Position X="273.5" Y="268" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>StringUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CEngine">
+    <Position X="1" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CElementId">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\CElementId.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CElementIdManager">
+    <Position X="7.5" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\CElementIdManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CElement">
+    <Position X="1" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>kAAEBAAAAIEgCMgEAAQAQBAIAABAoMAAQAAAAQBAAAA=</HashCode>
+      <FileName>EngineSubsystem\CElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CTagCollection">
+    <Position X="5.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\CTagCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CElementCollection">
+    <Position X="3.25" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\CElementCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TaskEngine.CTask">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEDAAAAAAAAAAAAAAAAAREAAAAAAAAAAAAAIAQAAA=</HashCode>
+      <FileName>EngineSubsystem\CTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="TaskEngine.EnumElementType">
+    <Position X="9.75" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAgAAAAAAAAIAAAAAAAAAAAAEAAAAAACAA=</HashCode>
+      <FileName>EngineSubsystem\EnumElementType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TaskEngine.EnumCardState">
+    <Position X="12" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAABEAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\EnumCardState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TaskEngine.EnumElementState">
+    <Position X="9.75" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAMAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\EnumElementState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TaskEngine.EnumTaskState">
+    <Position X="9.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAIAAAAAIAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>EngineSubsystem\EnumTaskState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TaskEngine.EnumTaskPriority">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAIAAAAAgIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EngineSubsystem\EnumTaskPriority.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
