@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{5866B8D3-3EB1-4812-A50D-DD65E61BDD0E}"
 	ProjectSection(SolutionItems) = preProject
 		AddRules.txt = AddRules.txt
+		Database.txt = Database.txt
 		Description.txt = Description.txt
 	EndProjectSection
 EndProject

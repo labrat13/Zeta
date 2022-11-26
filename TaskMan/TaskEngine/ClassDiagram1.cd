@@ -38,7 +38,6 @@
   <Class Name="TaskEngine.CElement">
     <Position X="1" Y="1.75" Width="1.5" />
     <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>

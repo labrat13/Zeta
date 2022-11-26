@@ -1,0 +1,37 @@
+
+Таблица Elements - хранение данных всех элементов
+- id		int		table id
+- elid		int		CElementId eid							Идентификатор элемента
+- title		string	String Title							Название элемента
+- descr		string	String Description						Однострочное описание элемента
+- remark	string	String Remarks							Многострочные заметки по элементу
+- creatime	?		DateTime CreaTime						Дата создания элемента
+- moditime	?		DateTime ModiTime						Дата изменения элемента
+- eltype	int		EnumElementType ElementType				Код типа элемента
+- parent	int		CElementId Parent						Ссылка на родительский элемент в дереве элементов
+- elstate	int		EnumElementState ElementState			Состояние активности элемента
+
+
+Таблица Tasks - хранение данных Задач
+- elid		int		element id								
+- state		int		EnumTaskState CTask.TaskState			Состояние задачи
+- prio		int		EnumTaskPriority CTask.TaskPriority		Важность задачи
+- comptime	?		DateTime CTask.TaskCompletionDate		Дата завершения задачи для планировщика
+- result	string	String CTask.TaskResult					Перечень целей задачи отдельно от описания
+
+
+Таблица Tagged - хранение связей тегов
+- id		int		tableid									первичный ключ таблицы
+- elid		int		element id								идентификатор элемента
+- tagid		int		tag element id							идентификатор элемента-тега
+
+---------------------------------------
+BEGIN TRANSACTION;
+CREATE TABLE "Tasks"(     "id" Integer PRIMARY KEY  NOT NULL  ,      "elid" Integer  NOT NULL   DEFAULT (0),      "state" Integer  NOT NULL   DEFAULT (0),      "prio" Integer  NOT NULL   DEFAULT (0),      "result" Text  NOT NULL  ,      "comptime" Integer  NOT NULL   DEFAULT (0));
+CREATE TABLE "Tagged"(     "id" Integer Primary Key Autoincrement  NOT NULL  ,      "elid" Integer  NOT NULL   DEFAULT (0),      "tagid" Integer  NOT NULL   DEFAULT (0));
+CREATE TABLE "Elements"(     "id" Integer Primary Key Autoincrement  NOT NULL  ,      "elid" Integer  NOT NULL   DEFAULT (0),      "title" Text  NOT NULL  ,      "descr" Text  NOT NULL  ,      "remark" Text  NOT NULL  ,      "creatime" Integer  NOT NULL   DEFAULT (0),      "moditime" Integer  NOT NULL   DEFAULT (0),      "eltype" Integer  NOT NULL   DEFAULT (0),      "parent" Integer  NOT NULL   DEFAULT (0),      "elstate" Integer  NOT NULL   DEFAULT (0));
+CREATE UNIQUE INDEX ix_tagged_tagid ON Tagged(tagid ASC);
+CREATE UNIQUE INDEX ix_tagged_elid ON Tagged(elid ASC);
+COMMIT;
+
+--------------------------------------
