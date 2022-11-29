@@ -9,3 +9,7 @@ C:\Users\1\source\repos\TaskMan\TaskEngine\bin\Debug\System.Data.SQLite.dll.conf
 C:\Users\1\source\repos\TaskMan\TaskEngine\obj\Debug\TaskEngine.csproj.CopyComplete
 C:\Users\1\source\repos\TaskMan\TaskEngine\obj\Debug\TaskEngine.dll
 C:\Users\1\source\repos\TaskMan\TaskEngine\obj\Debug\TaskEngine.pdb
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.csproj.AssemblyReference.cache
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.csproj.CoreCompileInputs.cache
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.dll
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.pdb

@@ -20,6 +20,10 @@ namespace TaskEngine
         /// <summary>
         /// Element is Deleted
         /// </summary>
-        Deleted
+        Deleted,
+        /// <summary>
+        /// Элемент защищен от удаления, хотя редактирование свойств допускается.
+        /// </summary>
+        ProtectedFromDelete,
     }
 }
