@@ -5,9 +5,17 @@ using System.Data.SQLite;
 
 namespace TaskEngine
 {
+    /// <summary>
+    /// NT- Task database adapter 
+    /// </summary>
+    /// <seealso cref="TaskEngine.SqliteDbAdapter" />
     public class TaskDbAdapter : SqliteDbAdapter
     {
-        #region *** Fields ***        
+        #region *** Fields ***          
+        /// <summary>
+        /// Standard database file name
+        /// </summary>
+        public const String DatabaseFileName = "db.sqlite";
         /// <summary>
         /// The table elements
         /// </summary>
