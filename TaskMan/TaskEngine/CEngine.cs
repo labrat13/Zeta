@@ -64,7 +64,10 @@ namespace TaskEngine
             this.m_dbAdapter.Open(connectionString);
             //получить максимальный ид элемента из БД и инициализировать менеджер идентификаторов элементов. 
             int maxid = this.m_dbAdapter.GetElementsMaxId();
-            this.m_idManager.ClaimUseNewId(maxid);
+            //если записей элементов нет, функция вернет -1, а нужен хотя бы 0.
+            if (maxid <= 0) maxid = 0;
+            //установить полученный ид как текущий в менеджере
+            this.m_idManager.internalSetCurrentId(maxid);
             //close database
             this.m_dbAdapter.Close();
 

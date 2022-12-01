@@ -158,7 +158,7 @@ namespace TaskEngine
             String abbrev = null;
             switch (this.m_ElementType)
             {
-                case EnumElementType.Rule:
+                case EnumElementType.Note:
                     abbrev = "RULE";
                     break;
                 case EnumElementType.Task:

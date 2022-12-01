@@ -32,6 +32,15 @@ namespace TaskEngine
             return "Current max ID = " + m_maxid.ToString();
         }
         /// <summary>
+        /// NT-Internal set current identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void internalSetCurrentId(int id)
+        {
+            this.m_maxid = id;
+        }
+
+        /// <summary>
         /// NT-Получить новый уникальный идентификатор элемента
         /// </summary>
         /// <returns></returns>

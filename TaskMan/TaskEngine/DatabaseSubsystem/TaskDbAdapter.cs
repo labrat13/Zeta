@@ -142,6 +142,7 @@ namespace TaskEngine
             // {
             // Open
             String connectionString = SqliteDbAdapter.CreateConnectionString(dbFile, false);
+            TaskDbAdapter.DatabaseCreate(dbFile);
             TaskDbAdapter db = new TaskDbAdapter(engine);
             db.Open(connectionString);
             // Write
@@ -195,11 +196,11 @@ namespace TaskEngine
                 this.ExecuteNonQuery(query, 60);
 
                 // create index
-                query = "CREATE UNIQUE INDEX ix_tagged_tagid ON Tagged(tagid ASC);";
+                query = "CREATE INDEX ix_tagged_tagid ON Tagged(tagid ASC);";
                 this.ExecuteNonQuery(query, 60);
-                query = "CREATE UNIQUE INDEX ix_tagged_elid ON Tagged(elid ASC);";
+                query = "CREATE INDEX ix_tagged_elid ON Tagged(elid ASC);";
                 this.ExecuteNonQuery(query, 60);
-                query = "CREATE UNIQUE INDEX ix_tasks_parent ON Elements(parent ASC);";
+                query = "CREATE INDEX ix_tasks_parent ON Elements(parent ASC);";
                 this.ExecuteNonQuery(query, 60);
 
                 this.TransactionCommit();
@@ -423,7 +424,7 @@ namespace TaskEngine
             // create if not exists
             if (ps == null)
             {
-                String query = "INSERT INTO \"Elements\"(\"id\", \"parent\", \"title\", \"description\", \"remark\", \"creatime\", \"moditime\", \"eltype\", \"elstate\") VALUES (?,?,?,?,?,?,?,?,?);";
+                String query = "INSERT INTO \"Elements\"(\"id\", \"parent\", \"title\", \"descr\", \"remark\", \"creatime\", \"moditime\", \"eltype\", \"elstate\") VALUES (?,?,?,?,?,?,?,?,?);";
                 ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
                 // set timeout here
                 ps.CommandTimeout = this.m_Timeout;
@@ -466,7 +467,7 @@ namespace TaskEngine
             // create if not exists
             if (ps == null)
             {
-                String query = "UPDATE \"Elements\" SET  \"parent\" = ?, \"title\" = ?, \"description\" = ?, \"remark\" = ?, \"creatime\" = ?, \"moditime\" = ?, \"eltype\" = ?, \"elstate\" = ? WHERE (\"id\" = ?);";
+                String query = "UPDATE \"Elements\" SET  \"parent\" = ?, \"title\" = ?, \"descr\" = ?, \"remark\" = ?, \"creatime\" = ?, \"moditime\" = ?, \"eltype\" = ?, \"elstate\" = ? WHERE (\"id\" = ?);";
                 ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
                 // set timeout here
                 ps.CommandTimeout = this.m_Timeout;

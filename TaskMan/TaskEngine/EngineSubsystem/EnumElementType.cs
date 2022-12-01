@@ -26,8 +26,8 @@ namespace TaskEngine
         /// </summary>
         Task,
         /// <summary>
-        /// Element is Rule
+        /// Element is Note
         /// </summary>
-        Rule
+        Note,
     }
 }

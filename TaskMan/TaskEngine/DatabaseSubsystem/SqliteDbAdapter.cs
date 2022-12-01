@@ -190,9 +190,9 @@ namespace TaskEngine
         {
             if (this.m_connection == null)
                 return;
-            if (((DbConnection)this.m_connection).State !=  ConnectionState.Closed)
-                ((DbConnection)this.m_connection).Close();
-            this.m_connection = (SQLiteConnection)null;
+            if (this.m_connection.State !=  ConnectionState.Closed)
+                this.m_connection.Close();
+            this.m_connection = null;
             //обнулить объекты команд перед закрытием менеджера
             this.ClearCommands();
 
@@ -246,9 +246,9 @@ namespace TaskEngine
         /// </summary>
         public void TransactionCommit()
         {
-            ((DbTransaction)this.m_transaction).Commit();
+            this.m_transaction.Commit();
             this.ClearCommands();
-            this.m_transaction = (SQLiteTransaction)null;
+            this.m_transaction = null;
         }
 
         /// <summary>
@@ -256,9 +256,9 @@ namespace TaskEngine
         /// </summary>
         public void TransactionRollback()
         {
-            ((DbTransaction)this.m_transaction).Rollback();
+            this.m_transaction.Rollback();
             this.ClearCommands();
-            this.m_transaction = (SQLiteTransaction)null;
+            this.m_transaction = null;
         }
 
         #endregion
@@ -281,9 +281,9 @@ namespace TaskEngine
         /// <returns>Returns number of changed rows or 0 if no changes.</returns>
         public int ExecuteNonQuery(string query, int timeout)
         {
-            SQLiteCommand sqLiteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-            ((DbCommand)sqLiteCommand).CommandTimeout = timeout;
-            return ((DbCommand)sqLiteCommand).ExecuteNonQuery();
+            SQLiteCommand sqliteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+            sqliteCommand.CommandTimeout = timeout;
+            return sqliteCommand.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -295,9 +295,9 @@ namespace TaskEngine
         /// <returns>Returns ResultSet for this query.</returns>
         public SQLiteDataReader ExecuteReader(string query, int timeout)
         {
-            SQLiteCommand sqLiteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-            ((DbCommand)sqLiteCommand).CommandTimeout = timeout;
-            return sqLiteCommand.ExecuteReader();
+            SQLiteCommand sqliteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+            sqliteCommand.CommandTimeout = timeout;
+            return sqliteCommand.ExecuteReader();
         }
 
         /// <summary>
@@ -309,16 +309,18 @@ namespace TaskEngine
         /// <returns>Returns result in first row first column as int. Returns -1 if errors.</returns>
         public int ExecuteScalar(string query, int timeout)
         {
-            SQLiteCommand sqLiteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-            ((DbCommand)sqLiteCommand).CommandTimeout = timeout;
-            int num = -1;
-            SQLiteDataReader sqLiteDataReader = sqLiteCommand.ExecuteReader();
-            if (((DbDataReader)sqLiteDataReader).HasRows)
+            SQLiteCommand sqliteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+            sqliteCommand.CommandTimeout = timeout;
+            Int32 num = -1;
+            SQLiteDataReader sqliteDataReader = sqliteCommand.ExecuteReader();
+            if (sqliteDataReader.HasRows)
             {
-                ((DbDataReader)sqLiteDataReader).Read();
-                num = ((DbDataReader)sqLiteDataReader).GetInt32(0);
+                sqliteDataReader.Read();
+                //если строк нет совсем, запрос возвращает DbNull
+                if(sqliteDataReader.IsDBNull(0) == false)
+                    num = sqliteDataReader.GetInt32(0);
             }
-            ((DbDataReader)sqLiteDataReader).Close();
+            sqliteDataReader.Close();
             return num;
         }
 
@@ -330,9 +332,9 @@ namespace TaskEngine
         /// <returns>Функция возвращает строку или пустую строку, если исходное значение было null.</returns>
         public static string getDbString(SQLiteDataReader rdr, int index)
         {
-            if (((DbDataReader)rdr).IsDBNull(index))
+            if (rdr.IsDBNull(index))
                 return string.Empty;
-            return ((DbDataReader)rdr).GetString(index).Trim();
+            return rdr.GetString(index).Trim();
         }
 
 
@@ -363,9 +365,9 @@ namespace TaskEngine
         public int DeleteRow(string table, string column, int val, int timeout)
         {
             String query = string.Format((IFormatProvider)CultureInfo.InvariantCulture, "DELETE FROM \"{0}\" WHERE (\"{1}\" = {2});", (object)table, (object)column, (object)val);
-            SQLiteCommand sqLiteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-            ((DbCommand)sqLiteCommand).CommandTimeout = timeout;
-            return ((DbCommand)sqLiteCommand).ExecuteNonQuery();
+            SQLiteCommand sqliteCommand = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+            sqliteCommand.CommandTimeout = timeout;
+            return sqliteCommand.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -378,16 +380,16 @@ namespace TaskEngine
         public int getTableMaxInt32(string table, string column, int timeout)
         {
             //TODO: remove this comments after function testing
-            // SQLiteCommand sqLiteCommand = new
+            // SQLiteCommand sqliteCommand = new
             // SQLiteCommand(String.Format((IFormatProvider)
             // CultureInfo.InvariantCulture, "SELECT MAX(\"{0}\") FROM \"{1}\";",
             // new object[2] {
             // (object) column,
             // (object) table
             // }), this.m_connection, this.m_transaction);
-            // ((DbCommand) sqLiteCommand).CommandTimeout = timeout;
+            // ((DbCommand) sqliteCommand).CommandTimeout = timeout;
             // int num = -1;
-            // SQLiteDataReader sqLiteDataReader = sqLiteCommand.ExecuteReader();
+            // SQLiteDataReader sqLiteDataReader = sqliteCommand.ExecuteReader();
             // if (((DbDataReader) sqLiteDataReader).HasRows)
             // {
             // ((DbDataReader) sqLiteDataReader).Read();
@@ -410,16 +412,16 @@ namespace TaskEngine
         public int getTableMinInt32(string table, string column, int timeout)
         {
             //TODO: remove this comments after function testing
-            // SQLiteCommand sqLiteCommand = new
+            // SQLiteCommand sqliteCommand = new
             // SQLiteCommand(String.Format((IFormatProvider)
             // CultureInfo.InvariantCulture, "SELECT MIN(\"{0}\") FROM \"{1}\";",
             // new object[2] {
             // (object) column,
             // (object) table
             // }), this.m_connection, this.m_transaction);
-            // ((DbCommand) sqLiteCommand).CommandTimeout = timeout;
+            // ((DbCommand) sqliteCommand).CommandTimeout = timeout;
             // int num = -1;
-            // SQLiteDataReader sqLiteDataReader = sqLiteCommand.ExecuteReader();
+            // SQLiteDataReader sqLiteDataReader = sqliteCommand.ExecuteReader();
             // if (((DbDataReader) sqLiteDataReader).HasRows)
             // {
             // ((DbDataReader) sqLiteDataReader).Read();
@@ -442,16 +444,16 @@ namespace TaskEngine
         public int GetRowCount(string table, string column, int timeout)
         {
             //TODO: remove this comments after function testing
-            // SQLiteCommand sqLiteCommand = new
+            // SQLiteCommand sqliteCommand = new
             // SQLiteCommand(String.Format((IFormatProvider)
             // CultureInfo.InvariantCulture, "SELECT COUNT(\"{0}\") FROM \"{1}\";",
             // new object[2] {
             // (object) column,
             // (object) table
             // }), this.m_connection, this.m_transaction);
-            // ((DbCommand) sqLiteCommand).CommandTimeout = timeout;
+            // ((DbCommand) sqliteCommand).CommandTimeout = timeout;
             // int num = -1;
-            // SQLiteDataReader sqLiteDataReader = sqLiteCommand.ExecuteReader();
+            // SQLiteDataReader sqLiteDataReader = sqliteCommand.ExecuteReader();
             // if (((DbDataReader) sqLiteDataReader).HasRows)
             // {
             // ((DbDataReader) sqLiteDataReader).Read();
@@ -475,14 +477,14 @@ namespace TaskEngine
         public int GetRowCount(string table, string column, int val, int timeout)
         {
             //TODO: remove this comments after function testing
-            // SQLiteCommand sqLiteCommand = new
+            // SQLiteCommand sqliteCommand = new
             // SQLiteCommand(String.Format((IFormatProvider)
             // CultureInfo.InvariantCulture, "SELECT COUNT(\"{0}\") FROM \"{1}\"
             // WHERE (\"{0}\" = {2});", (object) column, (object) table, (object)
             // val), this.m_connection, this.m_transaction);
-            // ((DbCommand) sqLiteCommand).CommandTimeout = timeout;
+            // ((DbCommand) sqliteCommand).CommandTimeout = timeout;
             // int num = -1;
-            // SQLiteDataReader sqLiteDataReader = sqLiteCommand.ExecuteReader();
+            // SQLiteDataReader sqLiteDataReader = sqliteCommand.ExecuteReader();
             // if (((DbDataReader) sqLiteDataReader).HasRows)
             // {
             // ((DbDataReader) sqLiteDataReader).Read();
@@ -518,13 +520,13 @@ namespace TaskEngine
         public void TableClear(string table, int timeout)
         {
             //TODO: remove this comments after function testing
-            // SQLiteCommand sqLiteCommand = new
+            // SQLiteCommand sqliteCommand = new
             // SQLiteCommand(String.Format((IFormatProvider)
             // CultureInfo.InvariantCulture, "DELETE FROM {0};", new object[1] {
             // (object) table
             // }), this.m_connection, this.m_transaction);
-            // ((DbCommand) sqLiteCommand).CommandTimeout = timeout;
-            // ((DbCommand) sqLiteCommand).ExecuteNonQuery();
+            // ((DbCommand) sqliteCommand).CommandTimeout = timeout;
+            // ((DbCommand) sqliteCommand).ExecuteNonQuery();
 
             String query = String.Format("DELETE FROM \"{0}\";", table);
             this.ExecuteNonQuery(query, timeout);
