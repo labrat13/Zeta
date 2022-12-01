@@ -47,6 +47,17 @@ namespace TaskEngine.EngineSubsystem
             return;
         }
         /// <summary>
+        /// NT-Adds the specified element object or null.
+        /// </summary>
+        /// <param name="id">The element identifier.</param>
+        /// <param name="obj">The element object or null.</param>
+        public void Add(int id, CElement obj)
+        {
+            CElementRef item = new CElementRef(id);
+            item.Element = obj;
+            this.m_dictionary.Add(id, item);
+        }
+        /// <summary>
         /// NT-Determines whether this instance contains the object.
         /// </summary>
         /// <param name="item">The item.</param>
@@ -78,5 +89,20 @@ namespace TaskEngine.EngineSubsystem
 
             return;
         }
+        /// <summary>
+        /// NT-Gets the list of identifier in this collection
+        /// </summary>
+        /// <returns>Returns list of identifier for this collection.</returns>
+        public List<int> GetListOfId()
+        {
+            //можно было просто перечислить ключи словаря коллекции.
+            List<int> result = new List<int>();
+            foreach (CElementRef item in this.m_dictionary.Values)
+                result.Add(item.Id);
+
+            return result;
+        }
+
+
     }
 }

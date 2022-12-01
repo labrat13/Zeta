@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Data;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-using System.Collections;
+using System.Data.SQLite;
 
 namespace TaskEngine
 {
@@ -142,7 +137,9 @@ namespace TaskEngine
             TaskDbAdapter db = new TaskDbAdapter(engine);
             db.Open(connectionString);
             // Write
-            db.CreateDatabaseTables();
+            bool result = db.CreateDatabaseTables();
+            if (result == false)
+                throw new Exception("Create database failed.");
             // Close database
             db.Close();
             // }
@@ -166,6 +163,7 @@ namespace TaskEngine
             bool result = true;
             try
             {
+                this.TransactionBegin();
                 // create Tasks table
                 TableDrop(TaskDbAdapter.TableElements, 60);
                 TableDrop(TaskDbAdapter.TableTasks, 60);
@@ -209,6 +207,183 @@ namespace TaskEngine
 
         #endregion
 
+        #region *** Element functions ***        
+        /// <summary>
+        /// NT-Deletes the element with transaction.
+        /// Close database after this operation.
+        /// </summary>
+        /// <param name="element">Any element.</param>
+        public void DeleteElementWithTransaction(CElement element)
+        {
+            try
+            {
+                //begin
+                this.TransactionBegin();
+
+                int elementId = element.Id;
+                //task variant
+                if (element.ElementType == EnumElementType.Task)
+                    this.intDeleteTask(elementId);
+                //tags delete
+                this.intDeleteAllElementTags(elementId);
+                //element delete
+                this.intDeleteElement(elementId);
+                //commit
+                this.TransactionCommit();
+            }
+            catch(Exception ex)
+            {
+                this.TransactionRollback();
+                throw ex;   
+            }
+
+            return;
+        }
+        /// <summary>
+        /// NT-Inserts any element with transaction.
+        /// Close database after this operation.
+        /// </summary>
+        /// <param name="element">Any element.</param>
+        public void InsertElementWithTransaction(CElement element)
+        {
+            try
+            {
+                //begin
+                this.TransactionBegin();
+                //element insert
+                //- set last modify time now 
+                element.ModiTime = DateTime.Now;
+                this.intInsertElement(element);
+                //task variant
+                if (element.ElementType == EnumElementType.Task)
+                    this.intInsertTask((CTask)element);
+                //tags insert - for all elements exclude Tags
+                if (element.ElementType != EnumElementType.Tag)
+                { 
+                    List<Int32> ids = element.Tags.GetListOfId();
+                    int elementId = element.Id;
+                    foreach (Int32 tagid in ids)
+                        this.intInsertElementTag(elementId, tagid);
+                }
+                //commit
+                this.TransactionCommit();
+            }
+            catch(Exception ex)
+            {
+                this.TransactionRollback();
+                throw ex;
+            }
+
+            return;
+        }
+        /// <summary>
+        /// NT-Updates any element with transaction.
+        /// Close database after this operation.
+        /// </summary>
+        /// <param name="element">Any element.</param>
+        public void UpdateElementWithTransaction(CElement element)
+        {
+            try
+            {
+                //begin
+                this.TransactionBegin();
+                //element update
+                //- set last modify time now 
+                element.ModiTime = DateTime.Now;
+                this.intUpdateElement(element);
+                //task variant
+                if (element.ElementType == EnumElementType.Task)
+                    this.intUpdateTask((CTask)element);
+                //tags update - for all elements exclude Tags
+                if (element.ElementType != EnumElementType.Tag)
+                {
+                    int elementId = element.Id;
+                    //remove all old tags
+                    this.intDeleteAllElementTags(elementId);
+                    //insert all new tags
+                    List<Int32> ids = element.Tags.GetListOfId();
+                    foreach (Int32 tagid in ids)
+                        this.intInsertElementTag(elementId, tagid);
+                }
+                //commit
+                this.TransactionCommit();
+            }
+            catch (Exception ex)
+            {
+                this.TransactionRollback();
+                throw ex;
+            }
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-Selects the element without transaction.
+        /// </summary>
+        /// <param name="elementId">The element identifier.</param>
+        /// <returns></returns>
+        public CElement SelectElementWithoutTransaction(int elementId)
+        {
+            CElement element = null;
+            //read element or null returned if element id is not found
+            element = this.intSelectElement(elementId);
+            if (element != null)//element record is exists
+            {
+                element = subSelectElement(elementId, element);
+            }
+            //return element
+            return element;
+        }
+
+        /// <summary>
+        /// NT-Subread specified element
+        /// </summary>
+        /// <param name="elementId">The element identifier.</param>
+        /// <param name="element">The CElement object from Elements table.</param>
+        /// <returns>Return CElement or CTask object or null if any needed record not founded</returns>
+        private CElement subSelectElement(int elementId, CElement element)
+        {
+            //task variant
+            if (element.ElementType == EnumElementType.Task)
+                element = this.intSelectTask(element);
+            if (element != null) //task record is exists
+            {
+                if (element.ElementType != EnumElementType.Tag)
+                {
+                    //read tags if element is not Tag
+                    List<int> ids = this.intGetElementTags(elementId);
+                    foreach (int tagid in ids)
+                        element.Tags.Add(tagid, null);
+                }
+            }
+
+            return element;
+        }
+        /// <summary>
+        /// NT-Selects the elements by parent identifier.
+        /// </summary>
+        /// <param name="parentId">The parent identifier.</param>
+        /// <returns>Returns list of founded elements.</returns>
+        /// <exception cref="Exception">Task record with id=" + elementId.ToString() + " not found!</exception>
+        public List<CElement> SelectElementsByParentId(int parentId)
+        {
+            List<CElement> result = new List<CElement>();
+            //get elements by parent id
+            List<CElement> elements = this.intSelectElementsByParent(parentId);
+            foreach(CElement element in elements)
+            {
+                int elementId = element.Id;
+                CElement elt = subSelectElement(elementId, element);
+                if (elt == null)
+                    throw new Exception("Task record with id=" + elementId.ToString() + " not found!");
+                //add to result list
+                result.Add(elt);
+            }
+
+            return result;
+        }
+
+        #endregion
         #region *** Elements table ***        
         /// <summary>
         /// NT-Возвращает максимальное значение идентификатора элемента или -1
@@ -223,7 +398,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="elementId">Идентификатор элемента</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        public Int32 DeleteElement(int elementId)
+        private Int32 intDeleteElement(int elementId)
         {
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"id\" = {1});", TaskDbAdapter.TableElements, elementId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
@@ -233,7 +408,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="el">CElement object</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        private int InsertElement(CElement el)
+        private int intInsertElement(CElement el)
         {
             SQLiteCommand ps = this.m_cmdInsertElement;
 
@@ -276,7 +451,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="el">CElement object</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        private int UpdateElement(CElement el)
+        private int intUpdateElement(CElement el)
         {
             SQLiteCommand ps = this.m_cmdUpdateElement;
 
@@ -322,7 +497,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="id">Идентификатор элемента</param>
         /// <returns>Return CElement object or null if id not found.</returns>
-        private CElement SelectElement(int id)
+        private CElement intSelectElement(int id)
         {
             CElement result = null;
             String query = "SELECT * FROM \"Elements\" WHERE (\"id\" = " + id.ToString() + ");";
@@ -330,7 +505,7 @@ namespace TaskEngine
             if (reader.HasRows)
                 while (reader.Read())
                 {
-                    result = ReadElement(reader);
+                    result = intReadElement(reader);
                 }
             // close command and result set objects
             reader.Close();
@@ -342,7 +517,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="reader">table reader object</param>
         /// <returns>Returns filled element object</returns>
-        private CElement ReadElement(SQLiteDataReader reader)
+        private CElement intReadElement(SQLiteDataReader reader)
         {
             CElement result = new CElement();
             result.Id = reader.GetInt32(0);
@@ -363,7 +538,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="parentid">Идентификатор родительского элемента</param>
         /// <returns>Returns list of CElement objects</returns>
-        private List<CElement> SelectElementsByParent(int parentid)
+        private List<CElement> intSelectElementsByParent(int parentid)
         {
             List<CElement> result = new List<CElement>();
             String query = "SELECT * FROM \"Elements\" WHERE (\"parent\" = " + parentid.ToString() + ");";
@@ -371,7 +546,7 @@ namespace TaskEngine
             if (reader.HasRows)
                 while (reader.Read())
                 {
-                    result.Add( ReadElement(reader));
+                    result.Add( intReadElement(reader));
                 }
             // close command and result set objects
             reader.Close();
@@ -387,7 +562,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="elid">The element identificator.</param>
         /// <returns>Returns list of tag Id's for specified element.</returns>
-        public List<Int32> GetElementTags(Int32 elid)
+        private List<Int32> intGetElementTags(Int32 elid)
         {
             List<Int32> result = new List<Int32>();
             String query = String.Format("SELECT \"tagid\" FROM \"{0}\" WHERE (\"elid\" = {1});", TaskDbAdapter.TableTagged, elid);
@@ -434,7 +609,7 @@ namespace TaskEngine
         /// <param name="elementId">Идентификатор элемента</param>
         /// <param name="tagId">Идентификатор тега</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        public int InsertElementTag(int elementId, int tagId)
+        private int intInsertElementTag(int elementId, int tagId)
         {
             String query = String.Format("INSERT INTO \"{0}\" (\"elid\", \"tagid\") VALUES ({1}, {2} );", TaskDbAdapter.TableTagged, elementId, tagId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
@@ -445,7 +620,7 @@ namespace TaskEngine
         /// <param name="elementId">Идентификатор элемента</param>
         /// <param name="tagId">Идентификатор тега</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        public int DeleteElementTag(int elementId, int tagId)
+        private int intDeleteElementTag(int elementId, int tagId)
         {
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"elid\" = {1}, \"tagid\" = {2});", TaskDbAdapter.TableTagged, elementId, tagId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
@@ -455,7 +630,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="elementId">Идентификатор элемента</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        public int DeleteAllElementTags(int elementId)
+        private int intDeleteAllElementTags(int elementId)
         {
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"elid\" = {1});", TaskDbAdapter.TableTagged, elementId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
@@ -468,8 +643,11 @@ namespace TaskEngine
         /// NT-Read task record
         /// </summary>
         /// <param name="el">Ранее извлеченный из таблицы ELements объект CElement</param>
-        /// <returns>Функция возвращает объект CTask, но без идентификаторов тегов!</returns>
-        private CTask SelectTask(CElement el)
+        /// <returns>
+        /// Функция возвращает объект CTask, но без идентификаторов тегов!
+        /// Если запись задачи не найдена, функция возвращает null.
+        /// </returns>
+        private CTask intSelectTask(CElement el)
         {
             //Заменить объект CELement на объект CTask
             CTask result = new CTask(el);
@@ -484,6 +662,8 @@ namespace TaskEngine
                     result.TaskCompletionDate = reader.GetDateTime(4);
                     result.TaskResult = reader.GetString(5);
                 }
+            //else return null if task info not found.
+            else result = null;
             // close command and result set objects
             reader.Close();
 
@@ -494,7 +674,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="elem">Task element</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        public int InsertTask(CTask elem)
+        private int intInsertTask(CTask elem)
         {
             SQLiteCommand ps = this.m_cmdInsertTask;
 
@@ -531,7 +711,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="elem">Task element</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        private int UpdateTask(CTask elem)
+        private int intUpdateTask(CTask elem)
         {
             SQLiteCommand ps = this.m_cmdUpdateTask;
 
@@ -568,123 +748,13 @@ namespace TaskEngine
         /// </summary>
         /// <param name="elementId">Идентификатор элемента</param>
         /// <returns>Возвращает число измененных строк таблицы</returns>
-        public int DeleteTask(int elementId)
+        private int intDeleteTask(int elementId)
         {
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"id\" = {1});", TaskDbAdapter.TableTasks, elementId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
         }
 
         #endregion
-
-        ///// <summary>
-        ///// NR-Получить список сырых элементов без идентификаторов тегов и ссылок на объекты
-        ///// </summary>
-        ///// <returns></returns>
-        //private List<CElement> GetAllElementsRaw()
-        //{
-        //    List<CElement> result = new List<CElement>();
-        //    String query = String.Format("SELECT * FROM \"" + TaskDbAdapter.TableElements + "\";");
-        //    SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
-        //    if (reader.HasRows)
-        //        while (reader.Read())
-        //        {
-        //            CElement el = new CElement();
-        //            el.Id = reader.GetInt32(0);
-        //            el.Parent  = new CElementRef(reader.GetInt32(1));
-        //            el.Title = reader.GetString(2);
-        //            el.Description = reader.GetString(3);
-        //            el.Remarks = reader.GetString(4);
-        //            el.CreaTime = DateTime.FromBinary(reader.GetInt64(5));
-        //            el.ModiTime = DateTime.FromBinary(reader.GetInt64(6));
-        //            el.ElementType = (EnumElementType)reader.GetInt32(7);
-        //            el.ElementState = (EnumElementState)reader.GetInt32(8);
-        //            //add this uncompleted item to list
-        //                result.Add(el);
-        //        }
-
-        //    // close command and result set objects
-        //    reader.Close();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// NR-Replace CElement with CTask element information.
-        ///// </summary>
-        ///// <param name="el">The CElement object</param>
-        ///// <returns>Function returns CTask object with task information.</returns>
-        //private CTask loadTaskElementInfo(CElement el)
-        //{
-        //    //exit if element is not CTask
-        //    if (el.ElementType != EnumElementType.Task)
-        //        return null;
-        //    //load Task info
-        //    CTask result = new CTask(el);
-        //    String query = String.Format("SELECT * FROM \"" + TaskDbAdapter.TableTasks + "\" WHERE (\"id\" = " + el.Id.ToString() + ");");
-        //    SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
-        //    if (reader.HasRows)
-        //        while (reader.Read())
-        //        {
-        //            result.TaskState = (EnumTaskState)reader.GetInt32(1);
-        //            result.TaskPriority = (EnumTaskPriority)reader.GetInt32(2);
-        //            result.TaskCompletionDate = reader.GetDateTime(3);
-        //            result.TaskResult = reader.GetString(4);
-        //        }
-        //    // close command and result set objects
-        //    reader.Close();
-
-        //    return result;
-        //}
-        ///// <summary>
-        ///// NR-Loads all elements from database to memory
-        ///// </summary>
-        ///// <returns></returns>
-        //public CElementCollection LoadAllElements()
-        //{
-        //    //1 load all elements raw from database
-        //    List<CElement> elements = this.GetAllElementsRaw();
-        //    CElementCollection collection = new CElementCollection();   
-        //    //2 replace Task elements to CTask object, if any
-        //    foreach(CElement element in elements)
-        //    {
-        //        if (element.ElementType == EnumElementType.Task)
-        //        {
-        //            CTask task = loadTaskElementInfo(element);
-        //            collection.Add(task);
-        //        }
-        //        else
-        //            collection.Add(element);
-        //    }
-        //    //3 get tag id and fill tag collection in each elements
-        //    foreach(CElement element in collection.getDictionary().Values)
-        //    {
-        //        if(element.ElementType != EnumElementType.Tag)
-        //        {
-        //            //get list of tag id's
-        //            List<Int32> tagids = getElementTags(element.Id);
-        //            //все теги уже загружены в общий список элементов и их просто надо найти и добавить в список тегов каждого элемента.
-        //            foreach(int id in tagids)
-        //            {
-        //                CElement tagelement = collection.Get(id);
-        //                element.Tags.Add(tagelement);
-        //            }
-        //        }
-        //    }
-        //    //4 set parent references
-        //    foreach (CElement element in collection.getDictionary().Values)
-        //    {
-        //        Int32 parentid = element.Parent.Id;
-        //        //if parentid == 0, this element has no parent, we use null.
-        //        CElement parent = null;
-        //        if (parentid != 0)
-        //            parent = collection.Get(parentid);
-                
-        //        element.Parent.Element = parent;
-        //    }
-        //    //5 return collection
-        //    return collection;
-        //}
-
 
         #region *** Setting table function ***
 

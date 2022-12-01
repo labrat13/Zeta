@@ -13,3 +13,9 @@ C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.csproj
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.csproj.CoreCompileInputs.cache
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.dll
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.pdb
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\bin\Debug\TaskEngine.dll
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\bin\Debug\TaskEngine.pdb
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\bin\Debug\System.Data.SQLite.pdb
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\bin\Debug\System.Data.SQLite.xml
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\TaskEngine\obj\Debug\TaskEngine.csproj.CopyComplete
