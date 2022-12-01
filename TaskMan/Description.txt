@@ -36,7 +36,7 @@ CElement - базовый класс элемента для всех Сущностей предметной области проекта.
 - String remarks				- многострочные заметки по элементу
 - DateTime creatime				- дата создания элемента
 - DateTime moditime				- дата изменения элемента
-- EnumElementType elementType	- код типа элемента: енум EnumElementType Default;Rule;Tag;Task;Category
+- EnumElementType elementType	- код типа элемента: енум EnumElementType Default;Note;Tag;Task;Category
   - записывается в БД, чтобы код знал, где искать дополнительные данные объекта.
 - CElement Parent				- ссылка на родительский элемент в дереве элементов
 - CTagCollection tags			- список ссылок на объекты тегов
@@ -59,10 +59,10 @@ CElement - базовый класс элемента для всех Сущностей предметной области проекта.
 Может быть помечена тегами, но не является задачей и не группирует подзадачи.
 Может быть, можно создавать под-правила, но не ясно, как это использовать.
 
-CRule : CElement - класс Правила 
+CNote : CElement - класс Правила 
 - поле tags указывает на теги элемента.
-- поле elementType всегда = EnumElementType.Rule
-- поле parent  указывает на CCategory CTask CRule объект.
+- поле elementType всегда = EnumElementType.Note
+- поле parent  указывает на CCategory CTask CNote объект.
 - поскольку дополнительных полей нет, весь объект хранится в таблице элементов.
 
 

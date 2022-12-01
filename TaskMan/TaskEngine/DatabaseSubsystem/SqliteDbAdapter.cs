@@ -13,6 +13,10 @@ namespace TaskEngine
     {
 
         #region *** Fields ***
+        /// <summary>
+        /// Standard database file name
+        /// </summary>
+        public const String DatabaseFileName = "db.sqlite";
 
         /// <summary>
         /// Database file connection string

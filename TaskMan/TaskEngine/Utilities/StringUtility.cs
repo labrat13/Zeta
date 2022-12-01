@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 
 namespace TaskEngine
@@ -153,6 +154,34 @@ namespace TaskEngine
             return dt.ToString("dddd, d MMMM yyyy'г. 'HH:mm:ss", RuCulture);
         }
         #endregion
+
+        /// <summary>
+        /// NT-Gets the current engine version.
+        /// </summary>
+        /// <returns></returns>
+        public static Version getCurrentEngineVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version;
+        }
+        /// <summary>
+        /// NT-Получить строку текущей версии сборки движка
+        /// </summary>
+        /// <returns></returns>
+        public static string getEngineVersionString()
+        {
+            //DONE: Убедиться что это возвращает версию текущей сборки а не приложения.
+            return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        }
+
+        /// <summary>
+        /// NT-Получить класс Сущности Движка.
+        /// Он нужен, чтобы раличать движки и их Каталог Проекта между собой.
+        /// </summary>
+        /// <returns>Возвращает строковый идентификатор класса Сущности Движка</returns>
+        public static string getEngineClass()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Name;
+        }
 
     }
 }

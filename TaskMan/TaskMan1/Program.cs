@@ -15,10 +15,10 @@ namespace TaskMan1
             //create solution
             String solutionRoot = "C:\\Temp\\";
             String solutionTitle = "testSolution";
-            CEngine.Create(solutionRoot, solutionTitle);
+            CEngine.SolutionCreate(solutionRoot, solutionTitle);
             //open solution
             String solutionPath = Path.Combine(solutionRoot, solutionTitle);
-            engine.Open(solutionPath);
+            engine.SolutionOpen(solutionPath);
 
             Console.WriteLine("Opened " + solutionPath);
 
@@ -31,7 +31,7 @@ namespace TaskMan1
             //7. rename engine.Open() to engine.SolutionOpen and so on. As defined in UAMX ?
             //8. Implement FileSystemManager class for solution file operations.
 
-            engine.m_dbAdapter.Open(); //open but not close after success transaction, close after rollback.
+            engine.DbAdapter.Open(); //open but not close after success transaction, close after rollback.
             //===================INSERT test ======================
             //create category Tasks
             CElement catTasks = new CElement();
@@ -43,7 +43,7 @@ namespace TaskMan1
             catTasks.Description = "Tasks main category";
             catTasks.Remarks = "This is a first fixed category, protected from deletion";
             //insert
-            engine.m_dbAdapter.InsertElementWithTransaction(catTasks);
+            engine.DbAdapter.InsertElementWithTransaction(catTasks);
 
             //create tag category Tags
             CElement tagcat = new CElement();
@@ -55,7 +55,7 @@ namespace TaskMan1
             tagcat.ElementType = EnumElementType.Category;
             tagcat.Remarks = "tag category remarks";
             //insert
-            engine.m_dbAdapter.InsertElementWithTransaction(tagcat);
+            engine.DbAdapter.InsertElementWithTransaction(tagcat);
 
             //create tag FirstTag
             CElement tag1 = new CElement();
@@ -67,7 +67,7 @@ namespace TaskMan1
             tag1.ElementType = EnumElementType.Tag;
             tag1.Remarks = "First tag remarks";
             //insert
-            engine.m_dbAdapter.InsertElementWithTransaction(tag1);
+            engine.DbAdapter.InsertElementWithTransaction(tag1);
 
             //create category CategoryHome
             CElement catHome = new CElement();
@@ -79,7 +79,7 @@ namespace TaskMan1
             catHome.ElementType = EnumElementType.Category;
             catHome.Remarks = "This is a first normal category";
             //insert
-            engine.m_dbAdapter.InsertElementWithTransaction(catHome);
+            engine.DbAdapter.InsertElementWithTransaction(catHome);
 
             //create Rule rule1
             CElement rule1 = new CElement();
@@ -92,7 +92,7 @@ namespace TaskMan1
             rule1.Remarks = "Rule remarks";
             rule1.Tags.Add(6, null);
             //insert
-            engine.m_dbAdapter.InsertElementWithTransaction(rule1);
+            engine.DbAdapter.InsertElementWithTransaction(rule1);
 
             //create task task1
             CTask task1 = new CTask();
@@ -111,27 +111,27 @@ namespace TaskMan1
             //tags
             task1.Tags.Add(6, null);
             //insert
-            engine.m_dbAdapter.InsertElementWithTransaction(task1);
+            engine.DbAdapter.InsertElementWithTransaction(task1);
             //=========================UPDATE test===================================
             task1.Description = "Updated task description";
             task1.TaskStartDate = new DateTime(2023, 06, 06);
-            engine.m_dbAdapter.UpdateElementWithTransaction(task1);
+            engine.DbAdapter.UpdateElementWithTransaction(task1);
 
             rule1.Title = "UpdatedNote";
-            engine.m_dbAdapter.UpdateElementWithTransaction(rule1);
+            engine.DbAdapter.UpdateElementWithTransaction(rule1);
             //========================SELECT Elements =======================
 
-            List<CElement> elements = engine.m_dbAdapter.SelectElementsByParentId(0);
-            List<CElement> user = engine.m_dbAdapter.SelectElementsByParentId(2);
+            List<CElement> elements = engine.DbAdapter.SelectElementsByParentId(0);
+            List<CElement> user = engine.DbAdapter.SelectElementsByParentId(2);
             //================DELETE elements ==============================
-            engine.m_dbAdapter.DeleteElementWithTransaction(task1);
-            engine.m_dbAdapter.DeleteElementWithTransaction(rule1);
-            List<CElement> user2 = engine.m_dbAdapter.SelectElementsByParentId(2);
+            engine.DbAdapter.DeleteElementWithTransaction(task1);
+            engine.DbAdapter.DeleteElementWithTransaction(rule1);
+            List<CElement> user2 = engine.DbAdapter.SelectElementsByParentId(2);
             //==============================================================
             //close connection
-            engine.m_dbAdapter.Close();
+            engine.DbAdapter.Close();
             //close solution
-            engine.Close();
+            engine.SolutionClose();
 
             return;
         }
