@@ -68,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatabaseSubsystem\Database.txt" />
+    <Content Include="Readme-TaskEngine.txt" />
+    <Content Include="Todo-TaskEngine.txt" />
+    <Content Include="Version-TaskEngine.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

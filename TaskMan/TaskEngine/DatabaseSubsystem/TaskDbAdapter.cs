@@ -34,15 +34,15 @@ namespace TaskEngine
         /// </summary>
         private CEngine m_Engine;
 
-        /// <summary>
-        /// SQL Command for AddSetting function
-        /// </summary>
-        protected SQLiteCommand m_cmdAddSetting;
-
-        /// <summary>
-        ///  SQL Command for UpdateSetting function
-        /// </summary>
-        protected SQLiteCommand m_cmdUpdateSetting;
+        ////Настройки закомментировал, чтобы не мешались, пока не используются.
+        ///// <summary>
+        ///// SQL Command for AddSetting function
+        ///// </summary>
+        //protected SQLiteCommand m_cmdAddSetting;
+        ///// <summary>
+        /////  SQL Command for UpdateSetting function
+        ///// </summary>
+        //protected SQLiteCommand m_cmdUpdateSetting;
 
         /// <summary>
         /// SQL Command for Insert Task function
@@ -71,8 +71,9 @@ namespace TaskEngine
         {
             this.m_Engine = engine;
 
-            this.m_cmdAddSetting = null;
-            this.m_cmdUpdateSetting = null;
+            ////Настройки закомментировал, чтобы не мешались, пока не используются.
+            //this.m_cmdAddSetting = null;
+            //this.m_cmdUpdateSetting = null;
 
             this.m_cmdInsertTask = null;
             this.m_cmdUpdateTask = null;
@@ -103,11 +104,13 @@ namespace TaskEngine
         protected override void ClearCommands()
         {
             // TODO: add code for new command here!
+
             //Эта функция вызывается 4 раза при каждом добавлении или изменении любого Элемента в таблицах.
             //закрыть и обнулить каждую команду адаптера
 
-            this.m_cmdAddSetting = null;
-            this.m_cmdUpdateSetting = null;
+            ////Настройки закомментировал, чтобы не мешались, пока не используются.
+            //this.m_cmdAddSetting = null;
+            //this.m_cmdUpdateSetting = null;
 
             this.m_cmdInsertTask = null;
             this. m_cmdUpdateTask = null;
@@ -871,133 +874,134 @@ namespace TaskEngine
 
         #endregion
 
-        #region *** Setting table function ***
+        //Настройки закомментировал, чтобы не мешались, пока не используются.
+        //#region *** Setting table function ***
 
-        /// <summary>
-        /// NT- Получить все записи таблицы настроек Оператора
-        /// </summary>
-        /// <returns>Функция возвращает все записи из ТаблицыНастроекОператора.</returns>
-        public List<SettingItem> GetAllSettings()
-        {
+        ///// <summary>
+        ///// NT- Получить все записи таблицы настроек Оператора
+        ///// </summary>
+        ///// <returns>Функция возвращает все записи из ТаблицыНастроекОператора.</returns>
+        //public List<SettingItem> GetAllSettings()
+        //{
 
-            List<SettingItem> list = new List<SettingItem>();
+        //    List<SettingItem> list = new List<SettingItem>();
 
-            String query = String.Format("SELECT * FROM \"{0}\";", TaskDbAdapter.TableSetting);
-            SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
-            if (reader.HasRows)
-                while (reader.Read())
-                {
-                    SettingItem si = new SettingItem();
-                    si.TableId = reader.GetInt32(0);
-                    si.Namespace = reader.GetString(1);
-                    si.Title = reader.GetString(2);
-                    si.Description = reader.GetString(3);
-                    si.Path = reader.GetString(4);// set value as Item.Path
-                                                  // set storage field as db
-                    si.Storage = SettingItem.StorageKeyForDatabaseItem;
-                    // add to result list
-                    list.Add(si);
-                }
+        //    String query = String.Format("SELECT * FROM \"{0}\";", TaskDbAdapter.TableSetting);
+        //    SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
+        //    if (reader.HasRows)
+        //        while (reader.Read())
+        //        {
+        //            SettingItem si = new SettingItem();
+        //            si.TableId = reader.GetInt32(0);
+        //            si.Namespace = reader.GetString(1);
+        //            si.Title = reader.GetString(2);
+        //            si.Description = reader.GetString(3);
+        //            si.Path = reader.GetString(4);// set value as Item.Path
+        //                                          // set storage field as db
+        //            si.Storage = SettingItem.StorageKeyForDatabaseItem;
+        //            // add to result list
+        //            list.Add(si);
+        //        }
 
-            // close command and result set objects
-            reader.Close();
+        //    // close command and result set objects
+        //    reader.Close();
 
-            return list;
-        }
+        //    return list;
+        //}
 
 
 
-        /// <summary>
-        /// NT-Добавить Настройку.
-        /// </summary>
-        /// <param name="p">Добавляемая Настройка.</param>
-        public void AddSetting(SettingItem p)
-        {
+        ///// <summary>
+        ///// NT-Добавить Настройку.
+        ///// </summary>
+        ///// <param name="p">Добавляемая Настройка.</param>
+        //public void AddSetting(SettingItem p)
+        //{
 
-            SQLiteCommand ps = this.m_cmdAddSetting;
+        //    SQLiteCommand ps = this.m_cmdAddSetting;
 
-            // create if not exists
-            if (ps == null)
-            {
-                String query = String.Format("INSERT INTO \"{0}\"(\"ns\", \"title\", \"descr\", \"val\") VALUES (?,?,?,?);", TaskDbAdapter.TableSetting);
-                ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-                // set timeout here
-                ps.CommandTimeout = this.m_Timeout;
-                //create parameters
-                ps.Parameters.Add("a0", DbType.String);
-                ps.Parameters.Add("a1", DbType.String);
-                ps.Parameters.Add("a2", DbType.String);
-                ps.Parameters.Add("a3", DbType.String);
-                // write back
-                this.m_cmdAddSetting = ps;
-            }
-            // set parameters
-            ps.Parameters[0].Value = p.Namespace;
-            ps.Parameters[1].Value = p.Title;
-            ps.Parameters[2].Value = p.Description;
-            ps.Parameters[3].Value = p.Path;
-            //execute command
-            ps.ExecuteNonQuery();
+        //    // create if not exists
+        //    if (ps == null)
+        //    {
+        //        String query = String.Format("INSERT INTO \"{0}\"(\"ns\", \"title\", \"descr\", \"val\") VALUES (?,?,?,?);", TaskDbAdapter.TableSetting);
+        //        ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+        //        // set timeout here
+        //        ps.CommandTimeout = this.m_Timeout;
+        //        //create parameters
+        //        ps.Parameters.Add("a0", DbType.String);
+        //        ps.Parameters.Add("a1", DbType.String);
+        //        ps.Parameters.Add("a2", DbType.String);
+        //        ps.Parameters.Add("a3", DbType.String);
+        //        // write back
+        //        this.m_cmdAddSetting = ps;
+        //    }
+        //    // set parameters
+        //    ps.Parameters[0].Value = p.Namespace;
+        //    ps.Parameters[1].Value = p.Title;
+        //    ps.Parameters[2].Value = p.Description;
+        //    ps.Parameters[3].Value = p.Path;
+        //    //execute command
+        //    ps.ExecuteNonQuery();
 
-            return;
-        }
+        //    return;
+        //}
 
-        /// <summary>
-        /// NT-Удалить Настройку.
-        /// </summary>
-        /// <param name="id">ИД Настройки.</param>
-        /// <returns>Функция возвращает число измененных строк таблицы.</returns>
-        public int RemoveSetting(int id)
-        {
-            // DELETE FROM `setting` WHERE (`id` = 1);
-            return this.DeleteRow(TaskDbAdapter.TableSetting, "id", id, this.m_Timeout);
-        }
+        ///// <summary>
+        ///// NT-Удалить Настройку.
+        ///// </summary>
+        ///// <param name="id">ИД Настройки.</param>
+        ///// <returns>Функция возвращает число измененных строк таблицы.</returns>
+        //public int RemoveSetting(int id)
+        //{
+        //    // DELETE FROM `setting` WHERE (`id` = 1);
+        //    return this.DeleteRow(TaskDbAdapter.TableSetting, "id", id, this.m_Timeout);
+        //}
 
-        /// <summary>
-        /// NT- Изменить Настройку (title, descr, value)
-        /// </summary>
-        /// <param name="p">Изменяемая Настройка</param>
-        /// <returns>Функция возвращает число измененных строк таблицы.</returns>
-        public int UpdateSetting(SettingItem p)
-        {
-            SQLiteCommand ps = this.m_cmdUpdateSetting;
+        ///// <summary>
+        ///// NT- Изменить Настройку (title, descr, value)
+        ///// </summary>
+        ///// <param name="p">Изменяемая Настройка</param>
+        ///// <returns>Функция возвращает число измененных строк таблицы.</returns>
+        //public int UpdateSetting(SettingItem p)
+        //{
+        //    SQLiteCommand ps = this.m_cmdUpdateSetting;
 
-            // create if not exists
-            if (ps == null)
-            {
-                String query = String.Format("UPDATE \"{0}\" SET \"ns\" = ?, \"title\" = ?, \"descr\" = ?, \"val\" = ? WHERE (\"id\" = ?);", TaskDbAdapter.TableSetting);
-                ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-                // set timeout here
-                ps.CommandTimeout = this.m_Timeout;
-                //create parameters
-                ps.Parameters.Add("a0", DbType.String);
-                ps.Parameters.Add("a1", DbType.String);
-                ps.Parameters.Add("a2", DbType.String);
-                ps.Parameters.Add("a3", DbType.String);
-                ps.Parameters.Add("a4", DbType.Int32);
-                // write back
-                this.m_cmdUpdateSetting = ps;
-            }
-            // set parameters
-            ps.Parameters[0].Value = p.Namespace;
-            ps.Parameters[1].Value = p.Title;
-            ps.Parameters[2].Value = p.Description;
-            ps.Parameters[3].Value = p.Path;// get value as Item.Path
-            ps.Parameters[4].Value = p.TableId;
-            //execute command
-            int result = ps.ExecuteNonQuery();
+        //    // create if not exists
+        //    if (ps == null)
+        //    {
+        //        String query = String.Format("UPDATE \"{0}\" SET \"ns\" = ?, \"title\" = ?, \"descr\" = ?, \"val\" = ? WHERE (\"id\" = ?);", TaskDbAdapter.TableSetting);
+        //        ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+        //        // set timeout here
+        //        ps.CommandTimeout = this.m_Timeout;
+        //        //create parameters
+        //        ps.Parameters.Add("a0", DbType.String);
+        //        ps.Parameters.Add("a1", DbType.String);
+        //        ps.Parameters.Add("a2", DbType.String);
+        //        ps.Parameters.Add("a3", DbType.String);
+        //        ps.Parameters.Add("a4", DbType.Int32);
+        //        // write back
+        //        this.m_cmdUpdateSetting = ps;
+        //    }
+        //    // set parameters
+        //    ps.Parameters[0].Value = p.Namespace;
+        //    ps.Parameters[1].Value = p.Title;
+        //    ps.Parameters[2].Value = p.Description;
+        //    ps.Parameters[3].Value = p.Path;// get value as Item.Path
+        //    ps.Parameters[4].Value = p.TableId;
+        //    //execute command
+        //    int result = ps.ExecuteNonQuery();
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        /// <summary>
-        /// NT-Remove all Settings
-        /// </summary>
-        public void RemoveAllSettings()
-        {
-            this.TableClear(TableSetting, m_Timeout);
-        }
-        #endregion
+        ///// <summary>
+        ///// NT-Remove all Settings
+        ///// </summary>
+        //public void RemoveAllSettings()
+        //{
+        //    this.TableClear(TableSetting, m_Timeout);
+        //}
+        //#endregion
 
     }
 }
