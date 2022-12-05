@@ -6,22 +6,15 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAADAMAAAoSAECAgAAEBAAIMAEEIBICAAMgCCAAg=</HashCode>
-      <FileName>SqliteDbAdapter.cs</FileName>
+      <HashCode>AIAAAADAMAAAoSAECAgAAEBCAIMAEEIBICAAMgCCAAg=</HashCode>
+      <FileName>DatabaseSubsystem\SqliteDbAdapter.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TaskEngine.StringUtility" Collapsed="true">
-    <Position X="8.5" Y="0.75" Width="1.5" />
+  <Class Name="TaskEngine.TaskDbAdapter">
+    <Position X="3.25" Y="0.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>StringUtility.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TaskEngine.TaskDbAdapter" Collapsed="true">
-    <Position X="3" Y="1.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>TaskDbAdapter.cs</FileName>
+      <HashCode>AQAWNABgACCAIIEGIgEgAoAEAQEAAoBBAgQIAQDAACI=</HashCode>
+      <FileName>DatabaseSubsystem\TaskDbAdapter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

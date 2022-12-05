@@ -7,9 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskMan1", "TaskMan1\TaskMa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{5866B8D3-3EB1-4812-A50D-DD65E61BDD0E}"
 	ProjectSection(SolutionItems) = preProject
-		AddRules.txt = AddRules.txt
 		Database.txt = Database.txt
-		Description.txt = Description.txt
+		..\Справочники\Wiki-TaskMan\Wiki-TaskMan.wiki = ..\Справочники\Wiki-TaskMan\Wiki-TaskMan.wiki
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskEngine", "TaskEngine\TaskEngine.csproj", "{80A0FDE9-4052-4CCB-803D-D184DF9DA358}"
