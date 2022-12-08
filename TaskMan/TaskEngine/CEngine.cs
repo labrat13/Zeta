@@ -49,7 +49,7 @@ namespace TaskEngine
         /// <summary>
         /// Объект настроек проекта движка
         /// </summary>
-        protected EngineSettings m_settings;
+        protected TaskEngineSettings m_settings;
         /// <summary>
         /// Менеджер файловой системы проекта данных движка
         /// </summary>
@@ -62,7 +62,7 @@ namespace TaskEngine
 
             //TODO: add code here
             //создать пакет настроек по умолчанию, пока для отладки.
-            this.m_settings = new EngineSettings();
+            this.m_settings = new TaskEngineSettings();
             //ElementIdManager нельзя здесь инициализировать, так как ему нужна присоединенная БД.
             //его надо инициализировать в Open()
             this.m_idManager = null;
@@ -95,7 +95,7 @@ namespace TaskEngine
         /// <summary>
         /// Объект настроек проекта движка
         /// </summary>
-        public EngineSettings Settings
+        public TaskEngineSettings Settings
         {
             get { return m_settings; }
         }
@@ -127,7 +127,7 @@ namespace TaskEngine
         /// <exception cref="System.Exception">
         /// Specified path is not found or Solution already exists
         /// </exception>
-        public static void SolutionCreate(String rootFolder, EngineSettings si) //String title)
+        public static void SolutionCreate(String rootFolder, TaskEngineSettings si) //String title)
         {
             ////0 проверить аргументы
             //if (!Directory.Exists(rootFolder)) throw new ArgumentException("Root folder must be exists", "rootFolder");

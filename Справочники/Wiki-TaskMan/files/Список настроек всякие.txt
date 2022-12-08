@@ -1,0 +1,47 @@
+Уже существующие в проекте:
+
+        public const string tagStoragePath = "StoragePath";
+        public const string tagReadOnly = "ReadOnly";
+        public const string tagEngineVersion = "EngineVersion";
+        public const string tagEngineClass = "EngineClass";//Класс движка - чтобы различать Хранилища разных движков.
+        public const string tagCreator = "Creator";
+        public const string tagTitle = "Title";
+        public const string tagDescription = "Description";
+        //public const string tagLinkPrefix = "LinkPrefix";//Префикс ссылки для СсылкаНаЭлемент и ИдентификаторЭлемента
+
+Добавить в проект:
+        internal const string tagStorageVersion  = "StorageVersion";//узнать что это такое и где брать
+        internal const string tagDatabaseSize  = "DatabaseSize";//размер файла БД
+        internal const string tagQualifiedName  = "QualifiedName";//имя подобно классификации "ИмяКлассаХранилищ.НазваниеХранилища"
+        internal const string tagStorageType  = "StorageType";//как квалиф имя но через ::
+        internal const string tagDocsCount  = "DocsCount";//количество файлов
+        internal const string tagDocsSize  = "DocsSize";//общий размер файлов 
+        internal const string tagTasksCount  = "TasksCount";// общее количество задач.
+        internal const string tagStoppedTaskCount  = "StoppedTaskCount";//количество приостановленных задач.
+        internal const string tagFinishedTaskCount  = "FinishedTaskCount";//количество выполненных задач.
+        internal const string tagRunTaskCount  = "RunTaskCount";//количество выполняющихся задач.
+        internal const string tagNotesCount  = "NotesCount";//количество Заметок.
+        internal const string tagCategoriesCount  = "CategoriesCount";//количество Категорий.
+        internal const string tagTagsCount  = "TagsCount";//количество Тегов.
+        internal const string tagDeletedCount  = "DeletedCount";//количество удаленных элементов (в Корзине).
+
+
+Взятые из Менеджера Хранилищ IMM2:
+
+        internal const string tagStoragePath  = "StoragePath";
+        internal const string tagReadOnly  = "ReadOnly";
+        internal const string tagStorageVersion  = "StorageVersion";//инкрементируется при каждом изменении или закрытии сессии?
+        internal const string tagEngineVersion  = "EngineVersion";
+        internal const string tagCreator  = "Creator";
+        internal const string tagTitle  = "Title";
+        internal const string tagQualifiedName  = "QualifiedName";//имя подобно классификации "ИмяКлассаХранилищ.НазваниеХранилища"
+        internal const string tagDescription  = "Description";
+        internal const string tagStorageType  = "StorageType";//как квалиф имя но через ::
+        internal const string tagPicsSize  = "PicsSize";//общий размер файлов 
+        internal const string tagDocsCount  = "DocsCount";//количество файлов
+        internal const string tagDocsSize  = "DocsSize";//общий размер файлов 
+        internal const string tagPicsCount  = "PicsCount";
+        internal const string tagEntityCount  = "EntityCount";
+        internal const string tagDatabaseSize  = "DatabaseSize";//размер файла БД
+        internal const string tagUsingCounter  = "UsingCounter";//хз что это
+
