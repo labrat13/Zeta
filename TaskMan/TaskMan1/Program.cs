@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TaskEngine;
+using TaskEngine.SettingSubsystem;
 
 namespace TaskMan1
 {
@@ -11,17 +12,66 @@ namespace TaskMan1
     {
         static void Main(string[] args)
         {
-            CEngine engine = new CEngine();
-            //create solution
-            String solutionRoot = "C:\\Temp\\";
-            String solutionTitle = "testSolution";
-            CEngine.SolutionCreate(solutionRoot, solutionTitle);
-            //open solution
-            String solutionPath = Path.Combine(solutionRoot, solutionTitle);
-            engine.SolutionOpen(solutionPath);
+            TestSettingSubsystem();
+            
+            //TestEngine();
 
-            Console.WriteLine("Opened " + solutionPath);
+            return;
+        }
+        /// <summary>
+        /// Гест файла настроек - успешно.
+        /// </summary>
+        private static void TestSettingSubsystem()
+        {
+            String filePath = "C:\\Temp\\set.xml";
+            
+            //Обязательно заполнять все поля!
+            //Если значение = пустая строка, то в XML-файл выводится сокращенный тег, а не тройка начало-значение-конец.
+            //Сокращенный же тег этот класс не читает, выбрасывает исключение "Тег не найден".
+            
+            TaskEngine.SettingSubsystem.TaskEngineSettings s = new TaskEngine.SettingSubsystem.TaskEngineSettings();
+            s.Creator = "Test";
+            s.Description = "Description as test";
+            s.LinkPrefix = "litest";
+            s.Title = "TestTitle";
+            s.StoragePath = "C:\\Temp\\";
+            s.QualifiedName = "Task.Task1";
+            s.StorageType = "Task::Task1";
+            s.Store(filePath);
 
+            //load
+            TaskEngine.SettingSubsystem.TaskEngineSettings readed = TaskEngineSettings.TryLoad(filePath);
+            if (readed != null)
+            {
+                Console.WriteLine(readed.Title);
+                Console.WriteLine(readed.Description);
+                Console.WriteLine(readed.LinkPrefix);
+            }
+
+
+            return;
+        }
+
+        private static void TestEngine()
+        {
+            //CEngine engine = new CEngine();
+            ////create solution
+            //String solutionRoot = "C:\\Temp\\";
+            //String solutionTitle = "testSolution";
+            //CEngine.SolutionCreate(solutionRoot, solutionTitle);
+            ////open solution
+            //String solutionPath = Path.Combine(solutionRoot, solutionTitle);
+            //engine.SolutionOpen(solutionPath);
+
+            //Console.WriteLine("Opened " + solutionPath);
+
+            //CreateBasicTree(engine);
+            ////close solution
+            //engine.SolutionClose();
+        }
+
+        private static void CreateBasicTree(CEngine engine)
+        {
             //TODO: 1. set constructor values by default, remove from here
             //2. move creating elements to engine object
             //3. DONE: first create main categories and tags, then user items (cat, rule and task)
@@ -130,10 +180,6 @@ namespace TaskMan1
             //==============================================================
             //close connection
             engine.DbAdapter.Close();
-            //close solution
-            engine.SolutionClose();
-
-            return;
         }
     }
 }

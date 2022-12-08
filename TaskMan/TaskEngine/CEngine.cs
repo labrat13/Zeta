@@ -149,7 +149,7 @@ namespace TaskEngine
             //если корневой каталог не существует, выдать сообщение об ошибке.
             if (!Directory.Exists(rootFolder))
                 throw new Exception("Specified path is not found");
-            string homeFolder = Path.Combine(rootFolder, StringUtility.MakeSafeTitle(title));
+            string homeFolder = Path.Combine(rootFolder, StringUtility.MakeSafeTitle(si.Title));
             //если каталог уже существует, выдать сообщение
             if (Directory.Exists(homeFolder))
                 throw new Exception("Solution already exists");

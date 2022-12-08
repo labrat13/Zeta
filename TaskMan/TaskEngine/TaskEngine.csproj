@@ -36,6 +36,8 @@
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\..\..\ЛокальныеИнструменты\sqliteDeploy\appFolder\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -57,8 +59,8 @@
     <Compile Include="UAMX2\EngineSettingsBase.cs" />
     <Compile Include="UAMX2\RecordBase.cs" />
     <Compile Include="SolutionSubsystem\SolutionManager.cs" />
+    <Compile Include="UAMX2\Utility.cs" />
     <Compile Include="Utilities\FileLink.cs" />
-    <Compile Include="Utilities\ItemDictionaryBase.cs" />
     <Compile Include="Utilities\StringUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />
   </ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Xml;
+using UAMX_2;
 
 namespace TaskEngine.SettingSubsystem
 {
@@ -75,7 +77,7 @@ namespace TaskEngine.SettingSubsystem
         public String QualifiedName
         {
             get { return this.getValueAsString(tagQualifiedName); }
-            internal set { this.setValue(tagQualifiedName, value); }
+            set { this.setValue(tagQualifiedName, value); }
         }
         /// <summary>
         /// NT-Получить строку типа Хранилища
@@ -83,7 +85,7 @@ namespace TaskEngine.SettingSubsystem
         public string StorageType
         {
             get { return this.getValueAsString(tagStorageType); }
-            internal set { this.setValue(tagStorageType, value); }
+            set { this.setValue(tagStorageType, value); }
         }
 
         /// <summary>
@@ -272,6 +274,53 @@ namespace TaskEngine.SettingSubsystem
 
 
         #endregion
+
+        /// <summary>
+        /// NT-проверить что файл настроек читается и правильный.
+        /// Исключений не выбрасывает.
+        /// </summary>
+        /// <param name="filePath">Путь к файлу настроек</param>
+        /// <returns>Возвращает объект информации о хранилище или null</returns>
+        public static new TaskEngineSettings TryLoad(string filePath)
+        {
+            TaskEngineSettings result = null;
+            try
+            {
+                result = LoadFile(filePath, true);
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// NT-Загрузить файл настроек движка,
+        /// проверить значения настроек на допустимость.
+        /// </summary>
+        /// <param name="storagePath">Корневой каталог проекта данных движка</param>
+        /// <returns>Возвращает объект информации о хранилище.</returns>
+        public static new TaskEngineSettings Load(String storagePath)
+        {
+            String filePath = Path.Combine(storagePath, EngineSettingsBase.DescriptionFileName);
+            return LoadFile(filePath, true);
+        }
+        /// <summary>
+        /// NT-Загрузить файл настроек движка
+        /// </summary>
+        /// <param name="filePath">Путь к файлу настроек</param>
+        /// <param name="validate">Проверить значения на допустимость</param>
+        /// <re
+        public static new TaskEngineSettings LoadFile(string filePath, bool validate)
+        {
+            TaskEngineSettings si = new TaskEngineSettings();
+            si.LoadFromFile(filePath);
+            if (validate) si.Validate();
+            return si;
+        }
+
+
 
         /// <summary>
         /// NT-Получить текущую версию  сборки Движка.
