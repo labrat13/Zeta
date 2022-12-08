@@ -60,7 +60,7 @@ namespace UAMX_2
 
         ////TODO: в производном классе добавить подобные константы свойств
 
-        //всего ХЗ штук
+        //всего 8 штук
         #endregion
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace UAMX_2
         public const String DescriptionFileName = "settings.xml";
 
         /// <summary>
-        /// NR-Конструктор
+        /// NT-Конструктор
         /// </summary>
         public EngineSettingsBase(): base()
         {
@@ -83,6 +83,25 @@ namespace UAMX_2
             m_dictionary.Add(tagDescription, String.Empty);
             m_dictionary.Add(tagEngineClass, this.getEngineClass());
             m_dictionary.Add(tagLinkPrefix, "link");
+            //total ХЗ items
+            return;
+        }
+
+        /// <summary>
+        /// NT-Конструктор копирования
+        /// </summary>
+        public EngineSettingsBase(EngineSettingsBase copy) : base()
+        {
+            //fill dictionary with default items
+            m_dictionary.Clear();
+            m_dictionary.Add(tagStoragePath, copy.getValueAsStringCopy(tagStoragePath));
+            m_dictionary.Add(tagReadOnly, copy.getValueAsStringCopy(tagReadOnly));
+            m_dictionary.Add(tagEngineVersion, copy.getValueAsStringCopy(tagEngineVersion));
+            m_dictionary.Add(tagCreator, copy.getValueAsStringCopy(tagCreator));
+            m_dictionary.Add(tagTitle, copy.getValueAsStringCopy(tagTitle));
+            m_dictionary.Add(tagDescription, copy.getValueAsStringCopy(tagDescription));
+            m_dictionary.Add(tagEngineClass, copy.getValueAsStringCopy(tagEngineClass));
+            m_dictionary.Add(tagLinkPrefix, copy.getValueAsStringCopy(tagLinkPrefix));
             //total ХЗ items
             return;
         }

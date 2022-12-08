@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using TaskEngine.SettingSubsystem;
 
 namespace TaskEngine
 {
@@ -870,6 +871,25 @@ namespace TaskEngine
         {
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"id\" = {1});", TaskDbAdapter.TableTasks, elementId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
+        }
+        /// <summary>
+        /// NR-Fills the storage information object.
+        /// </summary>
+        /// <param name="info">The storage information object.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        internal void fillStorageInfo(TaskEngineSettings info)
+        {
+            //TODO: тут должны быть заполнены поля:
+            //info.TaskCount
+            //info.StoppedTaskCount
+            //info.FinishedTaskCount
+            //info.RunTaskCount
+            //info.NotesCount
+            //info.CategoriesCount
+            //info.TagsCount
+            //info.DeletedCount
+
+            throw new NotImplementedException();
         }
 
         #endregion

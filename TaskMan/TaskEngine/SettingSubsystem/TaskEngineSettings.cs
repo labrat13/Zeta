@@ -30,7 +30,7 @@ namespace TaskEngine.SettingSubsystem
         internal const string tagTagsCount = "TagsCount";//количество Тегов.
         internal const string tagDeletedCount = "DeletedCount";//количество удаленных элементов (в Корзине).
 
-        //всего 14 штук + свойства из базовых классов
+        //всего 14 штук + 8 свойств из базовых классов = 22
         #endregion
 
         /// <summary>
@@ -55,7 +55,30 @@ namespace TaskEngine.SettingSubsystem
 
             return;
         }
+        /// <summary>
+        /// NT- Конструктор копирования для <see cref="TaskEngineSettings"/> класса.
+        /// </summary>
+        /// <param name="copy">Образец для копирования.</param>
+        public TaskEngineSettings(TaskEngineSettings copy): base(copy)
+        {
+            //m_dictionary.Add(tagStoragePath, copy.getValueAsStringCopy(tagStoragePath));
+            this.m_dictionary.Add(tagStorageVersion, copy.getValueAsStringCopy(tagStorageVersion)); 
+            this.m_dictionary.Add(tagDatabaseSize, copy.getValueAsStringCopy(tagDatabaseSize));
+            this.m_dictionary.Add(tagQualifiedName, copy.getValueAsStringCopy(tagQualifiedName)); 
+            this.m_dictionary.Add(tagStorageType, copy.getValueAsStringCopy(tagStorageType)); 
+            this.m_dictionary.Add(tagDocsCount, copy.getValueAsStringCopy(tagDocsCount));
+            this.m_dictionary.Add(tagDocsSize, copy.getValueAsStringCopy(tagDocsSize));
+            this.m_dictionary.Add(tagTaskCount, copy.getValueAsStringCopy(tagTaskCount));
+            this.m_dictionary.Add(tagStoppedTaskCount, copy.getValueAsStringCopy(tagStoppedTaskCount));
+            this.m_dictionary.Add(tagFinishedTaskCount, copy.getValueAsStringCopy(tagFinishedTaskCount));
+            this.m_dictionary.Add(tagRunTaskCount, copy.getValueAsStringCopy(tagRunTaskCount));
+            this.m_dictionary.Add(tagNotesCount, copy.getValueAsStringCopy(tagNotesCount));
+            this.m_dictionary.Add(tagCategoriesCount, copy.getValueAsStringCopy(tagCategoriesCount));
+            this.m_dictionary.Add(tagTagsCount, copy.getValueAsStringCopy(tagTagsCount));
+            this.m_dictionary.Add(tagDeletedCount, copy.getValueAsStringCopy(tagDeletedCount));
 
+            return;
+        }
 
         #region *** Properties ***
 

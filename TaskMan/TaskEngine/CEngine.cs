@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TaskEngine.SettingSubsystem;
-using TaskEngine.SolutionSubsystem;
+using TaskEngine.StorageFileSubsystem;
 
 namespace TaskEngine
 {
@@ -31,7 +31,7 @@ namespace TaskEngine
         //-- запрос ид элементов по ид тега в таблице Tagged должен быть пустой.
         //- удалить элементы кроме тегов можно, если они не являются родительскими к другим элементам.
         //-- запрос списка элементов по parentid должен быть пустой.
-        
+        #region *** Constants and fields ***
         /// <summary>
         /// Флаг, что движок работает в режиме Только чтение.
         /// </summary>
@@ -53,7 +53,10 @@ namespace TaskEngine
         /// <summary>
         /// Менеджер файловой системы проекта данных движка
         /// </summary>
-        protected SolutionManager m_SolutionManager; //проперти для него пока не делаем, потом видно будет.        
+        protected StorageFolderManager m_FSM; //проперти для него пока не делаем, потом видно будет.
+
+        #endregion
+
         /// <summary>
         /// NR-Initializes a new instance of the <see cref="CEngine"/> class.
         /// </summary>
@@ -67,6 +70,7 @@ namespace TaskEngine
             //его надо инициализировать в Open()
             this.m_idManager = null;
             this.m_dbAdapter = null;
+            this.m_FSM = null;
 
 
             return;
@@ -100,11 +104,11 @@ namespace TaskEngine
             get { return m_settings; }
         }
         /// <summary>
-        /// Gets the solution manager
+        /// NT-Gets the Storage filesystem manager
         /// </summary>
-        internal SolutionManager Solution
+        internal StorageFolderManager FSM
         {
-            get { return this.m_SolutionManager; }
+            get { return this.m_FSM; }
         }
 
         /// <summary>
@@ -112,13 +116,13 @@ namespace TaskEngine
         /// </summary>
         public Version EngineVersion
         {
-            get { return StringUtility.getCurrentEngineVersion(); }
+            get { return this.m_settings.getCurrentEngineVersion(); }
         }
 
         #endregion
 
         #region *** Главные функции движка ***
-        //Использовать "static new" вместо "static" при переопределении статических функций в производных классах
+
         /// <summary>
         /// NT-Создать новое Хранилище
         /// </summary>
@@ -127,7 +131,7 @@ namespace TaskEngine
         /// <exception cref="System.Exception">
         /// Specified path is not found or Solution already exists
         /// </exception>
-        public static void SolutionCreate(String rootFolder, TaskEngineSettings si) //String title)
+        public static void StorageCreate(String rootFolder, TaskEngineSettings si)
         {
             ////0 проверить аргументы
             //if (!Directory.Exists(rootFolder)) throw new ArgumentException("Root folder must be exists", "rootFolder");
@@ -166,7 +170,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="solutionFolder">Путь к каталогу данных Хранилища</param>
         /// <param name="readOnly">Открыть только для чтения</param>
-        public void SolutionOpen(string solutionFolder, bool readOnly)
+        public void StorageOpen(string solutionFolder, bool readOnly)
         {
             ////1 инициализировать менеджер каталога проекта движка
             //this.m_StorageFolderManager = new ProjectFolderManager(this, storagePath);
@@ -213,7 +217,7 @@ namespace TaskEngine
         /// <summary>
         /// NT-Завершить сеанс работы движка
         /// </summary>
-        public void SolutionClose()
+        public void StorageClose()
         {
             ////1 close ID manager
             //this.m_IdManager = null;
@@ -240,54 +244,93 @@ namespace TaskEngine
         //Все равно эта статистика нужна только пользователю посмотреть сколько чего в Хранилище.
         //Отложу это на потом - если пригодится.
 
-        ///// <summary>
-        ///// NR-
-        ///// </summary>
-        //public virtual void StorageGetStatistics()
-        //{
+        /// <summary>
+        /// NR-Получить статистику Хранилища
+        /// </summary>
+        public TaskEngineSettings StorageGetInfo()
+        {
+            //copy all fields to new object 
+            TaskEngineSettings info = new TaskEngineSettings(this.m_settings);
+            //тут должны быть скопированы поля:
+            //info.EngineVersion           
+            //info.Creator 
+            //info.Title 
+            //info.Description 
+            //info.EngineClass 
+            //info.StoragePath - повторно будет  заполнено позже
+            //info.ReadOnly  - повторно будет  заполнено позже
+            //info.LinkPrefix 
+            //info.QualifiedName 
+            //info.StorageType 
+            //info.StorageVersionString
 
-        //    ////TODO: добавить код сбора статистики Хранилища здесь
-        //    throw new System.NotImplementedException();
-        //}
 
-        ///// <summary>
-        ///// NR-Оптимизация проекта - незакончено, неясно как сделать и как использовать потом
-        ///// </summary>
-        //public virtual void StorageOptimize()
-        //{
-        //    //CheckReadOnly();
-        //    ////TODO: добавить код оптимизаци Хранилища здесь
-        //    throw new System.NotImplementedException();
-        //}
+            //get from database:
+            this.m_dbAdapter.fillStorageInfo(info);
+            //тут должны быть заполнены поля:
+            //info.TaskCount
+            //info.StoppedTaskCount
+            //info.FinishedTaskCount
+            //info.RunTaskCount
+            //info.NotesCount
+            //info.CategoriesCount
+            //info.TagsCount
+            //info.DeletedCount
+
+
+            //get from FSM
+            this.m_FSM.fillStorageInfo(info);
+            //тут должны быть заполнены поля:
+            //info.DatabaseSize
+            //info.DocsCount
+            //info.DocsSize
+            //info.StoragePath
+            //info.ReadOnly
+
+            return info;
+        }
+
+        /// <summary>
+        /// NR-Оптимизация Хранилища - незакончено, неясно как сделать и как использовать потом
+        /// </summary>
+        /// <returns>Return True if success, False otherwise.</returns>
+        public bool StorageOptimize()
+        {
+            //CheckReadOnly();
+            ////TODO: добавить код оптимизаци Хранилища здесь
+            throw new System.NotImplementedException();
+        }
 
         //Функция очистки. Ни разу не пользовался, проще создать новый проект. Но для комплекта тут реализована.
-        ///// <summary>
-        ///// NFT-Очистить проект
-        ///// </summary>
-        ///// <returns>Return True if success, False otherwise</returns>
-        //public bool StorageClear()
-        //{
-        //    CheckReadOnly();
-        //    //Тут очищаем все таблицы БД кроме таблицы свойств, удаляем все архивы, пересчитываем статистику и вносим ее в БД.
-        //    //в результате должно получиься пустое Хранилище, сохранившее свойства - имя, квалифицированное имя, путь итп.
-        //    if (m_db.ClearDb() == true)
-        //    {
-        //        m_docController.Clear();
-        //        m_picController.Clear();
-        //        this.updateStorageInfo();//это будет выполнено также при закрытии менеджера.
-        //        return true;
-        //    }
-        //    else return false;
-        //}
+        /// <summary>
+        /// NR-Очистить текущее Хранилище
+        /// </summary>
+        /// <returns>Return True if success, False otherwise</returns>
+        public bool StorageClear()
+        {
+            //CheckReadOnly();
+            ////Тут очищаем все таблицы БД кроме таблицы свойств, удаляем все архивы, пересчитываем статистику и вносим ее в БД.
+            ////в результате должно получиься пустое Хранилище, сохранившее свойства - имя, квалифицированное имя, путь итп.
+            //if (m_db.ClearDb() == true)
+            //{
+            //    m_docController.Clear();
+            //    m_picController.Clear();
+            //    this.updateStorageInfo();//это будет выполнено также при закрытии менеджера.
+            //    return true;
+            //}
+            //else return false;
+
+            throw new System.NotImplementedException();
+        }
 
         /// <summary>
         /// NT-Проверить, что указанный каталог является каталогом Хранилища
         /// </summary>
         /// <param name="path">Путь к каталогу</param>
         /// <returns>Возвращает true, если каталог является каталогом Хранилища. В противном случае возвращает false</returns>
-        public static bool IsSolutionFolder(string path)
+        public static bool IsStorageFolder(string path)
         {
-            return SolutionManager.IsSolutionFolder(path);
+            return StorageFolderManager.IsStorageFolder(path);
         }
 
         /// <summary>

@@ -84,6 +84,20 @@ namespace  UAMX_2
         {
             this.m_dictionary[name] = Utility.StringFromDateTime(val);
         }
+        /// <summary>
+        /// NT-Sets the value as string copy.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="val">The value string.</param>
+        protected void setValueAsStringCopy(string name, string val)
+        {
+            if (String.IsNullOrEmpty(val))
+                this.m_dictionary[name] = val;
+            else
+                this.m_dictionary[name] = String.Copy(val);
+
+            return;
+        }
 
         protected UInt32 getValueAsUInt32(string name)
         {
@@ -100,6 +114,17 @@ namespace  UAMX_2
         protected string getValueAsString(string name)
         {
             return this.m_dictionary[name];
+        }
+        /// <summary>
+        /// NT-Gets the value as string copy.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        protected string getValueAsStringCopy(string name)
+        {
+            String s = this.m_dictionary[name];
+            if (String.IsNullOrEmpty(s)) return s;
+            else return String.Copy(s);
         }
         protected bool getValueAsBoolean(string name)
         {

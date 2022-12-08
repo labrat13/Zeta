@@ -58,11 +58,10 @@
     <Compile Include="SettingSubsystem\TaskEngineSettings.cs" />
     <Compile Include="UAMX2\EngineSettingsBase.cs" />
     <Compile Include="UAMX2\RecordBase.cs" />
-    <Compile Include="SolutionSubsystem\SolutionManager.cs" />
+    <Compile Include="StorageFileSubsystem\StorageFolderManager.cs" />
     <Compile Include="UAMX2\Utility.cs" />
     <Compile Include="Utilities\FileLink.cs" />
     <Compile Include="Utilities\StringUtility.cs" />
-    <Compile Include="Utilities\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GeneralDiagramClasses.cd" />
