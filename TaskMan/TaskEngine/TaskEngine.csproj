@@ -60,7 +60,7 @@
     <Compile Include="UAMX2\RecordBase.cs" />
     <Compile Include="StorageFileSubsystem\StorageFolderManager.cs" />
     <Compile Include="UAMX2\Utility.cs" />
-    <Compile Include="Utilities\FileLink.cs" />
+    <Compile Include="UAMX2\FileLink.cs" />
     <Compile Include="Utilities\StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>

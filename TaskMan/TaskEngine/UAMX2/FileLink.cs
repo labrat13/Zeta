@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace TaskEngine.Utilities
+namespace UAMX_2
 {
     /// <summary>
     /// NR-Класс представляет ссылку на файл, локальную или сетевую (UNC).
