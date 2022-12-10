@@ -503,6 +503,58 @@ namespace TaskEngine
         }
 
         #endregion
+
+        #region *** Функции Статистики ***        
+        /// <summary>
+        /// NT-Показать число элементов указанного типа и состояния
+        /// </summary>
+        /// <param name="ty">Тип элемента.</param>
+        /// <param name="sta">Состояние элемента.</param>
+        /// <returns>
+        /// Возвращает число элементов указанного типа и состояния, найденных в БД.
+        /// Возвращает -1 при ошибке или если в таблице нет записей.
+        /// </returns>
+        public int GetCountOfElements(EnumElementType ty, EnumElementState sta)
+        {
+            int t = ((int)ty);
+            int s = ((int)sta);
+            String query = String.Format("SELECT COUNT(\"id\") FROM \"{0}\" WHERE ((\"eltype\" = {1}) AND (\"elstate\" = {2}));", TaskDbAdapter.TableElements, t, s);
+            
+            return this.ExecuteScalar(query, this.m_Timeout);
+        }
+        /// <summary>
+        /// NT-Показать число элементов указанного состояния. Например, удаленных в корзину.
+        /// </summary>
+        /// <param name="sta">Состояние элемента.</param>
+        /// <returns>
+        /// Возвращает число элементов указанного состояния, найденных в БД.
+        /// Возвращает -1 при ошибке или если в таблице нет записей.
+        /// </returns>
+        public int GetCountOfElements(EnumElementState sta)
+        {
+            int s = ((int)sta);
+            String query = String.Format("SELECT COUNT(\"id\") FROM \"{0}\" WHERE (\"elstate\" = {1});", TaskDbAdapter.TableElements, s);
+
+            return this.ExecuteScalar(query, this.m_Timeout);
+        }
+        /// <summary>
+        /// NT-Показать число задач, имеющих указанное состояние задачи
+        /// </summary>
+        /// <param name="taskState">Состояние задачи.</param>
+        /// <returns>
+        /// Возвращает число задач указанного состояния, найденных в БД.
+        /// Возвращает -1 при ошибке или если в таблице нет записей.
+        /// </returns>
+        public int GetCountOfTasks(EnumTaskState taskState)
+        {
+            int s = ((int)taskState);
+            String query = String.Format("SELECT COUNT(\"id\") FROM \"{0}\" WHERE (\"state\" = {1});", TaskDbAdapter.TableTasks, s);
+
+            return this.ExecuteScalar(query, this.m_Timeout);
+        }
+
+        #endregion
+
         #region *** Elements table ***        
         /// <summary>
         /// NT-Возвращает максимальное значение идентификатора элемента или -1
@@ -872,12 +924,43 @@ namespace TaskEngine
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"id\" = {1});", TaskDbAdapter.TableTasks, elementId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
         }
+
+
+        #endregion
+
+        #region *** Выборка задач для Сегодня ***        
         /// <summary>
-        /// NR-Fills the storage information object.
+        /// NT-Gets the list of task identifier before date.
+        /// </summary>
+        /// <param name="d">Date before.</param>
+        /// <returns>Returns list of task element id.</returns>
+        public List<int> GetListOfTaskIdBeforeDate(DateTime d)
+        {
+            List<int> result = new List<int>();
+            //setup temporary command
+            String query = String.Format("SELECT \"id\" FROM \"{0}\" WHERE ((\"starttime\" < ?) AND ((\"state\" = {1}) OR (\"state\" = {2})));");
+            SQLiteCommand cmd = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+            cmd.CommandTimeout = this.m_Timeout;
+            cmd.Parameters.Add("a0", DbType.DateTime).Value = d;
+            //execute command
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+                while (reader.Read())
+                    result.Add(reader.GetInt32(0));
+            // close command and result set objects
+            reader.Close();
+
+            return result;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// NT-Fills the storage information object.
         /// </summary>
         /// <param name="info">The storage information object.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        internal void fillStorageInfo(TaskEngineSettings info)
+        /// <returns>Функция возвращает строку сообщения с информацией о возникших ошибках.</returns>
+        internal String fillStorageInfo(TaskEngineSettings info)
         {
             //TODO: тут должны быть заполнены поля:
             //info.TaskCount
@@ -889,10 +972,107 @@ namespace TaskEngine
             //info.TagsCount
             //info.DeletedCount
 
-            throw new NotImplementedException();
+            int DeletedCount = this.GetCountOfElements(EnumElementState.Deleted);
+    
+            int TagsCount = this.GetCountOfElements(EnumElementType.Tag, EnumElementState.Normal);
+            int TagsCountProtected = this.GetCountOfElements(EnumElementType.Tag, EnumElementState.ProtectedFromDelete);
+
+            int CategoryCount = this.GetCountOfElements(EnumElementType.Category, EnumElementState.Normal);
+            int CategoryCountProtected = this.GetCountOfElements(EnumElementType.Category, EnumElementState.ProtectedFromDelete);
+
+            int NotesCount = this.GetCountOfElements(EnumElementType.Note, EnumElementState.Normal);
+            int NotesCountProtected = this.GetCountOfElements(EnumElementType.Note, EnumElementState.ProtectedFromDelete);
+            //получить число задач, включая удаленные.
+            //TODO: Количество задач считается неправильно - нужно учитывать флаг удаления элемента, но он находится в другой таблице - Elements.
+            int AllTaskCount = this.GetRowCount(TaskDbAdapter.TableTasks, "id", this.m_Timeout);
+            int RunTaskCount = this.GetCountOfTasks(EnumTaskState.Run);
+            int PausedTaskCount = this.GetCountOfTasks(EnumTaskState.Paused);
+            int CompletedTaskCount = this.GetCountOfTasks(EnumTaskState.Completed);
+
+            //check values and write
+            List<String> titles = new List<string>();
+            if(DeletedCount < 0)
+            {
+                DeletedCount = 0;
+                titles.Add("DeletedCount");
+            }
+
+            if(TagsCount < 0)
+            {
+                TagsCount = 0;
+                titles.Add("TagsCount");
+            }
+            if (TagsCountProtected < 0)
+            {
+                TagsCountProtected = 0;
+                titles.Add("TagsCountProtected");
+            }
+
+            if (CategoryCount < 0)
+            {
+                CategoryCount = 0;
+                titles.Add("CategoryCount");
+            }
+            if (CategoryCountProtected < 0)
+            {
+                CategoryCountProtected = 0;
+                titles.Add("CategoryCountProtected");
+            }
+
+            if (NotesCount < 0)
+            {
+                NotesCount = 0;
+                titles.Add("NotesCount");
+            }
+            if (NotesCountProtected < 0)
+            {
+                NotesCountProtected = 0;
+                titles.Add("NotesCountProtected");
+            }
+
+            if (AllTaskCount < 0)
+            {
+                AllTaskCount = 0;
+                titles.Add("AllTaskCount");
+            }
+            if (RunTaskCount < 0)
+            {
+                RunTaskCount = 0;
+                titles.Add("RunTaskCount");
+            }
+            if (PausedTaskCount < 0)
+            {
+                PausedTaskCount = 0;
+                titles.Add("PausedTaskCount");
+            }
+            if (CompletedTaskCount < 0)
+            {
+                CompletedTaskCount = 0;
+                titles.Add("CompletedTaskCount");
+            }
+            //form message string
+            String msgText = "All counters is OK.";
+            if (titles.Count > 0)
+            {
+                String titlestr = String.Join(", ", titles.ToArray());
+                msgText = "Errors: wrong counters " + titlestr;
+            }
+            titles.Clear();//destroy list of titles
+            titles = null;
+            //write to info
+            info.DeletedCount = DeletedCount;
+            info.TagsCount = TagsCount + TagsCountProtected;
+            info.CategoriesCount = CategoryCount + CategoryCountProtected;
+            info.NotesCount = NotesCount + NotesCountProtected;
+            info.TaskCount = AllTaskCount;
+            info.StoppedTaskCount = PausedTaskCount;
+            info.FinishedTaskCount = CompletedTaskCount;
+            info.RunTaskCount = RunTaskCount;
+
+            return msgText;
         }
 
-        #endregion
+
 
         //Настройки закомментировал, чтобы не мешались, пока не используются.
         //#region *** Setting table function ***

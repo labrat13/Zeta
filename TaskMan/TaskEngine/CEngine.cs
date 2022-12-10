@@ -245,8 +245,11 @@ namespace TaskEngine
         //Отложу это на потом - если пригодится.
 
         /// <summary>
-        /// NR-Получить статистику Хранилища
+        /// NT-Получить статистику Хранилища
         /// </summary>
+        /// <remarks>
+        /// Важно: Функция открывает и закрывает адаптер БД.
+        /// </remarks>
         public TaskEngineSettings StorageGetInfo()
         {
             //copy all fields to new object 
@@ -266,12 +269,15 @@ namespace TaskEngine
 
 
             //get from database:
-            this.m_dbAdapter.fillStorageInfo(info);
+            this.m_dbAdapter.Open();
+            String errmsg = this.m_dbAdapter.fillStorageInfo(info);
+            this.m_dbAdapter.Close();
+            //TODO: строку сообщения об ошибках надо как-то показать пользователю
             //тут должны быть заполнены поля:
-            //info.TaskCount
-            //info.StoppedTaskCount
-            //info.FinishedTaskCount
-            //info.RunTaskCount
+            //info.TaskCount - TODO: сейчас включая задачи в Корзине.
+            //info.StoppedTaskCount - TODO: сейчас включая задачи в Корзине.
+            //info.FinishedTaskCount - TODO: сейчас включая задачи в Корзине.
+            //info.RunTaskCount - TODO: сейчас включая задачи в Корзине.
             //info.NotesCount
             //info.CategoriesCount
             //info.TagsCount
