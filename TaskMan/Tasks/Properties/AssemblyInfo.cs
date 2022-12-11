@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанных со сборкой.
 [assembly: AssemblyTitle("Tasks")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Менеджер Задач")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Селяков Павел")]
 [assembly: AssemblyProduct("Tasks")]
-[assembly: AssemblyCopyright("Copyright ©  2022")]
+[assembly: AssemblyCopyright("Copyright ©  2022 Селяков Павел")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

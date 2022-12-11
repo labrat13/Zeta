@@ -24,7 +24,7 @@ namespace TaskEngine.StorageFileSubsystem
         //      - 2023-01-01    - каталог материалов на дату 01012023.
 
 
-        #region Константы        
+        #region *** Константы ***        
         /// <summary>
         /// The document storage folder name
         /// </summary>
@@ -35,7 +35,7 @@ namespace TaskEngine.StorageFileSubsystem
         public const string DatabaseFileBackupExtension = ".backup";
         #endregion
 
-        #region Поля
+        #region *** Поля ***
         /// <summary>
         /// Обратная ссылка на движок
         /// </summary>
@@ -61,6 +61,11 @@ namespace TaskEngine.StorageFileSubsystem
         ///// Путь к файлу БД - для открытия БД и процедуры ее бекапа.
         ///// </summary>
         //private string m_DatabaseFilePath;
+
+        /// <summary>
+        /// Detector monopoly using
+        /// </summary>
+        private SingleAppInstance m_singleAppInstance;
         #endregion
 
         /// <summary>
@@ -75,8 +80,9 @@ namespace TaskEngine.StorageFileSubsystem
             this.m_MainFolderPath = null;
             //this.m_DocumentStorageFolderPath = null;
             //this.m_DatabaseFilePath = null;
-
+            this.m_singleAppInstance = new SingleAppInstance();
             //TODO: Add code here...
+
             return;
         }
 
@@ -93,7 +99,7 @@ namespace TaskEngine.StorageFileSubsystem
         }
 
 
-        #region Проперти
+        #region *** Проперти ***
 
         /// <summary>
         /// NT- Получить флаг готовности подсистемы.
@@ -137,7 +143,7 @@ namespace TaskEngine.StorageFileSubsystem
         /// </summary>
         public string DatabaseFilePath
         {
-            get { return getDatabaseFilePath( m_MainFolderPath); }
+            get { return getDatabaseFilePath(m_MainFolderPath); }
         }
         /// <summary>
         /// NT-Gets the database backup file path.
@@ -150,9 +156,9 @@ namespace TaskEngine.StorageFileSubsystem
         /// NT-Получить путь к каталогу документов Хранилища.
         /// </summary>
         public string DocumentStorageFolderPath
-        { 
-            get { return getDocumentFolder(this.m_MainFolderPath); } 
-        }   
+        {
+            get { return getDocumentFolder(this.m_MainFolderPath); }
+        }
 
         #endregion
 
@@ -195,7 +201,11 @@ namespace TaskEngine.StorageFileSubsystem
         {
             if (this.m_Ready == true)
             {
+
                 //TODO:  тут выполнить де-инициализацию подсистемы.
+                //single app instance object close
+                this.finalPreviousInstance();
+                //class members clear
                 this.m_ReadOnly = false;
                 this.m_MainFolderPath = null;
 
@@ -236,6 +246,7 @@ namespace TaskEngine.StorageFileSubsystem
         /// </summary>
         internal void DatabaseFileBackup()
         {
+
             //файл БД еще не открыт, адаптер БД не инициализирован.
             //получить путь к файлу БД
             String src = DatabaseFilePath;
@@ -250,7 +261,7 @@ namespace TaskEngine.StorageFileSubsystem
             File.Copy(src, dst);
             //set archive attribute to backup
             File.SetAttributes(dst, FileAttributes.ReadOnly | FileAttributes.NotContentIndexed | FileAttributes.Archive);
-            
+
             return;
         }
 
@@ -277,7 +288,7 @@ namespace TaskEngine.StorageFileSubsystem
             //проверяем наличие обязательных файлов и каталогов
             //проверяем наличие каталога документов
             p = getDocumentFolder(path);
-            if (!Directory.Exists(p)) 
+            if (!Directory.Exists(p))
                 return false;
             //проверяем наличие файла БД
             p = getDatabaseFilePath(path);//Path.Combine(path, SqliteDbAdapter.DatabaseFileName);
@@ -286,7 +297,7 @@ namespace TaskEngine.StorageFileSubsystem
             p = getStorageInfoFilePath(path);//Path.Combine(path, EngineSettings.DescriptionFileName);
             if (!File.Exists(p)) return false;
             //try load description file
-            if (TaskEngineSettings.TryLoad(p) == null) 
+            if (TaskEngineSettings.TryLoad(p) == null)
                 return false;
 
             return true;
@@ -325,7 +336,7 @@ namespace TaskEngine.StorageFileSubsystem
             FileInfo[] fis = dirInfo.GetFiles("*.*", SearchOption.AllDirectories);
             info.DocsCount = fis.Length;
             long len = 0;
-            foreach(FileInfo fi2 in fis)
+            foreach (FileInfo fi2 in fis)
                 len += fi2.Length;
             info.DocsSize = len;
 
@@ -362,6 +373,64 @@ namespace TaskEngine.StorageFileSubsystem
         {
             return Path.Combine(path, TaskEngineSettings.DescriptionFileName);
         }
+
+        #endregion
+
+        #region *** check previous instance ***
+        /// <summary>
+        /// NT-Вернуть true если Хранилище уже открыто другим процессом
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [is storage already open]; otherwise, <c>false</c>.
+        /// </returns>
+        internal bool checkPreviousInstance()
+        {
+            bool toExit = false;
+            try
+            {
+                //create locking file path and start locking
+                String lockfilepath = Path.Combine(this.m_MainFolderPath, SingleAppInstance.LockingFileName);
+                this.m_singleAppInstance.lockInstance(lockfilepath);
+                //check flags
+                if (this.m_singleAppInstance.hasDuplicate == true)
+                {
+                    toExit = true;//AnotherCopyOnWork
+                }
+                //if (this.m_singleAppInstance.needRestoreData() == true)
+                //{
+                //    toExit = false;
+                //    //needRestoreData
+                //}
+            }
+            catch (Exception e)
+            {
+                //Print Exception here
+
+                //to exit because errors
+                this.finalPreviousInstance();
+                toExit = true;
+            }
+
+            return toExit;
+        }
+
+        /// <summary>
+        /// NT-Освободить ресурсы детектора запущенных копий приложения.
+        /// </summary>
+        internal void finalPreviousInstance()
+        {
+            try
+            {
+                this.m_singleAppInstance.unlockInstance();
+            }
+            catch (Exception e)
+            {
+               //TODO:  Print Exception Without Engine(e);
+            }
+
+            return;
+        }
+
         #endregion
 
     }

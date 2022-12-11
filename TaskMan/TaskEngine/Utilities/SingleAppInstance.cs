@@ -20,26 +20,14 @@ namespace TaskEngine.Utilities
     //        boolean toExit = checkPreviousInstance();
     //        if (toExit == false)
     //        {
-
-    //            // 2. TODO: приложение не умеет перехватывать свое завершение, поэтому не
-    //            // обрабатывает закрытие окна, Ctrl+C / Break.
-    //            // Так что в лог не выводится запись, завершающая сеанс работы.
-    //            // БД поэтому реализована так, что постоянно закрыта.
-
     //            // 3. create engine object
     //            engine = new Engine();
     //            // 4. init engine object
     //            engine.Init();
 
     //            // 5. запускаем цикл приема запросов
-    //            // TODO: тут надо изменить схему запросов, так как выход из цикла запросов
-    //            // в старой схеме запускал процедуру выключения компьютера.
-    //            // А в Линукс все не так, тут теперь просто приложение закрывается.
-    //            // m_exitcode = m_engine.ProcessLoop();
-    //            // processExitCode(m_exitcode);
     //            engine.CommandLoop();
 
-    //            // TODO: разобраться с исключениями в engine.Exit()
     //            engine.Exit();
     //            engine = null;
 
@@ -47,10 +35,6 @@ namespace TaskEngine.Utilities
     //    }
     //    catch (Exception e)
     //    {
-    //        // если лог работоспособен, то вывести сообщение в него
-    //        // if(Engine.isLogReady(engine))
-    //        Engine.LoggingException(engine, e);
-
     //        // print exception
     //        PrintExceptionWithoutEngine(e);
     //    }
@@ -181,42 +165,62 @@ namespace TaskEngine.Utilities
         /// <summary>
         /// Флаг, что предыдущая копия приложения уже запущена.
         /// </summary>        
-        private static bool m_hasDuplicate = false;
+        private bool m_hasDuplicate;
 
         /// <summary>
         /// Флаг, что предыдущая копия не была завершена корректно, и требуется восстановить данные приложения.
         /// </summary>
-        private static bool m_needRestoreData = false;
+        private bool m_needRestoreData;
 
         /// <summary>
         /// Путь к файлу блокировки.
         /// </summary>
-        private static String m_lockFilePathName = null;
+        private String m_lockFilePathName;
 
         /// <summary>
         /// Locking object must be for entire session
         /// </summary>
-        private static FileStream m_lockFileStream = null;
+        private FileStream m_lockFileStream;
         #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SingleAppInstance"/> class.
+        /// </summary>
+        public SingleAppInstance()
+        {
+            this.m_hasDuplicate = false;
+            this.m_lockFilePathName=null;
+            this.m_lockFileStream = null;
+            this.m_needRestoreData = false;
+
+            return;
+        }
+        /// <summary>
+        /// Finalizes an instance of the <see cref="SingleAppInstance"/> class.
+        /// </summary>
+        ~SingleAppInstance()
+        {
+            unlockInstance();
+
+            return;
+        }
 
         #region *** Properties ***
 
         /// <summary>
         /// NT-Флаг, что предыдущая копия приложения уже запущена.
         /// </summary>
-        /// <returns>Возвращает значение флага.</returns>
-        public static bool hasDuplicate()
+        public bool hasDuplicate
         {
-            return m_hasDuplicate;
+            get { return m_hasDuplicate; }
         }
 
         /// <summary>
         /// NT-Флаг, что нет запущенных копий, но предыдущая копия не была завершена корректно, и требуется восстановить данные приложения.
         /// </summary>
-        /// <returns>Возвращает значение флага.</returns>
-        public static bool needRestoreData()
+        public bool needRestoreData
         {
-            return m_needRestoreData;
+            get { return m_needRestoreData; }
         }
 
         #endregion
@@ -227,7 +231,7 @@ namespace TaskEngine.Utilities
         /// NT-Try lock application before start application routine.
         /// </summary>
         /// <param name="lockfilepath">Locking file pathname.</param>
-        public static void lockInstance(String lockfilepath)
+        public  void lockInstance(String lockfilepath)
         {
             bool isAlreadyExists = false;
             bool isAlreadyLocked = false;
@@ -288,7 +292,7 @@ namespace TaskEngine.Utilities
         /// NT - Current thread sleep for 50..maxMs milliseconds.
         /// </summary>
         /// <param name="maxMs">Maximum amount of milliseconds for sleep.</param>
-        private static void waitRandom(int maxMs)
+        private void waitRandom(int maxMs)
         {
             Random r = new Random(Environment.TickCount);
             int ms = r.Next(50, maxMs);
@@ -301,7 +305,7 @@ namespace TaskEngine.Utilities
         /// <summary>
         /// NT-Unlock application at exit application routine.
         /// </summary>
-        public static void unlockInstance()
+        public void unlockInstance()
         {
             if (m_lockFileStream != null)
             {
@@ -314,6 +318,8 @@ namespace TaskEngine.Utilities
                 File.Delete(m_lockFilePathName);    
 
             m_lockFilePathName = null;
+            this.m_hasDuplicate = false;
+            this.m_needRestoreData = false;
 
             return;
         }

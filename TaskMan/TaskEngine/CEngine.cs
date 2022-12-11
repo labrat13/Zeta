@@ -63,16 +63,14 @@ namespace TaskEngine
         /// </summary>
         public CEngine()
         {
-
             //TODO: add code here
             //создать пакет настроек по умолчанию, пока для отладки.
             this.m_settings = new TaskEngineSettings();
             //ElementIdManager нельзя здесь инициализировать, так как ему нужна присоединенная БД.
             //его надо инициализировать в Open()
-            this.m_idManager = null;
-            this.m_dbAdapter = null;
-            this.m_FSM = null;
-
+            this.m_idManager = new CElementIdManager(0);
+            this.m_dbAdapter = new TaskDbAdapter(this);
+            this.m_FSM = new StorageFolderManager(this);
 
             return;
         }
@@ -125,7 +123,7 @@ namespace TaskEngine
         #region *** Главные функции движка ***
 
         /// <summary>
-        /// NT-Создать новое Хранилище
+        /// NR-Создать новое Хранилище
         /// </summary>
         /// <param name="rootFolder">The root path, must be exists!</param>
         /// <param name="title">The solution title.</param>
@@ -173,50 +171,68 @@ namespace TaskEngine
         /// <param name="readOnly">Открыть только для чтения</param>
         public void StorageOpen(string solutionFolder, bool readOnly)
         {
-            ////1 инициализировать менеджер каталога проекта движка
-            //this.m_StorageFolderManager = new ProjectFolderManager(this, storagePath);
-            ////2 загрузить настройки движка
-            //this.m_settings = EngineSettings.Load(storagePath);
+            //TODO: не забыть про эту схему ридонли, ее можно только тут внутри реализовать
             ////3 проверить что каталог доступен для записи
             ////если каталог проекта реально рид-онли или пользователь хочет рид-онли, или настройки проекта - рид-онли, то выставляем рид-онли флаг.
             //this.m_ReadOnly = (this.m_StorageFolderManager.isReadOnlyFolder() || readOnly || m_settings.ReadOnly);
-            ////4 инициализировать адаптер БД и подключиться к БД, даже в рид-онли режиме
-            ////String dbpath = Path.Combine(storagePath, PMEngine.DbAdapter.DatabaseFileName); 
-            //this.m_dbAdapter = PMEngine.DbAdapter.SetupDbAdapter(this.m_StorageFolderManager.DatabaseFilePath, this.m_ReadOnly);
-            ////5 инициализировать менеджер идентификаторов элементов
-            ////создать объект менеджера идентификаторов, он уже требует доступной БД для подсчета максимального существующего ИД
-            //this.m_IdManager = new МенеджерИдентификаторовЭлемента(this);
-            //this.m_IdManager.InitCacheValues();//init id manager - read db
-            ////TODO: добавить дополнительный код открытия движка менеджера проектов
-            ////загрузить префикс ссылок в классы
-            //String prefix = this.m_settings.LinkPrefix.Trim();
-            //ElementId.Init(prefix.Substring(0, 1));
-            //ElementLink.Init(prefix);
 
 
-            //init solution folder manager
-            String databaseFilePath = Path.Combine(solutionFolder, TaskDbAdapter.DatabaseFileName);
-
-            //инициализировать адаптер БД
-            this.m_dbAdapter = new TaskDbAdapter(this);
-            //открыть БД
-            String connectionString = TaskDbAdapter.CreateConnectionString(databaseFilePath, false);
+            //первым инициализировать менеджер файлов Хранилища.
+            this.m_FSM.Open(solutionFolder, readOnly);
+            //1.Хранилище открыто в рид-онли?
+            //- Если нет,проверить, не открыто ли уже кем-то Хранилище.
+            if (readOnly == false)
+            {
+                //- Если да, выбросить исключение с текстом
+                if (this.m_FSM.checkPreviousInstance() == true)
+                    throw new Exception(String.Format("Хранилище уже открыто другим процессом", solutionFolder));
+                //else pass
+            }
+            //2. Загрузить файл свойств Хранилища
+            //- если исключение, выбросить исключение при загрузке файла свойств Хранилища.
+            String p = this.m_FSM.StorageInfoFilePath;
+            TaskEngineSettings sett = TaskEngineSettings.TryLoad(p);
+            if (sett == null)
+                throw new Exception("Ошибка при загрузке Настроек Хранилища: файл " + p);
+            else
+                this.m_settings = sett;
+            //3. Если режим не ридонли, создать бекап-копию файла БД Хранилища.
+            //- если исключение, выбросить исключение при создании файла резервной копии БД Хранилища.
+            if(readOnly == false)
+            {
+                try
+                {
+                    this.m_FSM.DatabaseFileBackup();
+                        
+                        }
+                catch(Exception ex)
+                {
+                    throw new Exception("Ошибка при создании резервной копии БД Хранилища.", ex);
+                }
+            }
+            //else pass
+            //4. Инициализация менеджера лога
+            //- а его нет в проекте пока что.
+            //5. Инициализация FSM - это уже должно быть сделано ранее, точно ранее лога.
+            //6. инициализация БД Хранилища
+            String connectionString = TaskDbAdapter.CreateConnectionString(this.m_FSM.DatabaseFilePath, false);
             this.m_dbAdapter.Open(connectionString);
+            //7. Инициализация МенеджерИдентификаторовЭлементов
             //получить максимальный ид элемента из БД и инициализировать менеджер идентификаторов элементов. 
             int maxid = this.m_dbAdapter.GetElementsMaxId();
-            //если записей элементов нет, функция вернет -1, а нужен хотя бы 0.
-            if (maxid <= 0) maxid = 0;
-            //установить полученный ид как текущий в менеджере
-            this.m_idManager = new CElementIdManager(maxid);
             //close database
             this.m_dbAdapter.Close();
-
+            //- если записей элементов нет, функция вернет -1, а нужен хотя бы 0.
+            if (maxid <= 0) maxid = 0;
+            //- установить полученный ид как текущий в менеджере
+            this.m_idManager.internalSetCurrentId(maxid);
+            //8. я ничего не забыл ?
 
             return;
         }
 
         /// <summary>
-        /// NT-Завершить сеанс работы движка
+        /// NR-Завершить сеанс работы движка
         /// </summary>
         public void StorageClose()
         {
