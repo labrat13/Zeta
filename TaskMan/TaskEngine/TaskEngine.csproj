@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SubsystemBase.cs" />
     <Compile Include="EngineSubsystem\CElement.cs" />
     <Compile Include="EngineSubsystem\CElementIdManager.cs" />
     <Compile Include="CEngine.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="StorageFileSubsystem\StorageFolderManager.cs" />
     <Compile Include="UAMX2\Utility.cs" />
     <Compile Include="UAMX2\FileLink.cs" />
+    <Compile Include="Utilities\SingleAppInstance.cs" />
     <Compile Include="Utilities\StringUtility.cs" />
   </ItemGroup>
   <ItemGroup>

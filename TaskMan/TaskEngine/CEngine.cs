@@ -178,10 +178,10 @@ namespace TaskEngine
             //this.m_settings = EngineSettings.Load(storagePath);
             ////3 проверить что каталог доступен для записи
             ////если каталог проекта реально рид-онли или пользователь хочет рид-онли, или настройки проекта - рид-онли, то выставляем рид-онли флаг.
-            //this.m_ReadOnly = (this.m_StorageFolderManager.isReadOnly() || readOnly || m_settings.ReadOnly);
+            //this.m_ReadOnly = (this.m_StorageFolderManager.isReadOnlyFolder() || readOnly || m_settings.ReadOnly);
             ////4 инициализировать адаптер БД и подключиться к БД, даже в рид-онли режиме
             ////String dbpath = Path.Combine(storagePath, PMEngine.DbAdapter.DatabaseFileName); 
-            //this.m_dbAdapter = PMEngine.DbAdapter.SetupDbAdapter(this.m_StorageFolderManager.DbFilePath, this.m_ReadOnly);
+            //this.m_dbAdapter = PMEngine.DbAdapter.SetupDbAdapter(this.m_StorageFolderManager.DatabaseFilePath, this.m_ReadOnly);
             ////5 инициализировать менеджер идентификаторов элементов
             ////создать объект менеджера идентификаторов, он уже требует доступной БД для подсчета максимального существующего ИД
             //this.m_IdManager = new МенеджерИдентификаторовЭлемента(this);
@@ -353,7 +353,7 @@ namespace TaskEngine
             ////если каталог не существует, возвращаем  true
             //if (!Directory.Exists(storagePath)) return true;
             ////1) если Хранилище на диске только для чтения, то вернуть false.
-            //if (isReadOnly(storagePath)) return false;
+            //if (isReadOnlyFolder(storagePath)) return false;
             ////2) пробуем переименовать каталог Хранилища
             ////если получится, то каталог никем не используется. удалим каталог и вернем true.
             ////иначе будет выброшено исключение - перехватим его и вернем false

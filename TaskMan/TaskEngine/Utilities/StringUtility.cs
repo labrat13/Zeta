@@ -189,10 +189,11 @@ namespace TaskEngine
         #region *** File path functions ***
 
         /// <summary>
-        /// NT-Возвращает флаг что указанное Хранилище может обновляться.
+        /// NT-Возвращает флаг, что указанный каталог ТолькоДляЧтения.
         /// </summary>
-        /// <returns>Returns True if storage is ReadOnly, False otherwise</returns>
-        public static bool isReadOnly(String folderPath)
+        /// <param name="folderPath">Путь к проверяемому каталогу.</param>
+        /// <returns>Функция возвращает True, если каталог ReadOnly, False в противном случае.</returns>
+        public static bool isReadOnlyFolder(String folderPath)
         {
             bool ro = false;
             //generate test file name
@@ -234,6 +235,18 @@ namespace TaskEngine
             return;
         }
 
+        /// <summary>
+        /// NT-Deletes the file.
+        /// </summary>
+        /// <param name="filePath">File path.</param>
+        internal static void DeleteFile(string filePath)
+        {
+            //remove file atttributes
+            File.SetAttributes(filePath, FileAttributes.Normal);
+            File.Delete(filePath);
+
+            return;
+        }
 
         /// <summary>
         /// Массив запрещенных имен файлов - для коррекции имен файлов
@@ -410,6 +423,7 @@ namespace TaskEngine
 
             return;
         }
+
         #endregion
 
     }

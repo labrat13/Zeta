@@ -67,9 +67,10 @@ namespace TaskEngine
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDbAdapter"/> class.
         /// </summary>
-        /// <param name="engine">The engine.</param>
+        /// <param name="engine">The engine. Can be null, because not used now.</param>
         public TaskDbAdapter(CEngine engine):base()
         {
+            //Нигде эта ссылка не используется сейчас?
             this.m_Engine = engine;
 
             ////Настройки закомментировал, чтобы не мешались, пока не используются.
