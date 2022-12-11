@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 
-namespace Engine.Utility
+namespace TaskEngine.Utilities
 {
     #region Пример использования класса
     //public static void main(String[] args)

@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Globalization;
+using TaskEngine.Utilities;
 
 namespace TaskEngine
 {
