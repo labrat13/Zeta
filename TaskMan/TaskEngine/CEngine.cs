@@ -37,6 +37,10 @@ namespace TaskEngine
         /// Флаг, что движок работает в режиме Только чтение.
         /// </summary>
         protected bool m_ReadOnly;
+        /// <summary>
+        /// Флаг, что Движок открыт
+        /// </summary>
+        protected bool m_Ready;
 
         /// <summary>
         /// Менеджер уникальных идентификаторов элементов.
@@ -59,18 +63,18 @@ namespace TaskEngine
         #endregion
 
         /// <summary>
-        /// NR-Initializes a new instance of the <see cref="CEngine"/> class.
+        /// NT-Initializes a new instance of the <see cref="CEngine"/> class.
         /// </summary>
         public CEngine()
         {
-            //TODO: add code here
+            this.m_ReadOnly = false;
+            this.m_Ready = false;
             //создать пакет настроек по умолчанию, пока для отладки.
             this.m_settings = new TaskEngineSettings();
-            //ElementIdManager нельзя здесь инициализировать, так как ему нужна присоединенная БД.
-            //его надо инициализировать в Open()
             this.m_idManager = new CElementIdManager(0);
             this.m_dbAdapter = new TaskDbAdapter(this);
             this.m_FSM = new StorageFolderManager(this);
+            //TODO: add code here
 
             return;
         }
@@ -85,8 +89,16 @@ namespace TaskEngine
             get { return m_ReadOnly; }
         }
 
+        /// <summary>
+        /// Флаг, что Движок открыт.
+        /// </summary>
+        public bool Ready
+        {
+            get { return m_Ready; }
+        }
+
         //Хотя адаптер БД нужен, проперти на него вряд ли потребуется где-то вне сборки
-        //А в сборке он не должен быть виден снаружи Движка. 
+        //TODO: А в сборке он не должен быть виден снаружи Движка. 
         /// <summary>
         /// Адаптер БД для хранения элементов
         /// </summary>
@@ -132,6 +144,8 @@ namespace TaskEngine
         /// </exception>
         public static void StorageCreate(String rootFolder, TaskEngineSettings si)
         {
+            //тут флаг открытия движка или флаг ридонли не учитываются
+            
             ////0 проверить аргументы
             //if (!Directory.Exists(rootFolder)) throw new ArgumentException("Root folder must be exists", "rootFolder");
             //if (si == null) throw new ArgumentNullException("si", "Engine settings object cannot be null");
@@ -169,14 +183,18 @@ namespace TaskEngine
         /// </summary>
         /// <param name="solutionFolder">Путь к каталогу данных Хранилища</param>
         /// <param name="readOnly">Открыть только для чтения</param>
+        /// <remarks>
+        /// Аргумент readOnly влияет следующим образом:
+        /// - Хранилище открывается в режиме  read-only тогда, когда ФайлНастроекХранилища имеет атрибут read-only, 
+        /// либо в ФайлНастроекХранилища свойство ReadOnly имеет значение True, либо аргумент readOnly данной функции 
+        /// имеет значение True. В этом случае резервное копирование БД не производится, внести какие-либо изменения в Хранилище нельзя.
+        /// В других случаях Хранилище открываается в нормальном режиме, выполняется резервное копирование БД, изменения в Хранилище сохраняются.
+        /// </remarks>
         public void StorageOpen(string solutionFolder, bool readOnly)
         {
-            //TODO: не забыть про эту схему ридонли, ее можно только тут внутри реализовать
-            ////3 проверить что каталог доступен для записи
-            ////если каталог проекта реально рид-онли или пользователь хочет рид-онли, или настройки проекта - рид-онли, то выставляем рид-онли флаг.
-            //this.m_ReadOnly = (this.m_StorageFolderManager.isReadOnlyFolder() || readOnly || m_settings.ReadOnly);
-
-
+            //заблокировать вызов функции, если Движок уже открыл любое Хранилище.
+            if(this.m_Ready == true)
+                throw new Exception("Движок уже используется.");
             //первым инициализировать менеджер файлов Хранилища.
             this.m_FSM.Open(solutionFolder, readOnly);
             //1.Хранилище открыто в рид-онли?
@@ -185,27 +203,37 @@ namespace TaskEngine
             {
                 //- Если да, выбросить исключение с текстом
                 if (this.m_FSM.checkPreviousInstance() == true)
-                    throw new Exception(String.Format("Хранилище уже открыто другим процессом", solutionFolder));
+                    throw new Exception("Хранилище уже открыто другим процессом: " + solutionFolder);
                 //else pass
             }
             //2. Загрузить файл свойств Хранилища
             //- если исключение, выбросить исключение при загрузке файла свойств Хранилища.
+            //- если каталог проекта реально рид-онли или пользователь хочет рид-онли, или настройки проекта - рид-онли, то выставляем рид-онли флаг.
+            //   управление readOnly: аргумент ИЛИ флаг из ФайлНастроекХранилища ИЛИ атрибут ФайлНастроекХранилища
+            //    и если любой из этих трех флагов установлен, хранилище открывается только для чтения.
+            //    Об этом надо предупредить пользователя после открытия Хранилища! Но это не ошибка, поэтому продолжаем работу.
             String p = this.m_FSM.StorageInfoFilePath;
+            bool infoFileReadOnly = StringUtility.isReadOnlyFile(p);
+            //try load storage info file
             TaskEngineSettings sett = TaskEngineSettings.TryLoad(p);
             if (sett == null)
                 throw new Exception("Ошибка при загрузке Настроек Хранилища: файл " + p);
             else
                 this.m_settings = sett;
+            //readonly processing for each subsystem
+            bool finalReadOnly = readOnly || infoFileReadOnly || this.m_settings.ReadOnly;
+            this.m_ReadOnly = finalReadOnly;
+            this.m_FSM.ReadOnly = finalReadOnly;
+
             //3. Если режим не ридонли, создать бекап-копию файла БД Хранилища.
             //- если исключение, выбросить исключение при создании файла резервной копии БД Хранилища.
-            if(readOnly == false)
+            if (finalReadOnly == false)
             {
                 try
                 {
                     this.m_FSM.DatabaseFileBackup();
-                        
-                        }
-                catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     throw new Exception("Ошибка при создании резервной копии БД Хранилища.", ex);
                 }
@@ -215,7 +243,7 @@ namespace TaskEngine
             //- а его нет в проекте пока что.
             //5. Инициализация FSM - это уже должно быть сделано ранее, точно ранее лога.
             //6. инициализация БД Хранилища
-            String connectionString = TaskDbAdapter.CreateConnectionString(this.m_FSM.DatabaseFilePath, false);
+            String connectionString = TaskDbAdapter.CreateConnectionString(this.m_FSM.DatabaseFilePath, finalReadOnly);
             this.m_dbAdapter.Open(connectionString);
             //7. Инициализация МенеджерИдентификаторовЭлементов
             //получить максимальный ид элемента из БД и инициализировать менеджер идентификаторов элементов. 
@@ -227,31 +255,42 @@ namespace TaskEngine
             //- установить полученный ид как текущий в менеджере
             this.m_idManager.internalSetCurrentId(maxid);
             //8. я ничего не забыл ?
+            //установить флаг открытия движка
+            this.m_Ready = true;
 
             return;
         }
 
         /// <summary>
-        /// NR-Завершить сеанс работы движка
+        /// NT-Завершить сеанс работы движка
         /// </summary>
         public void StorageClose()
         {
-            ////1 close ID manager
-            //this.m_IdManager = null;
-            ////2 close database adapter
-            //this.m_dbAdapter.Disconnect();
-            //this.m_dbAdapter = null;
-            ////3 настройки сейчас сохранять надо сразу после изменения, а не в конце работы движка.
-            ////поэтому тут их не сохраняем.
-            ////4 менеджер каталога сейчас ничего не содержит такого, чтобы его специально закрывать.
-            //this.m_ReadOnly = false;
-            //this.m_StorageFolderManager = null;
-            ////TODO: добавить дополнительный код закрытия движка менеджера проектов
+            //не все объекты можно сбросить или восстановить?
+            //TODO: проверить что объекты здесь восстанавливаются до начального состояния
 
-            //return;
+            //настройки надо записать в файл настроек перед закрытием, но только если движок был открыт правильно.
+            if (this.m_Ready == true)
+            {
+                //TODO: add setting version and statistic info before saving
+                this.m_settings.Store();
+            }
+            //settings not clearable, create new object
+            this.m_settings = new TaskEngineSettings();
 
-
+            //Close database if opened
             this.m_dbAdapter.Close();
+            //reset ID manager
+            this.m_idManager.internalSetCurrentId(0);
+            //reset FSM object
+            this.FSM.Close();
+            //reset readOnly flag
+            this.m_ReadOnly = false;
+
+            //clear Ready flag
+            this.m_Ready = false;
+
+            return;
         }
 
         //TODO: сбор статистики Хранилища - как это унифицировать?
@@ -269,6 +308,9 @@ namespace TaskEngine
         /// </remarks>
         public TaskEngineSettings StorageGetInfo()
         {
+            //check ready
+            this.ThrowIfNotReady();
+
             //copy all fields to new object 
             TaskEngineSettings info = new TaskEngineSettings(this.m_settings);
             //тут должны быть скопированы поля:
@@ -319,7 +361,11 @@ namespace TaskEngine
         /// <returns>Return True if success, False otherwise.</returns>
         public bool StorageOptimize()
         {
-            //CheckReadOnly();
+            //check ready
+            this.ThrowIfNotReady();
+            //check read-only
+            this.ThrowIfReadOnly();
+
             ////TODO: добавить код оптимизаци Хранилища здесь
             throw new System.NotImplementedException();
         }
@@ -331,7 +377,11 @@ namespace TaskEngine
         /// <returns>Return True if success, False otherwise</returns>
         public bool StorageClear()
         {
-            //CheckReadOnly();
+            //check ready
+            this.ThrowIfNotReady();
+            //check read-only
+            this.ThrowIfReadOnly();
+
             ////Тут очищаем все таблицы БД кроме таблицы свойств, удаляем все архивы, пересчитываем статистику и вносим ее в БД.
             ////в результате должно получиься пустое Хранилище, сохранившее свойства - имя, квалифицированное имя, путь итп.
             //if (m_db.ClearDb() == true)
@@ -364,6 +414,8 @@ namespace TaskEngine
         /// Возвращает false, если удалить Хранилище не удалось по какой-либо причине.</returns>
         public static bool StorageDelete(String storagePath)
         {
+
+
             //Этот код только для примера, его нужно переписать
             throw new System.NotImplementedException();//TODO: add code here
 
@@ -405,15 +457,6 @@ namespace TaskEngine
 
 
         /// <summary>
-        /// NR-зарегистрировать единственный экземпляр. Если это не так, вернуть False.
-        /// </summary>
-        /// <param name="uid">Уникальный строковый идентификатор приложения</param>
-        public virtual bool RegisterSingleInstance(string uid)
-        {
-            throw new System.NotImplementedException();//TODO: add code here
-        }
-
-        /// <summary>
         /// NR-Получить текстовое представление движка для отладки
         /// </summary>
         /// <returns></returns>
@@ -435,10 +478,20 @@ namespace TaskEngine
         /// <summary>
         /// NT-Проверить режим read-only и выбросить исключение
         /// </summary>
-        protected void ThrowReadOnly()
+        protected void ThrowIfReadOnly()
         {
             if (this.m_ReadOnly == true)
-                throw new Exception("Error: Writing to read-only storage!");
+                throw new Exception("Ошибка: Попытка записи в Хранилище, открытое только для чтения!");
+        }
+        /// <summary>
+        /// NT-Выбросить исключение, если Хранилище не открыто.
+        /// </summary>
+        /// <exception cref="System.Exception">ОшибкаЖ:Хранилище не открыто!</exception>
+        protected void ThrowIfNotReady()
+        {
+            //check ready flag
+            if (this.m_Ready != true)
+                throw new Exception("ОшибкаЖ:Хранилище не открыто!");
         }
 
         #endregion

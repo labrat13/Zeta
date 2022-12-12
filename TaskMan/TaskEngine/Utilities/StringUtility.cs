@@ -189,6 +189,19 @@ namespace TaskEngine.Utilities
         #region *** File path functions ***
 
         /// <summary>
+        /// NT-проверить что файл имеет атрибут Read-only.
+        /// </summary>
+        /// <param name="p">Путь к файлу</param>
+        /// <returns>
+        ///  Функция возвращает <c>true</c> если файл имеет атрибут read only; в противном случае функция возвращает <c>false</c>.
+        /// </returns>
+        public static bool isReadOnlyFile(string p)
+        {
+            FileAttributes f = File.GetAttributes(p);
+            return (f & FileAttributes.ReadOnly) != 0;
+        }
+
+        /// <summary>
         /// NT-Возвращает флаг, что указанный каталог ТолькоДляЧтения.
         /// </summary>
         /// <param name="folderPath">Путь к проверяемому каталогу.</param>
@@ -381,50 +394,6 @@ namespace TaskEngine.Utilities
 
         #endregion
 
-        #region Forms functions
-        /// <summary>
-        /// Цвет для выделения неправильного веб-имени  фоном текстового поля
-        /// </summary>
-        internal static Color InvalidWebNameBackColor = Color.MistyRose;
-
-        /// <summary>
-        /// NT-Установить цвет ошибки для текстбокса и вывести сообщение в строке состояния, если она есть
-        /// </summary>
-        /// <param name="wrong">Флаг ошибки</param>
-        /// <param name="control">Текстбокс</param>
-        /// <param name="statusBarLabel">Объект текста на статусбаре или null</param>
-        /// <param name="statusMsg">Сообщение об ошибке, для статусбара</param>
-        public static void colorizeWrongTextBox(bool wrong, TextBox control, ToolStripStatusLabel statusBarLabel, String statusMsg)
-        {
-            Color backColor;
-            //set error color for textbox
-            if (wrong)
-            {
-                backColor = InvalidWebNameBackColor;
-
-            }
-            else
-            {
-                backColor = Color.White;
-            }
-            control.BackColor = backColor;
-
-            //set new status bar message text
-            String msg;
-            if (statusBarLabel != null)
-            {
-                if (wrong)
-                    msg = statusMsg;
-                else
-                    msg = String.Empty;
-                //set new text
-                statusBarLabel.Text = msg;
-            }
-
-            return;
-        }
-
-        #endregion
 
     }
 }

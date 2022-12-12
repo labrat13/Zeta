@@ -1,7 +1,6 @@
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\Tasks.exe
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\Tasks.pdb
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.csproj.AssemblyReference.cache
-C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Form1.resources
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Properties.Resources.resources
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.csproj.GenerateResource.cache
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.csproj.CoreCompileInputs.cache
@@ -9,3 +8,11 @@ C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.exe
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.pdb
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.AboutBoxForm.resources
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.MainForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\Tasks.exe.config
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\TaskEngine.dll
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.dll
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\TaskEngine.pdb
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.pdb
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.xml
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.csproj.CopyComplete

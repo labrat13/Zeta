@@ -112,9 +112,10 @@ namespace TaskEngine.StorageFileSubsystem
         /// <summary>
         /// NT- Получить флаг ReadOnly подсистемы.
         /// </summary>
-        public bool IsReadOnly
+        public bool ReadOnly
         {
             get { return this.m_ReadOnly; }
+            set { this.m_ReadOnly = value; }
         }
 
         /// <summary>
@@ -169,6 +170,15 @@ namespace TaskEngine.StorageFileSubsystem
         public override string ToString()
         {
             return String.Format("Ready={0}; ReadOnly={1}; Dir={2}", this.m_Ready, this.m_ReadOnly, this.m_MainFolderPath);
+        }
+
+        /// <summary>
+        /// NT-Проверить режим read-only и выбросить исключение
+        /// </summary>
+        protected void ThrowIfReadOnly()
+        {
+            if (this.m_ReadOnly == true)
+                throw new Exception("Error: Writing to read-only storage!");
         }
 
         /// <summary>
@@ -246,7 +256,8 @@ namespace TaskEngine.StorageFileSubsystem
         /// </summary>
         internal void DatabaseFileBackup()
         {
-
+            //check read-only
+            this.ThrowIfReadOnly();
             //файл БД еще не открыт, адаптер БД не инициализирован.
             //получить путь к файлу БД
             String src = DatabaseFilePath;
@@ -312,6 +323,8 @@ namespace TaskEngine.StorageFileSubsystem
             return StringUtility.isReadOnlyFolder(this.m_MainFolderPath);
         }
 
+
+
         /// <summary>
         /// NT-Fills the storage information object.
         /// </summary>
@@ -342,6 +355,7 @@ namespace TaskEngine.StorageFileSubsystem
 
             return;
         }
+
 
 
         #region *** Вспомогательные функции ***
@@ -430,6 +444,8 @@ namespace TaskEngine.StorageFileSubsystem
 
             return;
         }
+
+
 
         #endregion
 
