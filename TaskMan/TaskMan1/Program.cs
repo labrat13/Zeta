@@ -29,7 +29,7 @@ namespace TaskMan1
             //Если значение = пустая строка, то в XML-файл выводится сокращенный тег, а не тройка начало-значение-конец.
             //Сокращенный же тег этот класс не читает, выбрасывает исключение "Тег не найден".
             
-            TaskEngine.SettingSubsystem.TaskEngineSettings s = new TaskEngine.SettingSubsystem.TaskEngineSettings();
+            TaskEngine.SettingSubsystem.TaskStorageInfo s = new TaskEngine.SettingSubsystem.TaskStorageInfo();
             s.Creator = "Test";
             s.Description = "Description as test";
             s.LinkPrefix = "litest";
@@ -40,7 +40,7 @@ namespace TaskMan1
             s.Store(filePath);
 
             //load
-            TaskEngine.SettingSubsystem.TaskEngineSettings readed = TaskEngineSettings.TryLoad(filePath);
+            TaskEngine.SettingSubsystem.TaskStorageInfo readed = TaskStorageInfo.TryLoad(filePath);
             if (readed != null)
             {
                 Console.WriteLine(readed.Title);

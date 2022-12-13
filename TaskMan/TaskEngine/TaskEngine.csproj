@@ -56,7 +56,7 @@
     <Compile Include="DatabaseSubsystem\TaskDbAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatabaseSubsystem\SqliteDbAdapter.cs" />
-    <Compile Include="SettingSubsystem\TaskEngineSettings.cs" />
+    <Compile Include="SettingSubsystem\TaskStorageInfo.cs" />
     <Compile Include="UAMX2\EngineSettingsBase.cs" />
     <Compile Include="UAMX2\RecordBase.cs" />
     <Compile Include="StorageFileSubsystem\StorageFolderManager.cs" />

@@ -54,7 +54,7 @@ namespace TaskEngine
         /// <summary>
         /// Объект настроек проекта движка
         /// </summary>
-        protected TaskEngineSettings m_settings;
+        protected TaskStorageInfo m_settings;
         /// <summary>
         /// Менеджер файловой системы проекта данных движка
         /// </summary>
@@ -70,7 +70,7 @@ namespace TaskEngine
             this.m_ReadOnly = false;
             this.m_Ready = false;
             //создать пакет настроек по умолчанию, пока для отладки.
-            this.m_settings = new TaskEngineSettings();
+            this.m_settings = new TaskStorageInfo();
             this.m_idManager = new CElementIdManager(0);
             this.m_dbAdapter = new TaskDbAdapter(this);
             this.m_FSM = new StorageFolderManager(this);
@@ -110,7 +110,7 @@ namespace TaskEngine
         /// <summary>
         /// Объект настроек проекта движка
         /// </summary>
-        public TaskEngineSettings Settings
+        public TaskStorageInfo Settings
         {
             get { return m_settings; }
         }
@@ -142,7 +142,7 @@ namespace TaskEngine
         /// <exception cref="System.Exception">
         /// Specified path is not found or Solution already exists
         /// </exception>
-        public static void StorageCreate(String rootFolder, TaskEngineSettings si)
+        public static void StorageCreate(String rootFolder, TaskStorageInfo si)
         {
             //тут флаг открытия движка или флаг ридонли не учитываются
             
@@ -215,7 +215,7 @@ namespace TaskEngine
             String p = this.m_FSM.StorageInfoFilePath;
             bool infoFileReadOnly = StringUtility.isReadOnlyFile(p);
             //try load storage info file
-            TaskEngineSettings sett = TaskEngineSettings.TryLoad(p);
+            TaskStorageInfo sett = TaskStorageInfo.TryLoad(p);
             if (sett == null)
                 throw new Exception("Ошибка при загрузке Настроек Хранилища: файл " + p);
             else
@@ -270,13 +270,15 @@ namespace TaskEngine
             //TODO: проверить что объекты здесь восстанавливаются до начального состояния
 
             //настройки надо записать в файл настроек перед закрытием, но только если движок был открыт правильно.
-            if (this.m_Ready == true)
+            if ((this.m_Ready == true) && (this.m_ReadOnly == false))
             {
-                //TODO: add setting version and statistic info before saving
-                this.m_settings.Store();
+                //add setting version and statistic info before saving
+                TaskStorageInfo sett = this.StorageGetInfo();
+                sett.upgradeStorageVersion();
+                sett.Store();
             }
             //settings not clearable, create new object
-            this.m_settings = new TaskEngineSettings();
+            this.m_settings = new TaskStorageInfo();
 
             //Close database if opened
             this.m_dbAdapter.Close();
@@ -293,26 +295,19 @@ namespace TaskEngine
             return;
         }
 
-        //TODO: сбор статистики Хранилища - как это унифицировать?
-        //- как словарь ключ-значение
-        //- каждый элемент словаря - представлен текстовым ключом-названием и цифровым значением
-        //- или текстовым названием, типом данных и значением?
-        //Все равно эта статистика нужна только пользователю посмотреть сколько чего в Хранилище.
-        //Отложу это на потом - если пригодится.
-
         /// <summary>
         /// NT-Получить статистику Хранилища
         /// </summary>
         /// <remarks>
         /// Важно: Функция открывает и закрывает адаптер БД.
         /// </remarks>
-        public TaskEngineSettings StorageGetInfo()
+        public TaskStorageInfo StorageGetInfo()
         {
             //check ready
             this.ThrowIfNotReady();
 
             //copy all fields to new object 
-            TaskEngineSettings info = new TaskEngineSettings(this.m_settings);
+            TaskStorageInfo info = new TaskStorageInfo(this.m_settings);
             //тут должны быть скопированы поля:
             //info.EngineVersion           
             //info.Creator 

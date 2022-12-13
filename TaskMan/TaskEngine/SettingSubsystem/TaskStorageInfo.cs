@@ -10,8 +10,16 @@ namespace TaskEngine.SettingSubsystem
     /// NT-Это класс, управляющий файлом настроек Хранилища.
     /// </summary>
     /// <seealso cref="UAMX_2.EngineSettingsBase" />
-    public class TaskEngineSettings : UAMX_2.EngineSettingsBase
+    public class TaskStorageInfo : UAMX_2.EngineSettingsBase
     {
+        //Свойство StorageVersion описыввет Версию Хранилища как версию содержмого Хранилища.
+        //Независимо от того, были изменения в данных или нет, в конце каждого сеанса работы с Хранилищем
+        //его ВерсияХранилища должна быть увеличена на 1. Для этого используется объект Version, 
+        //в нем поля Major и Minor и Revision - пока не определены, они должны бы отражать устройство данных Хранилища.
+        // И они в сеансе работы с Хранилищем не изменяются с момента создания Хранилища.
+        //А поле Version.Build должно отражать версию данных Хранилища как версию содержмого Хранилища.
+        //и оно инкрементируется при каждом закрытии Хранилища, кроме внезапного завершения процесса.
+
 
         #region Константы названий тегов словаря
         //названия свойств писать только латинскими буквами!
@@ -34,38 +42,38 @@ namespace TaskEngine.SettingSubsystem
         #endregion
 
         /// <summary>
-        /// NR-Initializes a new instance of the <see cref="TaskEngineSettings"/> class.
+        /// NT-Initializes a new instance of the <see cref="TaskStorageInfo"/> class.
         /// </summary>
-        public TaskEngineSettings():base()
+        public TaskStorageInfo() : base()
         {
-            this.m_dictionary.Add(tagStorageVersion , "1.0.0.0");  //TODO: узнать что это такое и где брать
-            this.m_dictionary.Add(tagDatabaseSize , "0");           
-             this.m_dictionary.Add(tagQualifiedName , ""); //TODO: узнать что это такое и где брать
-            this.m_dictionary.Add(tagStorageType , ""); //TODO: узнать что это такое и где брать
-            this.m_dictionary.Add(tagDocsCount , "0");
-            this.m_dictionary.Add(tagDocsSize , "0");
-            this.m_dictionary.Add(tagTaskCount , "0");
-            this.m_dictionary.Add(tagStoppedTaskCount , "0");
-            this.m_dictionary.Add(tagFinishedTaskCount , "0");
-            this.m_dictionary.Add(tagRunTaskCount , "0");
-            this.m_dictionary.Add(tagNotesCount , "0");
+            this.m_dictionary.Add(tagStorageVersion, "1.0.0.0");  //TODO: узнать что это такое и где брать
+            this.m_dictionary.Add(tagDatabaseSize, "0");
+            this.m_dictionary.Add(tagQualifiedName, ""); //TODO: узнать что это такое и где брать
+            this.m_dictionary.Add(tagStorageType, ""); //TODO: узнать что это такое и где брать
+            this.m_dictionary.Add(tagDocsCount, "0");
+            this.m_dictionary.Add(tagDocsSize, "0");
+            this.m_dictionary.Add(tagTaskCount, "0");
+            this.m_dictionary.Add(tagStoppedTaskCount, "0");
+            this.m_dictionary.Add(tagFinishedTaskCount, "0");
+            this.m_dictionary.Add(tagRunTaskCount, "0");
+            this.m_dictionary.Add(tagNotesCount, "0");
             this.m_dictionary.Add(tagCategoriesCount, "0");
-            this.m_dictionary.Add(tagTagsCount , "0");
-            this.m_dictionary.Add(tagDeletedCount , "0");
+            this.m_dictionary.Add(tagTagsCount, "0");
+            this.m_dictionary.Add(tagDeletedCount, "0");
 
             return;
         }
         /// <summary>
-        /// NT- Конструктор копирования для <see cref="TaskEngineSettings"/> класса.
+        /// NT- Конструктор копирования для <see cref="TaskStorageInfo"/> класса.
         /// </summary>
         /// <param name="copy">Образец для копирования.</param>
-        public TaskEngineSettings(TaskEngineSettings copy): base(copy)
+        public TaskStorageInfo(TaskStorageInfo copy) : base(copy)
         {
             //m_dictionary.Add(tagStoragePath, copy.getValueAsStringCopy(tagStoragePath));
-            this.m_dictionary.Add(tagStorageVersion, copy.getValueAsStringCopy(tagStorageVersion)); 
+            this.m_dictionary.Add(tagStorageVersion, copy.getValueAsStringCopy(tagStorageVersion));
             this.m_dictionary.Add(tagDatabaseSize, copy.getValueAsStringCopy(tagDatabaseSize));
-            this.m_dictionary.Add(tagQualifiedName, copy.getValueAsStringCopy(tagQualifiedName)); 
-            this.m_dictionary.Add(tagStorageType, copy.getValueAsStringCopy(tagStorageType)); 
+            this.m_dictionary.Add(tagQualifiedName, copy.getValueAsStringCopy(tagQualifiedName));
+            this.m_dictionary.Add(tagStorageType, copy.getValueAsStringCopy(tagStorageType));
             this.m_dictionary.Add(tagDocsCount, copy.getValueAsStringCopy(tagDocsCount));
             this.m_dictionary.Add(tagDocsSize, copy.getValueAsStringCopy(tagDocsSize));
             this.m_dictionary.Add(tagTaskCount, copy.getValueAsStringCopy(tagTaskCount));
@@ -84,16 +92,24 @@ namespace TaskEngine.SettingSubsystem
 
         //TODO:  добавить проперти для новых свойств        
         /// <summary>
-        /// NR-Gets the storage version string.
+        /// NT-Gets the storage version.
         /// </summary>
         /// <value>
-        /// The storage version string.
+        /// The storage version.
         /// </value>
-        public String StorageVersionString
+        public Version StorageVersion
         {
-            get { return this.m_dictionary[tagStorageVersion];  }
-            internal set { this.m_dictionary[tagStorageVersion] = value; }
+            get
+            {
+                string s = this.m_dictionary[tagStorageVersion];
+                return new Version(s);
+            }
+            internal set
+            {
+                this.m_dictionary[tagStorageVersion] = value.ToString();
+            }
         }
+
         /// <summary>
         /// NR-Получить квалифицированое имя Хранилища
         /// </summary>
@@ -304,9 +320,9 @@ namespace TaskEngine.SettingSubsystem
         /// </summary>
         /// <param name="filePath">Путь к файлу настроек</param>
         /// <returns>Возвращает объект информации о хранилище или null</returns>
-        public static new TaskEngineSettings TryLoad(string filePath)
+        public static new TaskStorageInfo TryLoad(string filePath)
         {
-            TaskEngineSettings result = null;
+            TaskStorageInfo result = null;
             try
             {
                 result = LoadFile(filePath, true);
@@ -324,7 +340,7 @@ namespace TaskEngine.SettingSubsystem
         /// </summary>
         /// <param name="storagePath">Корневой каталог проекта данных движка</param>
         /// <returns>Возвращает объект информации о хранилище.</returns>
-        public static new TaskEngineSettings Load(String storagePath)
+        public static new TaskStorageInfo Load(String storagePath)
         {
             String filePath = Path.Combine(storagePath, EngineSettingsBase.DescriptionFileName);
             return LoadFile(filePath, true);
@@ -335,15 +351,28 @@ namespace TaskEngine.SettingSubsystem
         /// <param name="filePath">Путь к файлу настроек</param>
         /// <param name="validate">Проверить значения на допустимость</param>
         /// <re
-        public static new TaskEngineSettings LoadFile(string filePath, bool validate)
+        public static new TaskStorageInfo LoadFile(string filePath, bool validate)
         {
-            TaskEngineSettings si = new TaskEngineSettings();
+            TaskStorageInfo si = new TaskStorageInfo();
             si.LoadFromFile(filePath);
             if (validate) si.Validate();
             return si;
         }
 
+        /// <summary>
+        /// NT-Обновить версию Хранилища: увеличить значение поля Build на 1 перед закрытием Хранилища.
+        /// </summary>
+        /// <returns>Функция возвращает предыдущее значение поля Build.</returns>
+        public int upgradeStorageVersion()
+        {
+            string s = this.m_dictionary[tagStorageVersion];
+            Version v = new Version(s);
+            int oldBuild = v.Build;
+            Version t = new Version(v.Major, v.Minor, oldBuild + 1, v.Revision);
+            this.m_dictionary[tagStorageVersion] = t.ToString();
 
+            return oldBuild;
+        }
 
         /// <summary>
         /// NT-Получить текущую версию  сборки Движка.

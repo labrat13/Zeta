@@ -962,7 +962,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="info">The storage information object.</param>
         /// <returns>Функция возвращает строку сообщения с информацией о возникших ошибках.</returns>
-        internal String fillStorageInfo(TaskEngineSettings info)
+        internal String fillStorageInfo(TaskStorageInfo info)
         {
             //TODO: тут должны быть заполнены поля:
             //info.TaskCount

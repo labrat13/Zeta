@@ -20,6 +20,7 @@ namespace Tasks
         /// Название окна приложения
         /// </summary>
         private const String MainFormTitle = "Менеджер Задач";
+
         /// <summary>
         /// Task engine object
         /// </summary>
@@ -79,10 +80,15 @@ namespace Tasks
         /// NT-Показать диалог сообщения об ошибке.
         /// </summary>
         /// <param name="text">Текст сообщения</param>
-        /// <param name="title">Заголовок окна сообщения</param>
+        /// <param name="title">Заголовок окна сообщения. Если title = String.Empty или null, используется MainForm.MainFormTitle.</param>
         private void showErrorMessageBox(string title, string text)
         {
-            MessageBox.Show(this, text, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            String title1 = title;
+            if(String.IsNullOrEmpty(title))
+                title1 = MainForm.MainFormTitle;
+            MessageBox.Show(this, text, title1, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            return;
         }
 
 
@@ -109,7 +115,7 @@ namespace Tasks
 
         #region *** Form Load Closing Closed handlers ***        
         /// <summary>
-        /// NR-Handles the Load event of the MainForm control.
+        /// NT-Handles the Load event of the MainForm control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -123,8 +129,7 @@ namespace Tasks
             this.setEnableMainMenuItems(false);
             //очистить дерево элементов и вставить надпись, что Хранилище не загружено.
             this.setEmptyTreeItems();
-            //update form
-            Application.DoEvents();
+            //форма еще не показана на экране, обновлять ее незачем.
             //load default storage?
             this.loadDefaultStorage();
 
@@ -145,7 +150,8 @@ namespace Tasks
         #endregion
 
 
-        #region *** Обработчики меню Справка главного меню ***        
+        #region *** Обработчики меню Справка главного меню ***   
+        
         /// <summary>
         /// NT-Handles the Click event of the просмотрСправкиToolStripMenuItem control.
         /// </summary>
@@ -155,7 +161,8 @@ namespace Tasks
         {
             //операции показа справки по программе
             this.showHelp();
-        }//TODO: Add code here
+        }
+
         /// <summary>
         /// NT-Handles the Click event of the оПрограммеToolStripMenuItem control.
         /// </summary>
@@ -172,10 +179,12 @@ namespace Tasks
         #endregion
 
         #region *** Обработчики меню Файл главного меню ***
+
         private void toolStripMenuItem_CreateStorage_Click(object sender, EventArgs e)
         {
             //TODO: Add code here
         }
+        
         /// <summary>
         /// NT-Handles the Click event of the toolStripMenuItem_OpenStorage control.
         /// </summary>
@@ -195,6 +204,7 @@ namespace Tasks
 
             return;
         }
+
         /// <summary>
         /// NT-Handles the Click event of the toolStripMenuItem_CloseStorage control.
         /// </summary>
@@ -206,14 +216,11 @@ namespace Tasks
             //TODO: Add code here
         }
 
-
-
         private void toolStripMenuItem_Exit_Click(object sender, EventArgs e)
         {
             this.Close();
             //вся обработка завершения работы должна проводиться в Form.Closing()
         }
-
 
         #endregion
 
@@ -230,7 +237,7 @@ namespace Tasks
             }
             catch(Exception ex)
             {
-                this.showErrorMessageBox("Файл справки приложения не найден или поврежден.", ex.ToString());
+                this.showErrorMessageBox(null, "Файл справки приложения не найден или поврежден.\n" + ex.ToString());
             }
         }
 
@@ -260,7 +267,7 @@ namespace Tasks
             //проверить что каталог Хранилища существует - это здесь только потому, что надо вывести сообщение о неправильном пути в настройке AutoStartStorage.
             if (!Directory.Exists(storagePath))
             {
-                this.showErrorMessageBox("Ошибка", "Хранилище из настройки AutoStartStorage не найдено: " + storagePath);
+                this.showErrorMessageBox(null, "Хранилище из настройки AutoStartStorage не найдено:\n" + storagePath);
                 return;
             }
             //открыть указанное Хранилище
@@ -279,13 +286,13 @@ namespace Tasks
                 //1 проверить что каталог Хранилища существует
                 if (!Directory.Exists(storagePath))
                 {
-                    this.showErrorMessageBox("Ошибка", "Хранилище не найдено: " + storagePath);
+                    this.showErrorMessageBox(null, "Хранилище не найдено:\n" + storagePath);
                     return;
                 }
                 //2 проверить что это каталог Хранилища
                 if (!CEngine.IsStorageFolder(storagePath))
                 {
-                    this.showErrorMessageBox("Ошибка", "Указанный каталог не является Хранилищем или Хранилище повреждено: " + storagePath);
+                    this.showErrorMessageBox(null, "Указанный каталог не является Хранилищем или Хранилище повреждено:\n" + storagePath);
                     return;
                 }
                 //3 определить readOnly для каталога Хранилища
@@ -332,7 +339,7 @@ namespace Tasks
                 //set status text
                 this.setStatusBarText("Ошибка открытия Хранилища", true);
                 //show exception info
-                this.showErrorMessageBox(ex.GetType().ToString(), ex.ToString());
+                this.showErrorMessageBox(null, "Ошибка: Исключение " + ex.GetType().ToString() + "\n" + ex.ToString());
             }
             finally
             {

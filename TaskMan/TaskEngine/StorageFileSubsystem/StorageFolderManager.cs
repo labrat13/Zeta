@@ -231,7 +231,7 @@ namespace TaskEngine.StorageFileSubsystem
         /// NT-Создать каталог Хранилища
         /// </summary>
         /// <param name="storageFolderPath">Путь к еще не существующему каталогу Хранилища</param>
-        internal static void CreateStorageFolder(string storageFolderPath, TaskEngineSettings sett)
+        internal static void CreateStorageFolder(string storageFolderPath, TaskStorageInfo sett)
         {
             //check folder is not exists
             if (Directory.Exists(storageFolderPath))
@@ -308,7 +308,7 @@ namespace TaskEngine.StorageFileSubsystem
             p = getStorageInfoFilePath(path);//Path.Combine(path, EngineSettings.DescriptionFileName);
             if (!File.Exists(p)) return false;
             //try load description file
-            if (TaskEngineSettings.TryLoad(p) == null)
+            if (TaskStorageInfo.TryLoad(p) == null)
                 return false;
 
             return true;
@@ -329,7 +329,7 @@ namespace TaskEngine.StorageFileSubsystem
         /// NT-Fills the storage information object.
         /// </summary>
         /// <param name="info">the storage information object</param>
-        internal void fillStorageInfo(TaskEngineSettings info)
+        internal void fillStorageInfo(TaskStorageInfo info)
         {
             //TODO: тут должны быть заполнены поля:
             //info.DatabaseSize
@@ -385,7 +385,7 @@ namespace TaskEngine.StorageFileSubsystem
         /// <returns>Функция возвращает собранный путь.</returns>
         private static string getStorageInfoFilePath(string path)
         {
-            return Path.Combine(path, TaskEngineSettings.DescriptionFileName);
+            return Path.Combine(path, TaskStorageInfo.DescriptionFileName);
         }
 
         #endregion
