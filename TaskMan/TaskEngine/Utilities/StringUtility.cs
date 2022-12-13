@@ -394,6 +394,22 @@ namespace TaskEngine.Utilities
 
         #endregion
 
+        /// <summary>
+        /// NT-вычислить процент завершенности процесса
+        /// </summary>
+        /// <param name="full">значение для 100%</param>
+        /// <param name="part">значение текущее</param>
+        /// <returns>Функция возвращает степерь завершенности процесса в процентах</returns>
+        public static int getIntPercent(int full, int part)
+        {
+            Double f = (Double)full;
+            Double p = (Double)part;
+            Double result = (p / f) * 100.0d;// or 100*p / f;
+
+            return (Int32)result;
+        }
+
+
 
     }
 }

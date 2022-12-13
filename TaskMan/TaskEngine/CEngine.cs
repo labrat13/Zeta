@@ -135,49 +135,42 @@ namespace TaskEngine
         #region *** Главные функции движка ***
 
         /// <summary>
-        /// NR-Создать новое Хранилище
+        /// NT-Создать новое Хранилище
         /// </summary>
         /// <param name="rootFolder">The root path, must be exists!</param>
-        /// <param name="title">The solution title.</param>
+        /// <param name="si">Заполненный объект свойств создаваемого Хранилища.</param>
         /// <exception cref="System.Exception">
         /// Specified path is not found or Solution already exists
         /// </exception>
         public static void StorageCreate(String rootFolder, TaskStorageInfo si)
         {
             //тут флаг открытия движка или флаг ридонли не учитываются
-            
-            ////0 проверить аргументы
-            //if (!Directory.Exists(rootFolder)) throw new ArgumentException("Root folder must be exists", "rootFolder");
-            //if (si == null) throw new ArgumentNullException("si", "Engine settings object cannot be null");
-            //if (String.IsNullOrEmpty(si.Title)) throw new ArgumentException("Project title cannot be empty");
-            ////1 создать каталог данных проекта
-            //String prjSafeName = Utility.makeSafeFolderName(si.Title);
-            //String prjFolder = Path.Combine(rootFolder, prjSafeName);
-            ////  записать правильный путь к проекту в переданный объект EngineSettings
-            //si.StoragePath = prjFolder;
-            //ProjectFolderManager.CreateProjectFolder(prjFolder, si);
-            ////не буду тут открывать движок, его некуда возвращать. Потом откроем соответствующей фукцией.
-            //////2 открыть движок, чтобы проверить и записать данные если нужно.
-            //////3 закрыть движок
 
-            ////TODO: добавить дополнительный код создания движка менеджера проектов
-
-
+            if (si == null) 
+                throw new ArgumentNullException("si", "Объект свойств Хранилища не должен быть null.");
             //если корневой каталог не существует, выдать сообщение об ошибке.
             if (!Directory.Exists(rootFolder))
-                throw new Exception("Specified path is not found");
+                throw new Exception("Родительский каталог для Хранилища не найден.");
+            //4 проверить, что папка доступна для записи
+            //  Если нет, вывести сообщение - ошибку об этом и выйти
+            if (StringUtility.isReadOnlyFolder(rootFolder) == true)
+                throw new Exception("Родительский каталог для Хранилища недоступен для записи.");
+            //title
+            if (String.IsNullOrEmpty(si.Title))
+                throw new Exception(String.Format("Неправильное название Хранилища: \"{0}\"", StringUtility.GetStringTextNull(si.Title)));
             string homeFolder = Path.Combine(rootFolder, StringUtility.MakeSafeTitle(si.Title));
             //если каталог уже существует, выдать сообщение
             if (Directory.Exists(homeFolder))
-                throw new Exception("Solution already exists");
+                throw new Exception("Solution already exists: " + homeFolder );
+            //  записать правильный путь к проекту в переданный объект EngineSettings
+            si.StoragePath = homeFolder;
             //создать каталог и всю файловую систему в нем.
-            Directory.CreateDirectory(homeFolder);
-            String databaseFilePath = Path.Combine(homeFolder, TaskDbAdapter.DatabaseFileName);
-            TaskDbAdapter.CreateNewDatabase(null, databaseFilePath);
-            //TODO: Добавить в БД фиксированные элементы
+            StorageFolderManager.CreateStorageFolder(homeFolder, si);
+            //TODO: Добавить в БД фиксированные элементы - здесь или в StorageFolderManager.CreateStorageFolder или при создании БД?
 
             return;
         }
+
         /// <summary>
         /// NT-Открыть Хранилище
         /// </summary>

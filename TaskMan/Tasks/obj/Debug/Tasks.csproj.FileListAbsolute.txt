@@ -16,3 +16,6 @@ C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.pdb
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.xml
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\System.Data.SQLite.dll.config
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.csproj.CopyComplete
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.StorageShortInfoForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\ЛицензионноеСоглашение.txt
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\Справка.chm

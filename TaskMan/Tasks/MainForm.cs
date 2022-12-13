@@ -8,7 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using TaskEngine;
+using TaskEngine.SettingSubsystem;
 using TaskEngine.Utilities;
+using Tasks.Forms;
 
 namespace Tasks
 {
@@ -45,73 +47,7 @@ namespace Tasks
         }
         #endregion
 
-        /// <summary>
-        /// NT-Установить новый текст статусбара
-        /// </summary>
-        /// <param name="text">Новый текст статусбара</param>
-        /// <param name="updateForm">Обновить вид формы?</param>
-        private void setStatusBarText(string text, bool updateForm)
-        {
-            this.toolStripStatusLabel_MainStatus.Text = text;
-            if(updateForm)
-                Application.DoEvents();
 
-            return;
-        }
-        /// <summary>
-        /// NT-Изменить заголовок главной формы
-        /// </summary>
-        /// <param name="storage">Название проекта.</param>
-        /// <param name="updateForm">Обновить вид формы?.</param>
-        /// <returns></returns>
-        private void setMainFormTitle(String storage, bool updateForm)
-        {
-            if (String.IsNullOrEmpty(storage))
-                this.Text = MainForm.MainFormTitle; // FormTitle;
-            else this.Text = storage + " - " + MainFormTitle; //FormTitle;
-                                                              //update form view?
-            if (updateForm)
-                Application.DoEvents();
-
-            return;
-        }
-
-        /// <summary>
-        /// NT-Показать диалог сообщения об ошибке.
-        /// </summary>
-        /// <param name="text">Текст сообщения</param>
-        /// <param name="title">Заголовок окна сообщения. Если title = String.Empty или null, используется MainForm.MainFormTitle.</param>
-        private void showErrorMessageBox(string title, string text)
-        {
-            String title1 = title;
-            if(String.IsNullOrEmpty(title))
-                title1 = MainForm.MainFormTitle;
-            MessageBox.Show(this, text, title1, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            return;
-        }
-
-
-
-
-        /// <summary>
-        /// NT-включить-выключить пункты меню при открытии-закрытии Хранилища
-        /// </summary>
-        /// <param name="opened">True если Хранилище открыто, False если закрыто.</param>
-        private void setEnableMainMenuItems(bool opened)
-        {
-            //если проект открыт, выключить одни пункты и включить другие
-            //если проект закрыт, наоборот.
-            this.toolStripMenuItem_CreateStorage.Enabled = !opened; //disable
-            this.toolStripMenuItem_OpenStorage.Enabled = !opened; //disable
-            this.toolStripMenuItem_CloseStorage.Enabled = opened; //enable
-            this.правкаToolStripMenuItem.Enabled = opened; //enable
-            //меню Инструменты-Настройки должны быть всегда доступны?
-            //TODO: другие пункты меню Инструменты зависят от состояния проекта? Но их пока нет.
-            //меню Справка всегда доступно.
-
-            return;
-        }
 
         #region *** Form Load Closing Closed handlers ***        
         /// <summary>
@@ -182,9 +118,11 @@ namespace Tasks
 
         private void toolStripMenuItem_CreateStorage_Click(object sender, EventArgs e)
         {
+            this.createStorage();
             //TODO: Add code here
         }
-        
+
+
         /// <summary>
         /// NT-Handles the Click event of the toolStripMenuItem_OpenStorage control.
         /// </summary>
@@ -194,7 +132,7 @@ namespace Tasks
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Укажите каталог открываемого Хранилища";
-            fbd.RootFolder = Environment.SpecialFolder.MyDocuments;
+            fbd.RootFolder = Environment.SpecialFolder.MyComputer;
             fbd.ShowNewFolderButton = false;
             if (fbd.ShowDialog() != DialogResult.OK)
                 return;
@@ -225,6 +163,102 @@ namespace Tasks
         #endregion
 
         /// <summary>
+        /// NT-Установить новый текст статусбара
+        /// </summary>
+        /// <param name="text">Новый текст статусбара</param>
+        /// <param name="updateForm">Обновить вид формы?</param>
+        private void setStatusBarText(string text, bool updateForm)
+        {
+            this.toolStripStatusLabel_MainStatus.Text = text;
+            if (updateForm)
+                Application.DoEvents();
+
+            return;
+        }
+        /// <summary>
+        /// NT-Изменить заголовок главной формы
+        /// </summary>
+        /// <param name="storage">Название проекта.</param>
+        /// <param name="updateForm">Обновить вид формы?.</param>
+        /// <returns></returns>
+        private void setMainFormTitle(String storage, bool updateForm)
+        {
+            if (String.IsNullOrEmpty(storage))
+                this.Text = MainForm.MainFormTitle; // FormTitle;
+            else this.Text = storage + " - " + MainFormTitle; //FormTitle;
+                                                              //update form view?
+            if (updateForm)
+                Application.DoEvents();
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-Показать диалог сообщения об ошибке.
+        /// </summary>
+        /// <param name="text">Текст сообщения</param>
+        /// <param name="title">Заголовок окна сообщения. Если title = String.Empty или null, используется MainForm.MainFormTitle.</param>
+        private void showErrorMessageBox(string title, string text)
+        {
+            String title1 = title;
+            if (String.IsNullOrEmpty(title))
+                title1 = MainForm.MainFormTitle;
+            MessageBox.Show(this, text, title1, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-включить-выключить пункты меню при открытии-закрытии Хранилища
+        /// </summary>
+        /// <param name="opened">True если Хранилище открыто, False если закрыто.</param>
+        private void setEnableMainMenuItems(bool opened)
+        {
+            //если проект открыт, выключить одни пункты и включить другие
+            //если проект закрыт, наоборот.
+            this.toolStripMenuItem_CreateStorage.Enabled = !opened; //disable
+            this.toolStripMenuItem_OpenStorage.Enabled = !opened; //disable
+            this.toolStripMenuItem_CloseStorage.Enabled = opened; //enable
+            this.правкаToolStripMenuItem.Enabled = opened; //enable
+            //меню Инструменты-Настройки должны быть всегда доступны?
+            //TODO: другие пункты меню Инструменты зависят от состояния проекта? Но их пока нет.
+            //меню Справка всегда доступно.
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-изменить название формы чтобы оно отражало прогресс процесса
+        /// </summary>
+        /// <param name="operation">Название процесса или String.Empty или  null если процесс не выполняется</param>
+        /// <param name="storageTitle">Название открытого Хранилища или String.Empty или  null если Хранилище не используется.</param>
+        /// <param name="srcFolderPath">Путь к папке исходных файлов или String.Empty или  null если процесс не использует исходный каталог.</param>
+        /// <param name="percent">значение прогресса в процентах. Укажите значение -1 если прогресс не используется.</param>
+        private void SetFormTitle(String operation, String storageTitle, String srcFolderPath, int percent)
+        {
+            string result = "";
+            //сформировать строку вида 38% Добавление TXT - КнигиЛибрусек - С:\temp\librusek1\1
+            //если operation  = null, вывести только название приложения.
+            if (String.IsNullOrEmpty(operation))
+                result = Application.ProductName;
+            else
+            {
+                result = result + operation;
+
+                if (!String.IsNullOrEmpty(storageTitle))
+                    result = result + " - " + storageTitle;
+                if (!String.IsNullOrEmpty(srcFolderPath))
+                    result = result + " - " + srcFolderPath;
+                if (percent > -1)
+                    result = percent.ToString() + "% " + result;
+            }
+            //set form title
+            this.Text = result;
+            Application.DoEvents();
+        }
+
+
+        /// <summary>
         /// NT-Показать файл справки
         /// </summary>
         private void showHelp()
@@ -250,6 +284,81 @@ namespace Tasks
             this.treeView_TaskTreeView.Nodes.Clear();
             this.treeView_TaskTreeView.Nodes.Add("Нет элементов.");
             this.treeView_TaskTreeView.EndUpdate();
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-Creates the storage.
+        /// </summary>
+        private void createStorage()
+        {
+            //Этот код создания Хранилища кривой, наскоро надерган из других проектов.
+            //TODO: Процесс создания Хранилища надо перепроектировать заново и реализовать правильно.
+            //А сейчас он только для тестирования написан.
+            
+            try
+            {
+                String storageRootFolder = "";
+                TaskStorageInfo info = null;
+                //указать каталог для Хранилища
+                FolderBrowserDialog fb = new FolderBrowserDialog();
+                fb.RootFolder = Environment.SpecialFolder.MyComputer;
+                fb.ShowNewFolderButton = true;
+                //if (!String.IsNullOrEmpty(m_storageFolder) && Directory.Exists(m_storageFolder))
+                //    fb.SelectedPath = m_storageFolder;
+                fb.Description = "Укажите родительский каталог для создаваемого Хранилища";
+                if (fb.ShowDialog() != DialogResult.OK) return;
+                storageRootFolder = fb.SelectedPath;
+                fb = null;
+                //1 показать форму свойств Хранилища, чтобы пользователь мог заполнить свойства Хранилища.
+                //2 если форма закрыта с Cancel, выйти с сообщением, что создание Хранилища отменено пользователем.
+                //  Если форма закрыта с ОК, продолжить
+                info = new TaskStorageInfo();
+                //info.Creator =  TODO: прописать эти поля в настройках, чтобы пользователь мог их изменить.
+                info.Title = "Введите название здесь";
+                info.Description = "Введите описание здесь";
+                info.QualifiedName = "Задачи";
+                info.StorageType = "Задачи";
+                //info.StoragePath = storageRootFolder;//TODO: уточнить
+                //
+                StorageCreateForm f = new StorageCreateForm();
+                f.Info = info;
+                DialogResult dr = f.ShowDialog(this);
+                if (dr != DialogResult.OK)
+                {
+                    //show information MessageBox
+                    MessageBox.Show(this, "Создание Хранилища отменено пользователем.", MainForm.MainFormTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                //3 из формы извлечь корневую папку, а из прочих полей формы собрать TaskStorageInfo объект.
+                TaskStorageInfo info2 = f.Info;
+
+                //4 проверить, что папка доступна для записи
+                //  Если нет, вывести сообщение - ошибку об этом и выйти
+                if (StringUtility.isReadOnlyFolder(storageRootFolder) == true)
+                {
+                    this.showErrorMessageBox(null, "Ошибка: Указанный для размещения Хранилища каталог недоступен:\n" + storageRootFolder);
+                    return;
+                }
+                //5 вызвать функцию создания Хранилища.
+                CEngine.StorageCreate(storageRootFolder, info2);
+                //6 вроде все...
+                //TODO: можно сразу и открыть это хранилище по всем этим данным.
+                //А лучше -открыть отдельным вызовом в вызывающей функции.
+            }
+            catch(Exception ex)
+            {
+                //set status text
+                this.setStatusBarText("Ошибка создания Хранилища", true);
+                //show exception info
+                this.showErrorMessageBox(null, "Ошибка: Исключение " + ex.GetType().ToString() + "\n" + ex.ToString());
+            }
+            finally
+            {
+
+
+            }
 
             return;
         }

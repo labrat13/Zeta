@@ -46,6 +46,18 @@
     <Compile Include="AboutBoxForm.Designer.cs">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\StorageCreateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StorageCreateForm.Designer.cs">
+      <DependentUpon>StorageCreateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StorageShortInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StorageShortInfoForm.Designer.cs">
+      <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormUtility.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -57,6 +69,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBoxForm.resx">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StorageShortInfoForm.resx">
+      <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -80,11 +95,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Справка.chm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme-Tasks.txt" />
     <Content Include="ToDo-Tasks.txt" />
     <Content Include="Version-Tasks.txt" />
+    <Content Include="ЛицензионноеСоглашение.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TaskEngine\TaskEngine.csproj">
