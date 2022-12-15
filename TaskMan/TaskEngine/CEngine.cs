@@ -32,11 +32,14 @@ namespace TaskEngine
         //-- запрос ид элементов по ид тега в таблице Tagged должен быть пустой.
         //- удалить элементы кроме тегов можно, если они не являются родительскими к другим элементам.
         //-- запрос списка элементов по parentid должен быть пустой.
+
         #region *** Constants and fields ***
+
         /// <summary>
         /// Флаг, что движок работает в режиме Только чтение.
         /// </summary>
         protected bool m_ReadOnly;
+
         /// <summary>
         /// Флаг, что Движок открыт
         /// </summary>
@@ -46,6 +49,7 @@ namespace TaskEngine
         /// Менеджер уникальных идентификаторов элементов.
         /// </summary>
         private CElementIdManager m_idManager;
+
         /// <summary>
         /// Адаптер БД 
         /// </summary>
@@ -55,6 +59,7 @@ namespace TaskEngine
         /// Объект настроек проекта движка
         /// </summary>
         protected TaskStorageInfo m_settings;
+
         /// <summary>
         /// Менеджер файловой системы проекта данных движка
         /// </summary>
@@ -114,6 +119,7 @@ namespace TaskEngine
         {
             get { return m_settings; }
         }
+
         /// <summary>
         /// NT-Gets the Storage filesystem manager
         /// </summary>
@@ -164,9 +170,9 @@ namespace TaskEngine
                 throw new Exception("Solution already exists: " + homeFolder );
             //  записать правильный путь к проекту в переданный объект EngineSettings
             si.StoragePath = homeFolder;
-            //создать каталог и всю файловую систему в нем.
+            //создать каталог Хранилища и всю файловую систему в нем.
+            //И добавить в БД фиксированные элементы при создании БД.
             StorageFolderManager.CreateStorageFolder(homeFolder, si);
-            //TODO: Добавить в БД фиксированные элементы - здесь или в StorageFolderManager.CreateStorageFolder или при создании БД?
 
             return;
         }
@@ -355,7 +361,7 @@ namespace TaskEngine
             this.ThrowIfReadOnly();
 
             ////TODO: добавить код оптимизаци Хранилища здесь
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException();//TODO: add code here
         }
 
         //Функция очистки. Ни разу не пользовался, проще создать новый проект. Но для комплекта тут реализована.
@@ -381,7 +387,7 @@ namespace TaskEngine
             //}
             //else return false;
 
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException();//TODO: add code here
         }
 
         /// <summary>
@@ -402,7 +408,6 @@ namespace TaskEngine
         /// Возвращает false, если удалить Хранилище не удалось по какой-либо причине.</returns>
         public static bool StorageDelete(String storagePath)
         {
-
 
             //Этот код только для примера, его нужно переписать
             throw new System.NotImplementedException();//TODO: add code here
@@ -455,7 +460,6 @@ namespace TaskEngine
 
         #endregion
 
-
         #region *** BotAPI functions ***
         //TODO: добавить тут рабочие функции движка 
         #endregion
@@ -470,7 +474,10 @@ namespace TaskEngine
         {
             if (this.m_ReadOnly == true)
                 throw new Exception("Ошибка: Попытка записи в Хранилище, открытое только для чтения!");
+
+            return;
         }
+
         /// <summary>
         /// NT-Выбросить исключение, если Хранилище не открыто.
         /// </summary>
@@ -480,6 +487,8 @@ namespace TaskEngine
             //check ready flag
             if (this.m_Ready != true)
                 throw new Exception("ОшибкаЖ:Хранилище не открыто!");
+
+            return;
         }
 
         #endregion

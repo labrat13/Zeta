@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using TaskEngine;
 using TaskEngine.SettingSubsystem;
 using TaskEngine.Utilities;
@@ -18,6 +12,7 @@ namespace Tasks
     {
 
         #region *** Constants and Fields ***  
+
         /// <summary>
         /// Название окна приложения
         /// </summary>
@@ -27,6 +22,7 @@ namespace Tasks
         /// Task engine object
         /// </summary>
         private CEngine m_Engine;
+
         #endregion
 
         public MainForm()
@@ -38,6 +34,7 @@ namespace Tasks
         }
 
         #region  *** Properties ***
+
         /// <summary>
         /// Менеджер движка управления Задачами
         /// </summary>
@@ -47,9 +44,8 @@ namespace Tasks
         }
         #endregion
 
-
-
-        #region *** Form Load Closing Closed handlers ***        
+        #region *** Form Load Closing Closed handlers ***   
+        
         /// <summary>
         /// NT-Handles the Load event of the MainForm control.
         /// </summary>
@@ -120,8 +116,9 @@ namespace Tasks
         {
             this.createStorage();
             //TODO: Add code here
-        }
 
+            return;
+        }
 
         /// <summary>
         /// NT-Handles the Click event of the toolStripMenuItem_OpenStorage control.
@@ -152,12 +149,20 @@ namespace Tasks
         {
             this.closeStorage();
             //TODO: Add code here
-        }
 
+            return;
+        }
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_Exit control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_Exit_Click(object sender, EventArgs e)
         {
             this.Close();
             //вся обработка завершения работы должна проводиться в Form.Closing()
+
+            return;
         }
 
         #endregion
@@ -175,6 +180,7 @@ namespace Tasks
 
             return;
         }
+
         /// <summary>
         /// NT-Изменить заголовок главной формы
         /// </summary>
@@ -255,8 +261,9 @@ namespace Tasks
             //set form title
             this.Text = result;
             Application.DoEvents();
-        }
 
+            return;
+        }
 
         /// <summary>
         /// NT-Показать файл справки
@@ -273,6 +280,8 @@ namespace Tasks
             {
                 this.showErrorMessageBox(null, "Файл справки приложения не найден или поврежден.\n" + ex.ToString());
             }
+
+            return;
         }
 
         /// <summary>
@@ -384,8 +393,9 @@ namespace Tasks
 
             return;
         }
+
         /// <summary>
-        /// NR-Loads the storage.
+        /// NT-Loads the storage.
         /// </summary>
         /// <param name="storagePath">The storage path.</param>
         private void loadStorage(string storagePath)
@@ -426,9 +436,9 @@ namespace Tasks
                     //else work next as readOnly mode
                 }
                 //7 собрать и показать дерево элементов в форме
-                //TODO: Add code here
+                this.showMainElementTree();
                 //8 собрать и показать СписокСегодня
-                //TODO: Add code here
+                this.showTodayTaksPanel();
                 //9 строку состояния изменить на Хранилище открыто
                 this.setStatusBarText("Хранилище успешно открыто: " + storagePath, false);
                 //10 заголовок формы заменить на новую с путем хранилища.
@@ -454,8 +464,26 @@ namespace Tasks
             {
 
             }
+
             return;
         }
+
+        /// <summary>
+        /// NR-собрать и показать СписокСегодня
+        /// </summary>
+        private void showTodayTaksPanel()
+        {
+            throw new NotImplementedException();//TODO: add code here
+        }
+
+        /// <summary>
+        /// NR-собрать и показать дерево элементов в форме.
+        /// </summary>
+        private void showMainElementTree()
+        {
+            throw new NotImplementedException();//TODO: add code here
+        }
+
         /// <summary>
         /// NT-Closes the storage.
         /// </summary>

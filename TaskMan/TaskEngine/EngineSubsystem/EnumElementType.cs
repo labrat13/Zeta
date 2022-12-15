@@ -5,8 +5,9 @@ using System.Text;
 namespace TaskEngine
 {
     /// <summary>
-    /// Енум типа элемента
+    /// Флаговый енум типа элемента.
     /// </summary>
+    [Flags]
     public enum EnumElementType
     {
         /// <summary>
@@ -16,18 +17,18 @@ namespace TaskEngine
         /// <summary>
         /// Element is Category
         /// </summary>
-        Category,
+        Category = 1,
         /// <summary>
         /// Element is Tag
         /// </summary>
-        Tag,
+        Tag = 2,
         /// <summary>
         /// Element is Task
         /// </summary>
-        Task,
+        Task = 4,
         /// <summary>
         /// Element is Note
         /// </summary>
-        Note,
+        Note = 8,
     }
 }
