@@ -13,43 +13,55 @@ namespace TaskEngine
     /// <seealso cref="TaskEngine.SqliteDbAdapter" />
     public class TaskDbAdapter : SqliteDbAdapter
     {
+
         #region *** Fields ***          
+
+        /// <summary>
+        /// Идентификатор корневого элемента дерева элементов, не существует в БД, но используется как parent.
+        /// </summary>
+        public const int ElementId_Root = 0;
+
+        /// <summary>
+        /// Идентификатор элемента раздела Задачи в дереве элементов.
+        /// </summary>
+        public const int ElementId_TaskRoot = 1;
+
+        /// <summary>
+        /// Идентификатор элемента раздела Теги в дереве элементов.
+        /// </summary>
+        public const int ElementId_TagRoot = 2;
+        //Элемент раздела Корзина формируется кодом и в БД не хранится.
 
         /// <summary>
         /// The table elements
         /// </summary>
         internal const String TableElements = "Elements";
+
         /// <summary>
         /// The table tagged
         /// </summary>
         internal const String TableTagged = "Tagged";
+
         /// <summary>
         /// The table tasks
         /// </summary>
         internal const String TableTasks = "Tasks";
+
         /// <summary>
         /// The table setting
         /// </summary>
         internal const String TableSetting = "Settings";
+
         /// <summary>
         /// Engine backreference
         /// </summary>
         private CEngine m_Engine;
 
-        ////Настройки закомментировал, чтобы не мешались, пока не используются.
-        ///// <summary>
-        ///// SQL Command for AddSetting function
-        ///// </summary>
-        //protected SQLiteCommand m_cmdAddSetting;
-        ///// <summary>
-        /////  SQL Command for UpdateSetting function
-        ///// </summary>
-        //protected SQLiteCommand m_cmdUpdateSetting;
-
         /// <summary>
         /// SQL Command for Insert Task function
         /// </summary>
         protected SQLiteCommand m_cmdInsertTask;
+
         /// <summary>
         /// SQL Command for UpdateTask function
         /// </summary>
@@ -59,12 +71,14 @@ namespace TaskEngine
         /// SQL Command for InsertElement function
         /// </summary>
         protected SQLiteCommand m_cmdInsertElement;
+
         /// <summary>
         /// SQL Command for UpdateElement function
         /// </summary>
         protected SQLiteCommand m_cmdUpdateElement;
 
         #endregion        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskDbAdapter"/> class.
         /// </summary>
@@ -74,10 +88,6 @@ namespace TaskEngine
             //Нигде эта ссылка не используется сейчас?
             this.m_Engine = engine;
 
-            ////Настройки закомментировал, чтобы не мешались, пока не используются.
-            //this.m_cmdAddSetting = null;
-            //this.m_cmdUpdateSetting = null;
-
             this.m_cmdInsertTask = null;
             this.m_cmdUpdateTask = null;
 
@@ -86,7 +96,6 @@ namespace TaskEngine
 
             return;
         }
-
 
         /// <summary>
         /// NT-Get string representation of object.
@@ -111,10 +120,6 @@ namespace TaskEngine
             //Эта функция вызывается 4 раза при каждом добавлении или изменении любого Элемента в таблицах.
             //закрыть и обнулить каждую команду адаптера
 
-            ////Настройки закомментировал, чтобы не мешались, пока не используются.
-            //this.m_cmdAddSetting = null;
-            //this.m_cmdUpdateSetting = null;
-
             this.m_cmdInsertTask = null;
             this. m_cmdUpdateTask = null;
 
@@ -123,6 +128,7 @@ namespace TaskEngine
 
             return;
         }
+
         public override void Open()
         {
             base.Open();
@@ -134,6 +140,7 @@ namespace TaskEngine
         }
 
         #region Database
+
         /// <summary>
         /// NT-Create new application database and fill with tables and initial data
         /// </summary>
@@ -219,6 +226,7 @@ namespace TaskEngine
 
             return result;
         }
+
         /// <summary>
         /// NR-Creates the initial content of the database.
         /// </summary>
@@ -239,10 +247,10 @@ namespace TaskEngine
             {
                 //create category Tasks
                 CElement catTasks = new CElement();
-                catTasks.Id = 1;
+                catTasks.Id = ElementId_TaskRoot;
                 catTasks.ElementType = EnumElementType.Category;
                 catTasks.ElementState = EnumElementState.ProtectedFromDelete;//do not use for user items!
-                catTasks.Parent = new CElementRef(0);
+                catTasks.Parent = new CElementRef(ElementId_Root);
                 catTasks.Title = "Tasks";
                 catTasks.Description = "Tasks main category";
                 catTasks.Remarks = "This is a first fixed category, protected from deletion";
@@ -251,8 +259,8 @@ namespace TaskEngine
 
                 //create tag category Tags
                 CElement tagcat = new CElement();
-                tagcat.Id = 2;
-                tagcat.Parent = new CElementRef(0);
+                tagcat.Id = ElementId_TagRoot;
+                tagcat.Parent = new CElementRef(ElementId_Root);
                 tagcat.Title = "Tags";
                 tagcat.Description = "Main tag category";
                 tagcat.ElementState = EnumElementState.ProtectedFromDelete;
@@ -264,7 +272,7 @@ namespace TaskEngine
                 //create tag FirstTag
                 CElement tag1 = new CElement();
                 tag1.Id = 3;
-                tag1.Parent = new CElementRef(2);
+                tag1.Parent = new CElementRef(ElementId_TagRoot);
                 tag1.Title = "FirstTag";
                 tag1.Description = " First tag";
                 tag1.ElementState = EnumElementState.Normal;
@@ -276,7 +284,7 @@ namespace TaskEngine
                 //create category CategoryHome
                 CElement catHome = new CElement();
                 catHome.Id = 4;
-                catHome.Parent = new CElementRef(1);
+                catHome.Parent = new CElementRef(ElementId_TaskRoot);
                 catHome.Title = "Home";
                 catHome.Description = "Tasks subcategory";
                 catHome.ElementState = EnumElementState.Normal;
@@ -328,7 +336,8 @@ namespace TaskEngine
 
         #endregion
 
-        #region *** Element functions ***        
+        #region *** Element functions ***     
+        
         /// <summary>
         /// NT-Deletes the element with transaction.
         /// Close database after this operation.
@@ -360,6 +369,7 @@ namespace TaskEngine
 
             return;
         }
+
         /// <summary>
         /// NT-Inserts any element with transaction.
         /// Close database after this operation.
@@ -397,6 +407,7 @@ namespace TaskEngine
 
             return;
         }
+
         /// <summary>
         /// NT-Updates any element with transaction.
         /// Close database after this operation.
@@ -480,6 +491,7 @@ namespace TaskEngine
 
             return element;
         }
+
         /// <summary>
         /// NT-Selects the elements by parent identifier.
         /// </summary>
@@ -506,7 +518,8 @@ namespace TaskEngine
 
         #endregion
 
-        #region *** Функции Статистики ***        
+        #region *** Функции Статистики ***     
+        
         /// <summary>
         /// NT-Показать число элементов указанного типа и состояния
         /// </summary>
@@ -524,6 +537,7 @@ namespace TaskEngine
             
             return this.ExecuteScalar(query, this.m_Timeout);
         }
+
         /// <summary>
         /// NT-Показать число элементов указанного состояния. Например, удаленных в корзину.
         /// </summary>
@@ -539,6 +553,7 @@ namespace TaskEngine
 
             return this.ExecuteScalar(query, this.m_Timeout);
         }
+
         /// <summary>
         /// NT-Показать число задач, имеющих указанное состояние задачи
         /// </summary>
@@ -557,7 +572,8 @@ namespace TaskEngine
 
         #endregion
 
-        #region *** Elements table ***        
+        #region *** Elements table ***  
+        
         /// <summary>
         /// NT-Возвращает максимальное значение идентификатора элемента или -1
         /// </summary>
@@ -566,6 +582,7 @@ namespace TaskEngine
         {
             return this.getTableMaxInt32(TaskDbAdapter.TableElements, "id", this.m_Timeout);
         }
+
         /// <summary>
         /// NT-Delete record from Elements table
         /// </summary>
@@ -576,6 +593,7 @@ namespace TaskEngine
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"id\" = {1});", TaskDbAdapter.TableElements, elementId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
         }
+
         /// <summary>
         /// NT-Insert element into Elements table
         /// </summary>
@@ -619,6 +637,7 @@ namespace TaskEngine
             //execute command
             return ps.ExecuteNonQuery();
         }
+
         /// <summary>
         /// NT-Update element into Elements table
         /// </summary>
@@ -685,6 +704,7 @@ namespace TaskEngine
 
             return result;
         }
+
         /// <summary>
         /// NT-Read one CELement object from table reader
         /// </summary>
@@ -730,6 +750,7 @@ namespace TaskEngine
         #endregion
 
         #region *** Tagged table ***
+
         /// <summary>
         /// NT-Получить список идентификаторов тегов для указанного элемента
         /// </summary>
@@ -753,6 +774,7 @@ namespace TaskEngine
 
             return result;
         }
+
         /// <summary>
         /// NT-Получить список идентификаторов элементов с указанным тегом
         /// </summary>
@@ -776,6 +798,7 @@ namespace TaskEngine
 
             return result;
         }
+
         /// <summary>
         /// NT-Добавить связку элемент-тег
         /// </summary>
@@ -787,6 +810,7 @@ namespace TaskEngine
             String query = String.Format("INSERT INTO \"{0}\" (\"elid\", \"tagid\") VALUES ({1}, {2} );", TaskDbAdapter.TableTagged, elementId, tagId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
         }
+
         /// <summary>
         /// NT-Удалить связку элемент-тег
         /// </summary>
@@ -798,6 +822,7 @@ namespace TaskEngine
             String query = String.Format("DELETE FROM \"{0}\" WHERE (\"elid\" = {1}, \"tagid\" = {2});", TaskDbAdapter.TableTagged, elementId, tagId);
             return this.ExecuteNonQuery(query, this.m_Timeout);
         }
+
         /// <summary>
         /// NT-Удалить все связки указанного элемента с тегами
         /// </summary>
@@ -812,6 +837,7 @@ namespace TaskEngine
         #endregion
 
         #region *** Tasks table ***
+
         /// <summary>
         /// NT-Read task record
         /// </summary>
@@ -842,6 +868,7 @@ namespace TaskEngine
 
             return result;
         }
+
         /// <summary>
         /// NT- Add task record
         /// </summary>
@@ -879,6 +906,7 @@ namespace TaskEngine
             //execute command
             return ps.ExecuteNonQuery();
         }
+
         /// <summary>
         /// NT-Update task record
         /// </summary>
@@ -916,6 +944,7 @@ namespace TaskEngine
             //execute command
             return ps.ExecuteNonQuery();
         }
+
         /// <summary>
         /// NT-Delete record from Task table
         /// </summary>
@@ -927,10 +956,10 @@ namespace TaskEngine
             return this.ExecuteNonQuery(query, this.m_Timeout);
         }
 
-
         #endregion
 
-        #region *** Выборка задач для Сегодня ***        
+        #region *** Выборка задач для Сегодня ***      
+        
         /// <summary>
         /// NT-Gets the list of task identifier before date.
         /// </summary>
@@ -1073,137 +1102,6 @@ namespace TaskEngine
 
             return msgText;
         }
-
-
-
-        //Настройки закомментировал, чтобы не мешались, пока не используются.
-        //#region *** Setting table function ***
-
-        ///// <summary>
-        ///// NT- Получить все записи таблицы настроек Оператора
-        ///// </summary>
-        ///// <returns>Функция возвращает все записи из ТаблицыНастроекОператора.</returns>
-        //public List<SettingItem> GetAllSettings()
-        //{
-
-        //    List<SettingItem> list = new List<SettingItem>();
-
-        //    String query = String.Format("SELECT * FROM \"{0}\";", TaskDbAdapter.TableSetting);
-        //    SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
-        //    if (reader.HasRows)
-        //        while (reader.Read())
-        //        {
-        //            SettingItem si = new SettingItem();
-        //            si.TableId = reader.GetInt32(0);
-        //            si.Namespace = reader.GetString(1);
-        //            si.Title = reader.GetString(2);
-        //            si.Description = reader.GetString(3);
-        //            si.Path = reader.GetString(4);// set value as Item.Path
-        //                                          // set storage field as db
-        //            si.Storage = SettingItem.StorageKeyForDatabaseItem;
-        //            // add to result list
-        //            list.Add(si);
-        //        }
-
-        //    // close command and result set objects
-        //    reader.Close();
-
-        //    return list;
-        //}
-
-
-
-        ///// <summary>
-        ///// NT-Добавить Настройку.
-        ///// </summary>
-        ///// <param name="p">Добавляемая Настройка.</param>
-        //public void AddSetting(SettingItem p)
-        //{
-
-        //    SQLiteCommand ps = this.m_cmdAddSetting;
-
-        //    // create if not exists
-        //    if (ps == null)
-        //    {
-        //        String query = String.Format("INSERT INTO \"{0}\"(\"ns\", \"title\", \"descr\", \"val\") VALUES (?,?,?,?);", TaskDbAdapter.TableSetting);
-        //        ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-        //        // set timeout here
-        //        ps.CommandTimeout = this.m_Timeout;
-        //        //create parameters
-        //        ps.Parameters.Add("a0", DbType.String);
-        //        ps.Parameters.Add("a1", DbType.String);
-        //        ps.Parameters.Add("a2", DbType.String);
-        //        ps.Parameters.Add("a3", DbType.String);
-        //        // write back
-        //        this.m_cmdAddSetting = ps;
-        //    }
-        //    // set parameters
-        //    ps.Parameters[0].Value = p.Namespace;
-        //    ps.Parameters[1].Value = p.Title;
-        //    ps.Parameters[2].Value = p.Description;
-        //    ps.Parameters[3].Value = p.Path;
-        //    //execute command
-        //    ps.ExecuteNonQuery();
-
-        //    return;
-        //}
-
-        ///// <summary>
-        ///// NT-Удалить Настройку.
-        ///// </summary>
-        ///// <param name="id">ИД Настройки.</param>
-        ///// <returns>Функция возвращает число измененных строк таблицы.</returns>
-        //public int RemoveSetting(int id)
-        //{
-        //    // DELETE FROM `setting` WHERE (`id` = 1);
-        //    return this.DeleteRow(TaskDbAdapter.TableSetting, "id", id, this.m_Timeout);
-        //}
-
-        ///// <summary>
-        ///// NT- Изменить Настройку (title, descr, value)
-        ///// </summary>
-        ///// <param name="p">Изменяемая Настройка</param>
-        ///// <returns>Функция возвращает число измененных строк таблицы.</returns>
-        //public int UpdateSetting(SettingItem p)
-        //{
-        //    SQLiteCommand ps = this.m_cmdUpdateSetting;
-
-        //    // create if not exists
-        //    if (ps == null)
-        //    {
-        //        String query = String.Format("UPDATE \"{0}\" SET \"ns\" = ?, \"title\" = ?, \"descr\" = ?, \"val\" = ? WHERE (\"id\" = ?);", TaskDbAdapter.TableSetting);
-        //        ps = new SQLiteCommand(query, this.m_connection, this.m_transaction);
-        //        // set timeout here
-        //        ps.CommandTimeout = this.m_Timeout;
-        //        //create parameters
-        //        ps.Parameters.Add("a0", DbType.String);
-        //        ps.Parameters.Add("a1", DbType.String);
-        //        ps.Parameters.Add("a2", DbType.String);
-        //        ps.Parameters.Add("a3", DbType.String);
-        //        ps.Parameters.Add("a4", DbType.Int32);
-        //        // write back
-        //        this.m_cmdUpdateSetting = ps;
-        //    }
-        //    // set parameters
-        //    ps.Parameters[0].Value = p.Namespace;
-        //    ps.Parameters[1].Value = p.Title;
-        //    ps.Parameters[2].Value = p.Description;
-        //    ps.Parameters[3].Value = p.Path;// get value as Item.Path
-        //    ps.Parameters[4].Value = p.TableId;
-        //    //execute command
-        //    int result = ps.ExecuteNonQuery();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// NT-Remove all Settings
-        ///// </summary>
-        //public void RemoveAllSettings()
-        //{
-        //    this.TableClear(TableSetting, m_Timeout);
-        //}
-        //#endregion
 
     }
 }

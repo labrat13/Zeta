@@ -46,6 +46,12 @@
     <Compile Include="AboutBoxForm.Designer.cs">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SelectElementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectElementForm.Designer.cs">
+      <DependentUpon>SelectElementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\StorageCreateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +75,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBoxForm.resx">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectElementForm.resx">
+      <DependentUpon>SelectElementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StorageShortInfoForm.resx">
       <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
