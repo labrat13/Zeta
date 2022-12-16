@@ -34,6 +34,19 @@ namespace TaskEngine.Utilities
         }
 
         /// <summary>
+        /// NT-Получить значение Да или Нет
+        /// </summary>
+        /// <param name="val">Boolean value.</param>
+        /// <returns>Функция возвращает строку Да либо Нет.</returns>
+        public static String GetStringYesNo(bool val)
+        {
+            if (val)
+                return "Да";
+            else 
+                return "Нет";
+        }
+
+        /// <summary>
         /// NT-Makes the safe title.
         /// </summary>
         /// <param name="s">The unsafe title string</param>

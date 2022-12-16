@@ -515,11 +515,50 @@ namespace TaskEngine
 
             return result;
         }
+        /// <summary>
+        /// NT-Selects the parent identifier by element identifier.
+        /// </summary>
+        /// <param name="elementId">The element identifier.</param>
+        /// <returns></returns>
+        public int SelectParentIdByElementId(int elementId)
+        {
+            String query = "SELECT \"parent\" FROM \"Elements\" WHERE (\"id\" = " + elementId.ToString() + ");";
+            int result = this.ExecuteScalar(query, this.m_Timeout);
+
+            return result;
+        }
+
+        /// <summary>
+        /// NT-Получить цепочку идентификаторов элементов от корня до указанного.
+        /// </summary>
+        /// <param name="elementId">Идентификатор конечного элемента цепочки.</param>
+        /// <param name="reverse">Реверсить элементы цепочки для получения направления Вниз по дереву.</param>
+        /// <returns>Возвращает цепочку идентификаторов элементов от elementId до корня дерева. Корневой элемент (= 0) не входит в цепочку!</returns>
+        public List<int> GetChainOfElementIds(int elementId, bool reverse)
+        {
+            List<int> result = new List<int>();
+            //собрать цепочку ид как кратчайший путь в дереве.
+            int parent = elementId;
+            do
+            {
+                 result.Add(parent);   //если разместить тут, список будет содержать elementId и не будет содержать 0 как root id или -1 как признак ошибки.           ю
+                parent = this.SelectParentIdByElementId(parent);
+            }
+            while (parent > 0);
+            //check error result
+            if (parent < 0)
+                throw new Exception("Ошибка элемент не найден");
+            //цепочка собрана, но в обратном порядке. Надо ее перевернуть.
+            if(reverse == true)
+                result.Reverse();
+
+            return result;
+        }
 
         #endregion
 
         #region *** Функции Статистики ***     
-        
+
         /// <summary>
         /// NT-Показать число элементов указанного типа и состояния
         /// </summary>

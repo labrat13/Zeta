@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TaskEngine.Utilities;
 
 namespace TaskEngine
 {
@@ -30,7 +31,9 @@ namespace TaskEngine
         /// Дата начала задачи для планировщика
         /// </summary>
         private DateTime m_TaskStartDate;
+
         #endregion
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="CTask"/> class.
         /// </summary>
@@ -152,6 +155,31 @@ namespace TaskEngine
 
             //check complete 
             return state;
+        }
+
+        /// <summary>
+        /// NT-Gets the element properties multiline text.
+        /// </summary>
+        /// <returns>Функция возвращает многострочный текст свойств элемента.</returns>  
+        public override string GetPropertiesText()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Описание: {0}", StringUtility.GetStringTextNull(this.m_Description)); sb.AppendLine();
+            sb.AppendFormat("ID: {0}", this.m_eid); sb.AppendLine();
+            sb.AppendFormat("Тип: {0}", this.m_ElementType); sb.AppendLine();
+            sb.AppendFormat("Название: {0}", StringUtility.GetStringTextNull(this.m_Title)); sb.AppendLine();
+            sb.Append("Активен: ");  sb.AppendLine(StringUtility.GetStringYesNo(this.m_ElementState == EnumElementState.Deleted));
+            //task info
+            sb.AppendFormat("Состояние задачи: {0}", this.m_TaskState); sb.AppendLine();
+            sb.AppendFormat("Важность задачи: {0}", this.m_TaskPriority); sb.AppendLine();
+            sb.AppendFormat("Результаты: {0}", StringUtility.GetStringTextNull(this.m_TaskResult)); sb.AppendLine();
+            sb.AppendFormat("Дата начала задачи: {0}", StringUtility.StringFromDateTime(this.m_TaskStartDate)); sb.AppendLine();
+            sb.AppendFormat("Дата завершения задачи: {0}", StringUtility.StringFromDateTime(this.m_TaskCompletionDate)); sb.AppendLine();
+            //timestamps
+            sb.AppendFormat("Дата создания: {0}", StringUtility.StringFromDateTime(this.m_CreaTime)); sb.AppendLine();
+            sb.AppendFormat("Дата изменения: {0}", StringUtility.StringFromDateTime(this.m_ModiTime)); sb.AppendLine();
+
+            return sb.ToString();
         }
 
     }

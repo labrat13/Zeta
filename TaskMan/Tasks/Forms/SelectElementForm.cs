@@ -30,6 +30,14 @@ namespace Tasks.Forms
         /// Task Engine reference
         /// </summary>
         private CEngine m_Engine;
+        /// <summary>
+        /// Менеджер дерева элементов
+        /// </summary>
+        private ElementTreeViewManager m_treeManager;
+        /// <summary>
+        /// Проверять отсутствие нарушения иерархии при выборе родительского элемента в этой форме.
+        /// </summary>
+        private bool m_checkHierarchy;
 
 #endregion
 
@@ -41,6 +49,26 @@ namespace Tasks.Forms
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectElementForm"/> class.
+        /// </summary>
+        /// <param name="engine">Task Engine reference for database access.</param>
+        /// <param name="elementType">Тип отображаемых элементов: Задачи, итп.</param>
+        /// <param name="startElementId">Идентификатор элемента, представляющего начало обозреваемого дерева элементов.</param>
+        /// <param name="checkHierarchy">Проверять отсутствие нарушения иерархии при выборе родительского элемента в этой форме.</param>
+        /// <param name="title">Текст заголовка окна</param>
+        /// <param name="description">Текстовое описание выполняемой операции в верхней части формы.</param>
+        public SelectElementForm(CEngine engine, EnumElementType elementType, int startElementId, bool checkHierarchy, string title, string description)
+        {
+            InitializeComponent();
+            this.m_treeManager = new ElementTreeViewManager(this.treeView_Elements, engine, startElementId, elementType);
+            this.Text = title;
+            this.label_Description.Text = description;
+            this.m_checkHierarchy = checkHierarchy; 
+
+            return;
+        }
+
         #region *** Properties ***
 
         /// <summary>
@@ -50,6 +78,7 @@ namespace Tasks.Forms
         /// The start element identifier.
         /// </value>
         public int StartElementId { get => m_StartElementId; set => m_StartElementId = value; }
+
         /// <summary>
         /// Идентификатор выбранного элемента, либо -1 как значение ошибки.
         /// </summary>
@@ -57,6 +86,7 @@ namespace Tasks.Forms
         /// The selected element identifier.
         /// </value>
         public int SelectedElementId { get => m_SelectedElementId; set => m_SelectedElementId = value; }
+
         /// <summary>
         /// Фильтр типа отображаемых элементов.
         /// </summary>
@@ -64,6 +94,7 @@ namespace Tasks.Forms
         /// The type of the element.
         /// </value>
         public EnumElementType ElementType { get => m_ElementType; set => m_ElementType = value; }
+
         /// <summary>
         /// Task Engine reference for database access.
         /// </summary>
@@ -90,32 +121,38 @@ namespace Tasks.Forms
         /// NT-Shows the SelectElementForm dialog.
         /// </summary>
         /// <param name="owner">The owner.</param>
+        /// <param name="title">Текст заголовка окна.</param>
         /// <param name="engine">Task Engine reference for database access.</param>
-        /// <param name="elementType">Фильтр типа отображаемых элементов.</param>
+        /// <param name="elementType">Тип выбираемого элемента.</param>
         /// <param name="startElementId">Идентификатор элемента, представляющего начало обозреваемого дерева элементов.</param>
+        /// <param name="checkHierarchy">Проверять отсутствие нарушения иерархии при выборе родительского элемента в этой форме.</param>
         /// <param name="description">Текстовое описание выполняемой операции в верхней части формы.</param>
         /// <returns>Функция возвращает идентификатор выбранного элемента либо -1 если пользователь отменил операцию.</returns>
+        /// <remarks>
+        /// Тип отображаемого элемента: Определяет тип элемента, который можно выбрать для возврата. 
+        /// Категории отображаются независимо от этого значения, так как они соединяют всю структуру элементов разных типов.
+        /// </remarks>
         public int ShowSelectElementForm(
-            IWin32Window owner, 
+            IWin32Window owner,
+            String title,
             CEngine engine, 
             EnumElementType elementType,
             int startElementId,
+            bool checkHierarchy,
             String description)
         {
             int result = -1; //error value
             SelectElementForm f = null;
             try
             {
-                f = new SelectElementForm();
-                f.Engine = engine;
-                f.ElementType = elementType;
-                f.StartElementId = startElementId;
+                //TODO: добавить загрузку размера и позиции формы из файла настроек приложения 
+                f = new SelectElementForm(engine, elementType, startElementId, checkHierarchy, title, description);
                 f.SelectedElementId = 0;
-                f.Description = description;
                 //show form
                 DialogResult dr = f.ShowDialog(owner);
                 if (dr == DialogResult.OK)
                     result = f.SelectedElementId;
+                //TODO: добавить сохранение размера и позиции формы в файл настроек приложения 
                 f.Dispose();
                 f = null;
             }
@@ -136,52 +173,107 @@ namespace Tasks.Forms
             return result;
         }
 
-
-        #region *** Form functions ***
-
+        #region *** Form functions ***  
+        
+        /// <summary>
+        /// NR-Handles the Load event of the SelectElementForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SelectElementForm_Load(object sender, EventArgs e)
         {
-//TODO: add code here
+            //Point pt = Properties.Settings.Default.SelectTreeFormPosition;
+            ////TODO: проверить координаты окна, чтобы его не потерять за пределами дисплея 
+            //if (pt.X > 1000) pt.X = 1000;
+            //if (pt.Y > 1000) pt.Y = 1000;
+            //Location = pt;
+            //тут заполнить дерево элементов
+            this.m_treeManager.ShowTree();
         }
 
+        /// <summary>
+        /// NR-Handles the FormClosed event of the SelectElementForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosedEventArgs"/> instance containing the event data.</param>
         private void SelectElementForm_FormClosed(object sender, FormClosedEventArgs e)
         {
 //TODO: add code here
         }
 
+        /// <summary>
+        /// NR-Handles the FormClosing event of the SelectElementForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
         private void SelectElementForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-//TODO: add code here
+            //тут очистить дерево элементов и коллекцию иконок
+            //для следующего запуска диалога
+            this.m_treeManager.ClearTree();
+
+            return;
         }
 
-#endregion
+        #endregion
 
-#region *** Form button event handlers ***
-
+        #region *** Form button event handlers ***        
+        /// <summary>
+        /// NR-Handles the Click event of the button_OK control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void button_OK_Click(object sender, EventArgs e)
         {
-//TODO: add code here
+            //выбранный в дереве элемент запомнить - это должно было быть сделано в обработчике выделения ноды
+            //диалог закрыть с ОК
+            this.DialogResult = DialogResult.OK;
+            //закрыть форму
+            this.Close();
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the button_Cancel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void button_Cancel_Click(object sender, EventArgs e)
         {
-//TODO: add code here
+            //диалог закрыть с отменой
+            this.DialogResult = DialogResult.Cancel;
+            //закрыть форму
+            this.Close();
         }
 
-#endregion
+        #endregion
 
-#region *** TreeView event handlers ***
+        #region *** TreeView event handlers ***
 
         //Одиночный клик это выделение ноды дерева.
         //двойной клик это развертывание-свертывание ноды.
 
-
-        private void treeView_Elements_DoubleClick(object sender, EventArgs e)
+        /// <summary>
+        /// NT-Handles the AfterSelect event of the treeView_Elements control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        private void treeView_Elements_AfterSelect(object sender, TreeViewEventArgs e)
         {
-//TODO: add code here
+            //тут в диалоге надо вывести инфу о выделенном элементе
+            //и кнопку ОК диалога включить или выключить
+            //чтобы нельзя было выбрать неподходящий тип элемента
+            TaskEngine.CElement obj = this.m_treeManager.NodeSelected(e);
+            //кнопка ОК диалога
+            this.button_OK.Enabled = this.m_treeManager.IsAllowedElement(m_checkHierarchy, obj);
+            //создать и вывести описание объекта
+            this.label_Information.Text = obj.Description;
+            ////TODO: показать полное описание элемента: - вывести многострочный текст в дополнительную правую панель-текстбокс. Требует переделки макета формы.
+            //this.label_Information.Text = obj.GetPropertiesText();
+
+            return;
         }
 
-#endregion
+        #endregion
+
 
     }
 }

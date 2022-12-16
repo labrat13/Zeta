@@ -46,6 +46,7 @@
     <Compile Include="AboutBoxForm.Designer.cs">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ElementTreeViewManager.cs" />
     <Compile Include="Forms\SelectElementForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -254,5 +254,38 @@ namespace TaskEngine
         //    return;
         //}
 
+        /// <summary>
+        /// NT-Gets the element properties multiline text.
+        /// </summary>
+        /// <returns>Функция возвращает многострочный текст свойств элемента.</returns>  
+        public virtual string GetPropertiesText()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Описание: {0}", StringUtility.GetStringTextNull(this.m_Description)); sb.AppendLine();
+            sb.AppendFormat("ID: {0}", this.m_eid); sb.AppendLine();
+            sb.AppendFormat("Тип: {0}", this.m_ElementType); sb.AppendLine();
+            sb.AppendFormat("Название: {0}", StringUtility.GetStringTextNull(this.m_Title)); sb.AppendLine();
+            sb.Append("Активен: "); sb.AppendLine(StringUtility.GetStringYesNo(this.m_ElementState == EnumElementState.Deleted));
+            sb.AppendFormat("Дата создания: {0}", StringUtility.StringFromDateTime(this.m_CreaTime)); sb.AppendLine();
+            sb.AppendFormat("Дата изменения: {0}", StringUtility.StringFromDateTime(this.m_ModiTime)); sb.AppendLine();
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// NT-Возвращает true если элемент помечен как неактивный.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> если элемент помечен как неактивный; в противном случае, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// Эта функция упрощает проверки состояния активности элемента в некоторых функциях.
+        /// </remarks>
+        public bool IsDeleted()
+        {
+            return this.m_ElementState == EnumElementState.Deleted;
+        }
+
+
     }
 }

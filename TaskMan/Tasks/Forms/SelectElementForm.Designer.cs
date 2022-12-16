@@ -33,6 +33,7 @@
             this.button_OK = new System.Windows.Forms.Button();
             this.label_Description = new System.Windows.Forms.Label();
             this.treeView_Elements = new System.Windows.Forms.TreeView();
+            this.label_Information = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,27 +41,29 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel1.Controls.Add(this.button_Cancel, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.button_OK, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.button_Cancel, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.button_OK, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.label_Description, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.treeView_Elements, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label_Information, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(320, 326);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(352, 427);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // button_Cancel
             // 
             this.button_Cancel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_Cancel.Location = new System.Drawing.Point(242, 298);
+            this.button_Cancel.Location = new System.Drawing.Point(274, 399);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(75, 23);
             this.button_Cancel.TabIndex = 0;
@@ -72,7 +75,7 @@
             // 
             this.button_OK.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.button_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button_OK.Location = new System.Drawing.Point(152, 298);
+            this.button_OK.Location = new System.Drawing.Point(184, 399);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(75, 23);
             this.button_OK.TabIndex = 1;
@@ -97,15 +100,28 @@
             this.treeView_Elements.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Elements.Location = new System.Drawing.Point(3, 43);
             this.treeView_Elements.Name = "treeView_Elements";
-            this.treeView_Elements.Size = new System.Drawing.Size(314, 248);
+            this.treeView_Elements.Size = new System.Drawing.Size(346, 279);
             this.treeView_Elements.TabIndex = 3;
-            this.treeView_Elements.DoubleClick += new System.EventHandler(this.treeView_Elements_DoubleClick);
+            this.treeView_Elements.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Elements_AfterSelect);
+            // 
+            // label_Information
+            // 
+            this.label_Information.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.label_Information, 3);
+            this.label_Information.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label_Information.Location = new System.Drawing.Point(3, 325);
+            this.label_Information.Name = "label_Information";
+            this.label_Information.Size = new System.Drawing.Size(346, 70);
+            this.label_Information.TabIndex = 4;
+            this.label_Information.Text = "Информация о элементе";
             // 
             // SelectElementForm
             // 
+            this.AcceptButton = this.button_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(320, 326);
+            this.CancelButton = this.button_Cancel;
+            this.ClientSize = new System.Drawing.Size(352, 427);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(250, 250);
             this.Name = "SelectElementForm";
@@ -126,5 +142,6 @@
         private System.Windows.Forms.Button button_OK;
         private System.Windows.Forms.Label label_Description;
         private System.Windows.Forms.TreeView treeView_Elements;
+        private System.Windows.Forms.Label label_Information;
     }
 }
