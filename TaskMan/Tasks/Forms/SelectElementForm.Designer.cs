@@ -28,11 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Узел0");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Узел1");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Узел2");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Узел3");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectElementForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button_Cancel = new System.Windows.Forms.Button();
             this.button_OK = new System.Windows.Forms.Button();
             this.label_Description = new System.Windows.Forms.Label();
             this.treeView_Elements = new System.Windows.Forms.TreeView();
+            this.imageList_ElementPics = new System.Windows.Forms.ImageList(this.components);
             this.label_Information = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -98,11 +105,40 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.treeView_Elements, 3);
             this.treeView_Elements.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Elements.ImageIndex = 0;
+            this.treeView_Elements.ImageList = this.imageList_ElementPics;
             this.treeView_Elements.Location = new System.Drawing.Point(3, 43);
             this.treeView_Elements.Name = "treeView_Elements";
+            treeNode1.ImageIndex = 0;
+            treeNode1.Name = "Узел0";
+            treeNode1.Text = "Узел0";
+            treeNode2.ImageIndex = 1;
+            treeNode2.Name = "Узел1";
+            treeNode2.Text = "Узел1";
+            treeNode3.ImageIndex = 2;
+            treeNode3.Name = "Узел2";
+            treeNode3.Text = "Узел2";
+            treeNode4.ImageIndex = 3;
+            treeNode4.Name = "Узел3";
+            treeNode4.Text = "Узел3";
+            this.treeView_Elements.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4});
+            this.treeView_Elements.SelectedImageIndex = 0;
             this.treeView_Elements.Size = new System.Drawing.Size(346, 279);
             this.treeView_Elements.TabIndex = 3;
             this.treeView_Elements.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Elements_AfterSelect);
+            // 
+            // imageList_ElementPics
+            // 
+            this.imageList_ElementPics.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList_ElementPics.ImageStream")));
+            this.imageList_ElementPics.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList_ElementPics.Images.SetKeyName(0, "category2.png");
+            this.imageList_ElementPics.Images.SetKeyName(1, "tag.png");
+            this.imageList_ElementPics.Images.SetKeyName(2, "task.png");
+            this.imageList_ElementPics.Images.SetKeyName(3, "note.png");
             // 
             // label_Information
             // 
@@ -143,5 +179,6 @@
         private System.Windows.Forms.Label label_Description;
         private System.Windows.Forms.TreeView treeView_Elements;
         private System.Windows.Forms.Label label_Information;
+        private System.Windows.Forms.ImageList imageList_ElementPics;
     }
 }
