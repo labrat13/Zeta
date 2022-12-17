@@ -493,6 +493,19 @@ namespace TaskEngine
         }
 
         /// <summary>
+        /// NT-Gets the count of elements by parent identifier.
+        /// </summary>
+        /// <param name="parentId">The parent identifier.</param>
+        /// <returns>Функция возвращает количество подэлементов для данного элемента.</returns>
+        public int GetCountOfElementsByParentId(int parentId)
+        {
+            String query = "SELECT COUNT(\"id\") FROM \"Elements\" WHERE (\"parent\" = " + parentId.ToString() + ");";
+            int result = this.ExecuteScalar(query, this.m_Timeout);
+
+            return result;
+        }
+
+        /// <summary>
         /// NT-Selects the elements by parent identifier.
         /// </summary>
         /// <param name="parentId">The parent identifier.</param>
@@ -1141,6 +1154,7 @@ namespace TaskEngine
 
             return msgText;
         }
+
 
     }
 }

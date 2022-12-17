@@ -30,5 +30,9 @@ namespace TaskEngine
         /// Element is Note
         /// </summary>
         Note = 8,
+        /// <summary>
+        /// All types of Element.
+        /// </summary>
+        AllTypes = Category | Tag | Task | Note,
     }
 }

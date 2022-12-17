@@ -527,5 +527,13 @@ namespace Tasks
 
             return;
         }
+
+        private void тест1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //SelectElementForm f = new SelectElementForm(this.m_Engine, EnumElementType.AllTypes, 5, false, MainForm.MainFormTitle + " - Выбрать элемент:", "Выберите элемент для тестирования:");
+            int selectedId = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
+
+            return;
+        }
     }
 }

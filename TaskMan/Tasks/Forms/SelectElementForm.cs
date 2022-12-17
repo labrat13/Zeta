@@ -132,7 +132,7 @@ namespace Tasks.Forms
         /// Тип отображаемого элемента: Определяет тип элемента, который можно выбрать для возврата. 
         /// Категории отображаются независимо от этого значения, так как они соединяют всю структуру элементов разных типов.
         /// </remarks>
-        public int ShowSelectElementForm(
+        public static int ShowSelectElementForm(
             IWin32Window owner,
             String title,
             CEngine engine, 

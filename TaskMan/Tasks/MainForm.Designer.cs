@@ -28,10 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Нет элементов");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.MainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel_MainStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.treeView_TaskTreeView = new System.Windows.Forms.TreeView();
+            this.imageList_treeViewMain = new System.Windows.Forms.ImageList(this.components);
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CreateStorage = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,16 +54,15 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeView_TaskTreeView = new System.Windows.Forms.TreeView();
+            this.тест1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.MainStatusStrip.SuspendLayout();
-            this.MainMenuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -100,6 +104,43 @@
             this.toolStripStatusLabel_MainStatus.Name = "toolStripStatusLabel_MainStatus";
             this.toolStripStatusLabel_MainStatus.Size = new System.Drawing.Size(87, 20);
             this.toolStripStatusLabel_MainStatus.Text = "Status text...";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeView_TaskTreeView);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 371);
+            this.splitContainer1.SplitterDistance = 266;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // treeView_TaskTreeView
+            // 
+            this.treeView_TaskTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_TaskTreeView.ImageIndex = 0;
+            this.treeView_TaskTreeView.ImageList = this.imageList_treeViewMain;
+            this.treeView_TaskTreeView.Location = new System.Drawing.Point(0, 0);
+            this.treeView_TaskTreeView.Name = "treeView_TaskTreeView";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "Нет элементов";
+            this.treeView_TaskTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.treeView_TaskTreeView.SelectedImageIndex = 0;
+            this.treeView_TaskTreeView.Size = new System.Drawing.Size(266, 371);
+            this.treeView_TaskTreeView.TabIndex = 0;
+            // 
+            // imageList_treeViewMain
+            // 
+            this.imageList_treeViewMain.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList_treeViewMain.ImageStream")));
+            this.imageList_treeViewMain.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList_treeViewMain.Images.SetKeyName(0, "category2.png");
+            this.imageList_treeViewMain.Images.SetKeyName(1, "tag.png");
+            this.imageList_treeViewMain.Images.SetKeyName(2, "task.png");
+            this.imageList_treeViewMain.Images.SetKeyName(3, "note.png");
             // 
             // MainMenuStrip
             // 
@@ -182,7 +223,8 @@
             // инструментыToolStripMenuItem
             // 
             this.инструментыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_Settings});
+            this.toolStripMenuItem_Settings,
+            this.тест1ToolStripMenuItem});
             this.инструментыToolStripMenuItem.Name = "инструментыToolStripMenuItem";
             this.инструментыToolStripMenuItem.Size = new System.Drawing.Size(117, 24);
             this.инструментыToolStripMenuItem.Text = "Инструменты";
@@ -190,7 +232,7 @@
             // toolStripMenuItem_Settings
             // 
             this.toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-            this.toolStripMenuItem_Settings.Size = new System.Drawing.Size(167, 26);
+            this.toolStripMenuItem_Settings.Size = new System.Drawing.Size(224, 26);
             this.toolStripMenuItem_Settings.Text = "Настройки";
             // 
             // справкаToolStripMenuItem
@@ -231,30 +273,12 @@
             this.MainToolStrip.Size = new System.Drawing.Size(112, 25);
             this.MainToolStrip.TabIndex = 1;
             // 
-            // splitContainer1
+            // тест1ToolStripMenuItem
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeView_TaskTreeView);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 371);
-            this.splitContainer1.SplitterDistance = 266;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // treeView_TaskTreeView
-            // 
-            this.treeView_TaskTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView_TaskTreeView.Location = new System.Drawing.Point(0, 0);
-            this.treeView_TaskTreeView.Name = "treeView_TaskTreeView";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "Нет элементов";
-            this.treeView_TaskTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            this.treeView_TaskTreeView.Size = new System.Drawing.Size(266, 371);
-            this.treeView_TaskTreeView.TabIndex = 0;
+            this.тест1ToolStripMenuItem.Name = "тест1ToolStripMenuItem";
+            this.тест1ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.тест1ToolStripMenuItem.Text = "Тест1";
+            this.тест1ToolStripMenuItem.Click += new System.EventHandler(this.тест1ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -276,10 +300,10 @@
             this.toolStripContainer1.PerformLayout();
             this.MainStatusStrip.ResumeLayout(false);
             this.MainStatusStrip.PerformLayout();
-            this.MainMenuStrip.ResumeLayout(false);
-            this.MainMenuStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.MainMenuStrip.ResumeLayout(false);
+            this.MainMenuStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -308,5 +332,7 @@
         private System.Windows.Forms.ToolStrip MainToolStrip;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView_TaskTreeView;
+        private System.Windows.Forms.ImageList imageList_treeViewMain;
+        private System.Windows.Forms.ToolStripMenuItem тест1ToolStripMenuItem;
     }
 }

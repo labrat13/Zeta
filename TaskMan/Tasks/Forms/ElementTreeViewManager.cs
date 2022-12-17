@@ -27,11 +27,59 @@ namespace Tasks.Forms
     /// Построить цепочку Ид элементов от корня до выбранного в качестве нового parent.
     /// Если в этой цепочке есть ид текущего элемента, то цепочка неправильная, это соединение образует кольцо, надо заблокировать выбор такого нового parent.
     /// 
-    /// /// </remarks>
+    /// </remarks>
     internal class ElementTreeViewManager
     {
 
         #region *** Constants and Fields ***
+
+
+
+        //----- Константы цвета текста для TreeView -----
+
+        /// <summary>
+        /// Цвет надписи обычных элементов
+        /// </summary>
+        public static Color Color_NormalElement = Color.Black;
+
+        /// <summary>
+        /// Цвет надписи неактивных элементов
+        /// </summary>
+        public static Color Color_InactiveElement = Color.Gray;
+
+        /// <summary>
+        /// Цвет надписи приоритетных задач
+        /// </summary>
+        public static Color Color_PriorityTask = Color.Red;
+
+        /// <summary>
+        /// Цвет надписи неприоритетных задач
+        /// </summary>
+        public static Color Color_NotPriorityTask = Color.Red;
+
+        //----- Константы индексов иконок для TreeView -----
+
+        /// <summary>
+        /// Индекс иконки дерева: Категория.
+        /// </summary>
+        public const int IconIndex_Category = 0;
+
+        /// <summary>
+        /// Индекс иконки дерева: Тег.
+        /// </summary>
+        public const int IconIndex_Tag = 1;
+
+        /// <summary>
+        /// Индекс иконки дерева: Задача.
+        /// </summary>
+        public const int IconIndex_Task = 2;
+
+        /// <summary>
+        /// Индекс иконки дерева: Заметка.
+        /// </summary>
+        public const int IconIndex_Note = 3;
+
+        //----- Переменные класса -----
 
         /// <summary>
         /// Объект БД
@@ -63,18 +111,23 @@ namespace Tasks.Forms
         /// </summary>
         protected int m_startElementId;
 
+        //объекты шрифтов для нод дерева, зависят от потока.
+        //Чтобы изменить шрифт дерева, измените его в контроле дерева.
         /// <summary>
-        /// Цвет надписи обычных элементов
+        ///Шрифт нормальный, используется по умолчанию для нод всех элементов.
         /// </summary>
-        public static Color NormalColor = Color.Black;
-
+        protected Font m_FontNormal;
         /// <summary>
-        /// Цвет надписи неактивных элементов
+        /// Шрифт курсивный.
         /// </summary>
-        public static Color InactiveColor = Color.Gray;
+        protected Font m_FontItalic;
+        /// <summary>
+        /// Шрифт курсивный зачеркнутый.
+        /// </summary>
+        protected Font m_FontItalicStrike;
 
-        #endregion      
-        
+        #endregion
+
         /// <summary>
         /// NR-Initializes a new instance of the <see cref="ElementTreeViewManager"/> class.
         /// </summary>
@@ -96,11 +149,16 @@ namespace Tasks.Forms
         /// </remarks>
         public ElementTreeViewManager(TreeView tw, CEngine engine, int startElementId, EnumElementType elementType)
         {
-            this.m_treeView = tw;   
+            this.m_treeView = tw;
             this.m_AllowedElementTypes = elementType;
             this.m_engine = engine;
             this.m_result = null;
             this.m_startElementId = startElementId;
+
+            //set fonts
+            this.m_FontNormal = new Font(tw.Font, FontStyle.Regular);
+            this.m_FontItalic = new Font(tw.Font, FontStyle.Italic);
+            this.m_FontItalicStrike = new Font(tw.Font, FontStyle.Italic | FontStyle.Strikeout);
 
             return;
         }
@@ -134,90 +192,72 @@ namespace Tasks.Forms
         /// </summary>
         internal void ShowTree()
         {
-            throw new NotImplementedException();//TODO: add code here
 
             //создание дерева сделано, не тестировано, а остальные фишки - не сделаны.
             //ВАЖНО: нода содержит объект элемента в поле Tag
 
-            //удалить все ноды из дерева
-            ClearTree();
-
             //начать обновление дерева 
             this.m_treeView.BeginUpdate();
+            //удалить все ноды из дерева
+            this.m_treeView.Nodes.Clear();
 
-            ////тут загрузить из БД всю кучу элементов и построить из них дерево, сначала в памяти, а потом в трееконтрол поместить.
-            ////дерево строить в памяти - через поля реф в объектах связей-ссылок.
-            ////- не получается - у элемента нет ссылок на подэлементы, только на родителя.
-            ////1 загрузить все элементы требуемого типа из БД в список
-            //List<UAMX_Element> elements;
-            //if (this.m_showedType == ЕнумТипЭлемента.Категория)
-            //    elements = this.m_adapter.getAllCategories();
-            //else if (this.m_showedType == ЕнумТипЭлемента.КлассЗадачи)
-            //    elements = this.m_adapter.getAllClassTasks();
-            //else throw new Exception("Неизвестный тип элемента: " + this.m_showedType);
-
-            ////2 создать ноды для каждого элемента и поместить их в словарь <UID, node>
-            //Dictionary<Int32, TreeNode> dic = new Dictionary<Int32, TreeNode>();
-            //foreach (UAMX_Element el in elements)
-            //    dic.Add(el.Id.Id, makeTreeNode(el));
-
-            ////3 создать связи между нодами перебором всех нод в словаре
-            //foreach (TreeNode tns in dic.Values)
-            //{
-            //    if (tns.Tag == null)
-            //        continue;
-            //    //получить ид родительского элемента (и ноды)
-            //    UAMX_Element ut = (UAMX_Element)tns.Tag;
-            //    Int32 idd = ut.CategoryLink.ID.Id;
-            //    //если ид родительской ноды = 0, значит текущая нода - в корне дерева.
-            //    //и тут пока я ничего не  придумал
-            //    if (idd == 0)
-            //    {
-            //        //добавить текущую ноду в треевиев
-            //        this.m_treeView.Nodes.Add(tns);
-            //    }
-            //    else
-            //    {
-            //        //найти элемент по ид в словаре и его ноду прицепить к текущей
-            //        if (dic.ContainsKey(idd))
-            //        {
-            //            TreeNode tdd = dic[idd];
-            //            tdd.Nodes.Add(tns);//TODO: check no dublicates here
-            //        }
-            //        else
-            //        {
-            //            //указанного в Parent ссылке элемента нет в БД.
-            //            //что тут делать?
-            //            //пока просто добавим эту потерянную ноду в корень дерева
-            //            //так же, как и с ид=0
-            //            //TODO: а можно объединить в один код эти два случая - потом, после отладки.
-            //            //добавить текущую ноду в треевиев
-            //            this.m_treeView.Nodes.Add(tns);
-            //        }
-            //    }
-            //}
-
-            //===============================================
-            //Новое решение, под этот проект:
             this.m_engine.DbAdapter.Open();
             //1 построить цепочку ид элементов от рута до начального элемента
             //передать ее в виде списка инт сверху вниз 
             List<int> idChain = this.m_engine.DbAdapter.GetChainOfElementIds(this.m_startElementId, true);
             //2 построить дерево нод сверху вниз по этой цепочке, раскрывая только ноды, указанные в цепочке.
-            //3 раскрыть конечную ноду, если надо?
-            //TODO: add code here
-
-
+            //- вставить RootId = 0 в начало цепочки
+            idChain.Insert(0, TaskDbAdapter.ElementId_Root);
+            //nodes collection for this loop
+            TreeNodeCollection subnodes = this.m_treeView.Nodes;
+            TreeNode nextNode = null;
+            //loop
+            foreach (int id in idChain)
+            {
+                    //get child elements
+                    List<CElement> childs = this.m_engine.DbAdapter.SelectElementsByParentId(id);
+                //foreach childs - add to subnodes as new node 
+                    foreach(CElement el in childs)
+                    {
+                        //filter by type and then by id chain
+                        //игнорировать элементы, помеченные удаленными.
+                        if (el.IsDeleted())
+                            continue;
+                        //игнорировать элементы любого типа, кроме категорий и указанного в m_AllowedElementType
+                        if (!this.IsAllowedElementType(el.ElementType))
+                            continue;
+                        //теперь элементы добавить в дерево как папки.
+                        //только папку со следующим ид в цепочке показать раскрытой, остальные - свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
+                        if (idChain.Contains(el.Id))
+                        {
+                            nextNode = makeTreeNode(el, false);
+                            subnodes.Add(nextNode);
+                        }
+                        else
+                        {
+                            bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(el.Id) > 0);
+                            subnodes.Add(makeTreeNode(el, subnodesExists));
+                        }
+                        //end
+                    } //end child elements processing
+                //nextNode теперь является следующей нодой, в которую добавляются субноды.
+                if (nextNode == null)
+                    throw new Exception("Не найден элемент цепочки в ереве элементов.");
+                else
+                {
+                    subnodes = nextNode.Nodes;
+                    nextNode = null;
+                }
+            }//end id chain processing
 
             this.m_engine.DbAdapter.Close();
             //закончить обновление дерева
             m_treeView.EndUpdate();
-
-            ////4 список очистить
-            //elements.Clear();
+            //3 раскрыть конечную ноду, если надо?
+            this.m_treeView.SelectedNode = nextNode;
 
             //TODO: остальное смотреть в Инвентарь.CTreeViewManager
-
+            return;
         }
 
 
@@ -249,7 +289,7 @@ namespace Tasks.Forms
         /// </remarks> 
         public bool IsAllowedElementType(EnumElementType elementType)
         {
-            return (this.m_AllowedElementTypes == elementType); 
+            return ((elementType == EnumElementType.Category) || ((this.m_AllowedElementTypes & elementType) > 0)); 
         }
 
         /// <summary>
@@ -262,7 +302,7 @@ namespace Tasks.Forms
         /// </returns>
         public bool IsAllowedElement(bool checkHierarchy, CElement toCheck)
         {
-            bool isAllowedElementType = (this.m_AllowedElementTypes == toCheck.ElementType);
+            bool isAllowedElementType = ((this.m_AllowedElementTypes & toCheck.ElementType) > 0);
             bool isAllowedHierarchyChain = true;
             if(checkHierarchy == true)
                 isAllowedHierarchyChain = this.checkHierarchyChain(this.m_startElementId, toCheck.Id);
@@ -296,11 +336,12 @@ namespace Tasks.Forms
         }
 
         /// <summary>
-        /// NT-Создать ноду по данным объекта, но без субнод.
+        /// NT-Создать ноду по данным объекта, без актуальных субнод.
         /// </summary>
         /// <param name="obj">Элемент</param>
-        /// <returns></returns>
-        private TreeNode makeTreeNode(CElement obj)
+        /// <param name="addTempSubnode">Добавить временную субноду, чтобы ноду можно было раскрыть. </param>
+        /// <returns>Функция возвращает ноду для дерева элементов.</returns>
+        private TreeNode makeTreeNode(CElement obj, bool addTempSubnode)
         {
             TreeNode tn = new TreeNode();
             //get icon index
@@ -311,14 +352,54 @@ namespace Tasks.Forms
             tn.Text = obj.Title;
             tn.ToolTipText = obj.Description;
             //выбрать цвет надписи ноды
-            tn.ForeColor = SelectNodeColor(obj);
+            SelectNodeFontAndColor(tn, obj);
             //ВАЖНО: нода содержит объект элемента в поле Tag
             tn.Tag = obj;
-            //добавить дочерние элементы, если они есть.
-            //здесь нельзя - нет ссылок на них в obj.
-            //есть только родительский элемент, и он не поможет здесь.
+            //добавить пустую ноду, если надо
+            if (addTempSubnode)
+                tn.Nodes.Add("temp node");
+
             return tn;
         }
+
+        /// <summary>
+        /// NT-Назначить цвет и шрифт ноды согласно свойствам элемента
+        /// </summary>
+        /// <param name="tn">Объект ноды.</param>
+        /// <param name="obj">Объект Элемента.</param>
+        private void SelectNodeFontAndColor(TreeNode tn, CElement obj)
+        {
+            //deleted element color
+            if (obj.IsDeleted())
+            {
+                 tn.ForeColor = ElementTreeViewManager.Color_InactiveElement;
+                tn.NodeFont = this.m_FontItalic;//курсив серый
+            }
+            else
+            {
+                //
+                tn.ForeColor = ElementTreeViewManager.Color_NormalElement;
+                tn.NodeFont = this.m_FontNormal;
+                //если это Задача, то цвет определяется ее важностью.
+                if (obj.ElementType == EnumElementType.Task)
+                {
+                    CTask ct = (CTask)obj;
+                    //task priority
+                    if (ct.TaskPriority == EnumTaskPriority.High)
+                        tn.ForeColor = ElementTreeViewManager.Color_PriorityTask;
+                    else if (ct.TaskPriority >= EnumTaskPriority.Low)
+                        tn.ForeColor = ElementTreeViewManager.Color_NotPriorityTask; 
+                    //task state
+                    if(ct.IsCompleted())
+                        tn.NodeFont = this.m_FontItalicStrike;//зачеркнутый курсив 
+                    else if (ct.IsPaused())
+                        tn.NodeFont = this.m_FontItalic;//курсив 
+                }
+            }
+
+            return;
+        }
+
 
         /// <summary>
         /// NT-Gets the index of the node image.
@@ -333,16 +414,16 @@ namespace Tasks.Forms
             switch (t)
             {
                 case EnumElementType.Category:
-                    result = 0;
+                    result = IconIndex_Category;
                     break;
                 case EnumElementType.Tag:
-                    result = 1;
+                    result = IconIndex_Tag;
                     break;
                 case EnumElementType.Task:
-                    result = 2;
+                    result = IconIndex_Task;
                     break;
                 case EnumElementType.Note:
-                    result = 3;
+                    result = IconIndex_Note;
                     break;
                 default:
                     throw new Exception("Неправильный тип элемента: " + t.ToString());
@@ -358,12 +439,21 @@ namespace Tasks.Forms
         /// <returns></returns>
         private static Color SelectNodeColor(CElement obj)
         {
-            //TODO: добавить еще цвета для показа важности задач прямов дереве - это надо вынести в отдельную функцию тогда.
-            Color c = ElementTreeViewManager.NormalColor;
-            if (obj.IsDeleted())//if (objElementState == EnumElementState.Deleted)
-                c = ElementTreeViewManager.InactiveColor;
+            //deleted element color
+             if (obj.IsDeleted())//if (objElementState == EnumElementState.Deleted)
+                return ElementTreeViewManager.Color_InactiveElement;           
+            
+            //если это Задача, то цвет определяется ее важностью.
+            if(obj.ElementType == EnumElementType.Task)
+            {
+                CTask ct = (CTask)obj;
+                if (ct.TaskPriority == EnumTaskPriority.High)
+                    return ElementTreeViewManager.Color_PriorityTask;
+                else if (ct.TaskPriority >= EnumTaskPriority.Low)
+                    return ElementTreeViewManager.Color_NotPriorityTask;;
+            }
 
-            return c;
+            return ElementTreeViewManager.Color_NormalElement;
         }
     }
 }

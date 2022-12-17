@@ -117,6 +117,28 @@ namespace TaskEngine
         #endregion
 
         /// <summary>
+        /// NT-Determines whether this Task is completed.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this Task is completed; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsCompleted()
+        {
+            return this.m_TaskState == EnumTaskState.Completed;
+        }
+
+        /// <summary>
+        /// Determines whether this Task is paused.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this Task is paused; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsPaused()
+        {
+            return this.m_TaskState == EnumTaskState.Paused;
+        }
+
+        /// <summary>
         /// NT-Получить степень заполненности карточки элемента.
         /// </summary>
         /// <returns></returns>
