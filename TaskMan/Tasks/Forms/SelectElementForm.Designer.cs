@@ -105,6 +105,7 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.treeView_Elements, 3);
             this.treeView_Elements.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Elements.HideSelection = false;
             this.treeView_Elements.ImageIndex = 0;
             this.treeView_Elements.ImageList = this.imageList_ElementPics;
             this.treeView_Elements.Location = new System.Drawing.Point(3, 43);
@@ -127,8 +128,11 @@
             treeNode3,
             treeNode4});
             this.treeView_Elements.SelectedImageIndex = 0;
+            this.treeView_Elements.ShowNodeToolTips = true;
             this.treeView_Elements.Size = new System.Drawing.Size(346, 279);
             this.treeView_Elements.TabIndex = 3;
+            this.treeView_Elements.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_Elements_BeforeCollapse);
+            this.treeView_Elements.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_Elements_BeforeExpand);
             this.treeView_Elements.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Elements_AfterSelect);
             // 
             // imageList_ElementPics

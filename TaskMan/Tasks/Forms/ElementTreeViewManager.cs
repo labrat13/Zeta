@@ -198,6 +198,8 @@ namespace Tasks.Forms
 
             //начать обновление дерева 
             this.m_treeView.BeginUpdate();
+            //set cursor
+            Cursor.Current = Cursors.WaitCursor;
             //удалить все ноды из дерева
             this.m_treeView.Nodes.Clear();
 
@@ -256,11 +258,49 @@ namespace Tasks.Forms
 
             this.m_engine.DbAdapter.Close();
             //закончить обновление дерева
+            Cursor.Current = Cursors.Default;
             m_treeView.EndUpdate();
+
             //3 раскрыть конечную ноду, если надо?
-            this.m_treeView.SelectedNode = nextNode;
+            //Важно: В этом месте БД уже не используется и закрыта, поэтому ее могут открывать и закрывать обработчики событий дерева.  
+            //this.m_treeView.SelectedNode = lastNode; - это не работает, так как в дереве уже нет этой ноды
+            //надо раскрывать ноды по цепочке ид
+            this.ExpandNodes(idChain);
 
             //TODO: остальное смотреть в Инвентарь.CTreeViewManager
+            return;
+        }
+        /// <summary>
+        /// NT-Раскрыть узлы дерева по цепочке идентификаторов элементов. 
+        /// </summary>
+        /// <param name="idChain">The identifier chain.</param>
+        private void ExpandNodes(List<int> idChain)
+        {
+            TreeNodeCollection subnodes = this.m_treeView.Nodes;
+            foreach (int id in idChain)
+            {
+                //skip root id = 0;
+                if (id == TaskDbAdapter.ElementId_Root)
+                    continue;
+                foreach (TreeNode child in subnodes)
+                {
+                    if (child == null)
+                        continue;
+                    CElement elem = (CElement)child.Tag;
+                    if (elem == null)
+                        continue;
+                    //expand node
+                    if (elem.Id == id)
+                    {
+                        child.Expand();
+                        subnodes = child.Nodes;
+                        break;
+                    }
+                }
+            }
+            //TODO: тут последний элемент не выбирается в дереве.
+            //а если бы он выбирался - генерировал бы событие NodeSelect.
+            //А это событие сейчас неправильно обрабатывается, и вызывающему коду возвращается 0.
             return;
         }
 
@@ -273,9 +313,15 @@ namespace Tasks.Forms
         /// <returns></returns>
         internal CElement NodeSelected(TreeViewEventArgs e)
         {
+            if (e.Action == TreeViewAction.Unknown)
+                return null;
             //надо передать в диалог объект данных выделенного элемента
             TreeNode node = e.Node;
+            if (node == null)
+                return null;
             CElement obj = (CElement)node.Tag;
+            if (obj == null)
+                return null;
             //записать объект как результат
             this.m_result = obj;
             //вернуть объект элемента в диалог, чтобы он мог отобразить его описание
@@ -436,28 +482,114 @@ namespace Tasks.Forms
             return result;
         }
 
-        /// <summary>
-        /// NT-Selects the color of the node.
-        /// </summary>
-        /// <param name="obj">Элемент</param>
-        /// <returns></returns>
-        private static Color SelectNodeColor(CElement obj)
-        {
-            //deleted element color
-            if (obj.IsDeleted())//if (objElementState == EnumElementState.Deleted)
-                return ElementTreeViewManager.Color_InactiveElement;
+        ///// <summary>
+        ///// NT-Selects the color of the node.
+        ///// </summary>
+        ///// <param name="obj">Элемент</param>
+        ///// <returns></returns>
+        //private static Color SelectNodeColor(CElement obj)
+        //{
+        //    //deleted element color
+        //    if (obj.IsDeleted())//if (objElementState == EnumElementState.Deleted)
+        //        return ElementTreeViewManager.Color_InactiveElement;
 
-            //если это Задача, то цвет определяется ее важностью.
-            if (obj.ElementType == EnumElementType.Task)
+        //    //если это Задача, то цвет определяется ее важностью.
+        //    if (obj.ElementType == EnumElementType.Task)
+        //    {
+        //        CTask ct = (CTask)obj;
+        //        if (ct.TaskPriority == EnumTaskPriority.High)
+        //            return ElementTreeViewManager.Color_PriorityTask;
+        //        else if (ct.TaskPriority >= EnumTaskPriority.Low)
+        //            return ElementTreeViewManager.Color_NotPriorityTask; ;
+        //    }
+
+        //    return ElementTreeViewManager.Color_NormalElement;
+        //}
+
+
+        /// <summary>
+        /// NR-Node Before expand event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        internal void TreeViewBeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            //skip invalid actions
+            if (e.Action != TreeViewAction.Expand)
+                return;
+            //нода раскрывается - вставить в нее субноды элементов, если они есть.
+            TreeNode node = e.Node;
+            if (node == null)
+                return;
+            CElement el = (CElement)node.Tag;
+            if (el == null)
+                return;
+
+            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
+            node.Nodes.Clear();
+            //теперь открыть бд, получить все суб-элементы, добавить их как суб-ноды, закрыть БД
+            int parentId = el.Id;
+            //start update
+            try
             {
-                CTask ct = (CTask)obj;
-                if (ct.TaskPriority == EnumTaskPriority.High)
-                    return ElementTreeViewManager.Color_PriorityTask;
-                else if (ct.TaskPriority >= EnumTaskPriority.Low)
-                    return ElementTreeViewManager.Color_NotPriorityTask; ;
+                this.m_treeView.BeginUpdate();
+                this.m_treeView.UseWaitCursor = true;
+                this.m_engine.DbAdapter.Open();
+
+                //get child elements
+                List<CElement> childs = this.m_engine.DbAdapter.SelectElementsByParentId(parentId);
+                //foreach childs - add to subnodes as new node 
+                foreach (CElement ch in childs)
+                {
+                    //filter by type and then by id chain
+                    //игнорировать элементы, помеченные удаленными.
+                    if (ch.IsDeleted())
+                        continue;
+                    //игнорировать элементы любого типа, кроме категорий и указанного в m_AllowedElementType
+                    if (!this.IsAllowedElementType(ch.ElementType))
+                        continue;
+                    //теперь элементы добавить в дерево как папки.
+                    //свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
+                    bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(ch.Id) > 0);
+                    node.Nodes.Add(makeTreeNode(ch, subnodesExists));
+                }
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+            finally
+            {
+                //finish update
+                this.m_engine.DbAdapter.Close();
+                this.m_treeView.UseWaitCursor = false;
+                this.m_treeView.EndUpdate();
             }
 
-            return ElementTreeViewManager.Color_NormalElement;
+            return;
+        }
+
+        /// <summary>
+        /// NT-Node Before collapse event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        internal void TreeViewBeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            //skip invalid actions
+            if (e.Action != TreeViewAction.Collapse)
+                return;
+            //нода сворачивается - вставить в нее временную субноду.
+            TreeNode node = e.Node;
+            if (node == null)
+                return;
+
+            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
+            node.Nodes.Clear();
+            //вставить субноду
+            node.Nodes.Add("temp node");
+
+            return;
         }
     }
 }

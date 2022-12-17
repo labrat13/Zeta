@@ -12,6 +12,11 @@ namespace Tasks.Forms
     public partial class SelectElementForm : Form
     {
         
+        //TODO: убрать неиспользуемые поля здесь - после отладки этой формы.
+        //TODO: адаптер Бд лучше бы держать открытым на все время существования этой модальной формы:
+        //от Form.Load  до Form.Closing, а то сложно тут с событиями получается, они все Бд используют и когда попало вызываются.
+        //а так - исключение поймал - и форму закрыл, и БД закрыл  - все хорошо.
+
         #region *** Constants and fields ***
 
         /// <summary>
@@ -262,6 +267,9 @@ namespace Tasks.Forms
             //и кнопку ОК диалога включить или выключить
             //чтобы нельзя было выбрать неподходящий тип элемента
             TaskEngine.CElement obj = this.m_treeManager.NodeSelected(e);
+            //skip any wrong events
+            if (obj == null)
+                return;
             //кнопка ОК диалога
             this.button_OK.Enabled = this.m_treeManager.IsAllowedElement(m_checkHierarchy, obj);
             //создать и вывести описание объекта
@@ -272,8 +280,17 @@ namespace Tasks.Forms
             return;
         }
 
+
         #endregion
 
+        private void treeView_Elements_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            this.m_treeManager.TreeViewBeforeExpand(sender, e);
+        }
 
+        private void treeView_Elements_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            this.m_treeManager.TreeViewBeforeCollapse(sender, e);
+        }
     }
 }
