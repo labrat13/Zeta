@@ -473,7 +473,7 @@ namespace Tasks
         /// </summary>
         private void showTodayTaksPanel()
         {
-            throw new NotImplementedException();//TODO: add code here
+            //TODO: add code here
         }
 
         /// <summary>
@@ -481,7 +481,7 @@ namespace Tasks
         /// </summary>
         private void showMainElementTree()
         {
-            throw new NotImplementedException();//TODO: add code here
+            //TODO: add code here
         }
 
         /// <summary>

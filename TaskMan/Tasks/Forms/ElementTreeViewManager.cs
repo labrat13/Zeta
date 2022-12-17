@@ -214,40 +214,44 @@ namespace Tasks.Forms
             //loop
             foreach (int id in idChain)
             {
-                    //get child elements
-                    List<CElement> childs = this.m_engine.DbAdapter.SelectElementsByParentId(id);
+                //get child elements
+                List<CElement> childs = this.m_engine.DbAdapter.SelectElementsByParentId(id);
                 //foreach childs - add to subnodes as new node 
-                    foreach(CElement el in childs)
+                foreach (CElement el in childs)
+                {
+                    //filter by type and then by id chain
+                    //игнорировать элементы, помеченные удаленными.
+                    if (el.IsDeleted())
+                        continue;
+                    //игнорировать элементы любого типа, кроме категорий и указанного в m_AllowedElementType
+                    if (!this.IsAllowedElementType(el.ElementType))
+                        continue;
+                    //теперь элементы добавить в дерево как папки.
+                    //только папку со следующим ид в цепочке показать раскрытой, остальные - свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
+                    if (idChain.Contains(el.Id))
                     {
-                        //filter by type and then by id chain
-                        //игнорировать элементы, помеченные удаленными.
-                        if (el.IsDeleted())
-                            continue;
-                        //игнорировать элементы любого типа, кроме категорий и указанного в m_AllowedElementType
-                        if (!this.IsAllowedElementType(el.ElementType))
-                            continue;
-                        //теперь элементы добавить в дерево как папки.
-                        //только папку со следующим ид в цепочке показать раскрытой, остальные - свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
-                        if (idChain.Contains(el.Id))
-                        {
-                            nextNode = makeTreeNode(el, false);
-                            subnodes.Add(nextNode);
-                        }
-                        else
-                        {
-                            bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(el.Id) > 0);
-                            subnodes.Add(makeTreeNode(el, subnodesExists));
-                        }
-                        //end
-                    } //end child elements processing
+                        nextNode = makeTreeNode(el, false);
+                        subnodes.Add(nextNode);
+                    }
+                    else
+                    {
+                        bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(el.Id) > 0);
+                        subnodes.Add(makeTreeNode(el, subnodesExists));
+                    }
+                    //end
+                } //end child elements processing
                 //nextNode теперь является следующей нодой, в которую добавляются субноды.
-                if (nextNode == null)
-                    throw new Exception("Не найден элемент цепочки в ереве элементов.");
-                else
+                if (nextNode != null)
                 {
                     subnodes = nextNode.Nodes;
                     nextNode = null;
                 }
+                //else
+                //{
+                //    //Если последний элемент не содержит субэлементов, мы оказываемся здесь.
+                //    //Если элемент цепочки не был найден, мы оказываемся здесь. Но этого не может быть - ведь мы уже собрали цепочку ранее, значит элемент существует..
+                //    throw new Exception("Не найден элемент цепочки в дереве элементов.");
+                //}
             }//end id chain processing
 
             this.m_engine.DbAdapter.Close();
@@ -289,7 +293,7 @@ namespace Tasks.Forms
         /// </remarks> 
         public bool IsAllowedElementType(EnumElementType elementType)
         {
-            return ((elementType == EnumElementType.Category) || ((this.m_AllowedElementTypes & elementType) > 0)); 
+            return ((elementType == EnumElementType.Category) || ((this.m_AllowedElementTypes & elementType) > 0));
         }
 
         /// <summary>
@@ -304,7 +308,7 @@ namespace Tasks.Forms
         {
             bool isAllowedElementType = ((this.m_AllowedElementTypes & toCheck.ElementType) > 0);
             bool isAllowedHierarchyChain = true;
-            if(checkHierarchy == true)
+            if (checkHierarchy == true)
                 isAllowedHierarchyChain = this.checkHierarchyChain(this.m_startElementId, toCheck.Id);
 
             return isAllowedElementType && isAllowedHierarchyChain;
@@ -319,7 +323,7 @@ namespace Tasks.Forms
         private bool checkHierarchyChain(int currentElementId, int newParentElementId)
         {
             //быстро вернуть результат, если элемент ссылается на самого себя.
-            if(currentElementId == newParentElementId)
+            if (currentElementId == newParentElementId)
                 return false;
             //open database if not opened 
             this.m_engine.DbAdapter.Open();
@@ -328,7 +332,7 @@ namespace Tasks.Forms
             List<int> ids = this.m_engine.DbAdapter.GetChainOfElementIds(newParentElementId, false);
             //2 проверяем: если цепочка содержит currentElementId, значит цепочка образует кольцо newParentElementId - currentElementId - ... - newParentElementId
             //Это неправильная цепочка, возвращаем результат.
-            bool result = ids.Contains(currentElementId); 
+            bool result = ids.Contains(currentElementId);
             //close database
             this.m_engine.DbAdapter.Close();
 
@@ -372,7 +376,7 @@ namespace Tasks.Forms
             //deleted element color
             if (obj.IsDeleted())
             {
-                 tn.ForeColor = ElementTreeViewManager.Color_InactiveElement;
+                tn.ForeColor = ElementTreeViewManager.Color_InactiveElement;
                 tn.NodeFont = this.m_FontItalic;//курсив серый
             }
             else
@@ -388,9 +392,9 @@ namespace Tasks.Forms
                     if (ct.TaskPriority == EnumTaskPriority.High)
                         tn.ForeColor = ElementTreeViewManager.Color_PriorityTask;
                     else if (ct.TaskPriority >= EnumTaskPriority.Low)
-                        tn.ForeColor = ElementTreeViewManager.Color_NotPriorityTask; 
+                        tn.ForeColor = ElementTreeViewManager.Color_NotPriorityTask;
                     //task state
-                    if(ct.IsCompleted())
+                    if (ct.IsCompleted())
                         tn.NodeFont = this.m_FontItalicStrike;//зачеркнутый курсив 
                     else if (ct.IsPaused())
                         tn.NodeFont = this.m_FontItalic;//курсив 
@@ -440,17 +444,17 @@ namespace Tasks.Forms
         private static Color SelectNodeColor(CElement obj)
         {
             //deleted element color
-             if (obj.IsDeleted())//if (objElementState == EnumElementState.Deleted)
-                return ElementTreeViewManager.Color_InactiveElement;           
-            
+            if (obj.IsDeleted())//if (objElementState == EnumElementState.Deleted)
+                return ElementTreeViewManager.Color_InactiveElement;
+
             //если это Задача, то цвет определяется ее важностью.
-            if(obj.ElementType == EnumElementType.Task)
+            if (obj.ElementType == EnumElementType.Task)
             {
                 CTask ct = (CTask)obj;
                 if (ct.TaskPriority == EnumTaskPriority.High)
                     return ElementTreeViewManager.Color_PriorityTask;
                 else if (ct.TaskPriority >= EnumTaskPriority.Low)
-                    return ElementTreeViewManager.Color_NotPriorityTask;;
+                    return ElementTreeViewManager.Color_NotPriorityTask; ;
             }
 
             return ElementTreeViewManager.Color_NormalElement;

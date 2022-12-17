@@ -251,9 +251,9 @@ namespace TaskEngine
                 catTasks.ElementType = EnumElementType.Category;
                 catTasks.ElementState = EnumElementState.ProtectedFromDelete;//do not use for user items!
                 catTasks.Parent = new CElementRef(ElementId_Root);
-                catTasks.Title = "Tasks";
-                catTasks.Description = "Tasks main category";
-                catTasks.Remarks = "This is a first fixed category, protected from deletion";
+                catTasks.Title = "Задачи";
+                catTasks.Description = "Раздел для Задач.";
+                catTasks.Remarks = "Это раздел для Задач, защищен от удаления.";
                 //insert
                 this.InsertElementWithTransaction(catTasks);
 
@@ -261,11 +261,11 @@ namespace TaskEngine
                 CElement tagcat = new CElement();
                 tagcat.Id = ElementId_TagRoot;
                 tagcat.Parent = new CElementRef(ElementId_Root);
-                tagcat.Title = "Tags";
-                tagcat.Description = "Main tag category";
+                tagcat.Title = "Теги";
+                tagcat.Description = "Раздел для Тегов.";
                 tagcat.ElementState = EnumElementState.ProtectedFromDelete;
                 tagcat.ElementType = EnumElementType.Category;
-                tagcat.Remarks = "tag category remarks";
+                tagcat.Remarks = "Это раздел для Тегов, защищен от удаления.";
                 //insert
                 this.InsertElementWithTransaction(tagcat);
 
@@ -273,11 +273,11 @@ namespace TaskEngine
                 CElement tag1 = new CElement();
                 tag1.Id = 3;
                 tag1.Parent = new CElementRef(ElementId_TagRoot);
-                tag1.Title = "FirstTag";
-                tag1.Description = " First tag";
+                tag1.Title = "ТестовыйТег";
+                tag1.Description = "Первый тег в этом Хранилище.";
                 tag1.ElementState = EnumElementState.Normal;
                 tag1.ElementType = EnumElementType.Tag;
-                tag1.Remarks = "First tag remarks";
+                tag1.Remarks = "Описание тестового тега.";
                 //insert
                 this.InsertElementWithTransaction(tag1);
 
@@ -285,11 +285,11 @@ namespace TaskEngine
                 CElement catHome = new CElement();
                 catHome.Id = 4;
                 catHome.Parent = new CElementRef(ElementId_TaskRoot);
-                catHome.Title = "Home";
-                catHome.Description = "Tasks subcategory";
+                catHome.Title = "Дом";
+                catHome.Description = "Задачи по хозяйству?";
                 catHome.ElementState = EnumElementState.Normal;
                 catHome.ElementType = EnumElementType.Category;
-                catHome.Remarks = "This is a first normal category";
+                catHome.Remarks = "Это первая обычная категория.";
                 //insert
                 this.InsertElementWithTransaction(catHome);
 
@@ -297,11 +297,11 @@ namespace TaskEngine
                 CElement rule1 = new CElement();
                 rule1.Id = 5;
                 rule1.Parent = new CElementRef(4);
-                rule1.Title = "Rule1";
-                rule1.Description = "Rule description text";
+                rule1.Title = "Первая заметка";
+                rule1.Description = "Текст описания заметки.";
                 rule1.ElementState = EnumElementState.Normal;
                 rule1.ElementType = EnumElementType.Note;
-                rule1.Remarks = "Rule remarks";
+                rule1.Remarks = "Это первая тестовая заметка. Заметки применяются для описания правил и полезных замечаний.";
                 rule1.Tags.Add(3, null);
                 //insert
                 this.InsertElementWithTransaction(rule1);
@@ -310,15 +310,15 @@ namespace TaskEngine
                 CTask task1 = new CTask();
                 task1.Id = 6;
                 task1.Parent = new CElementRef(4);
-                task1.Title = "Task1";
-                task1.Description = "Task description text";
+                task1.Title = "Задача1";
+                task1.Description = "Первая тестовая Задача.";
                 task1.ElementState = EnumElementState.Normal;//must be init in constructor
                 task1.ElementType = EnumElementType.Task;//must be init in CTask constructor
-                task1.Remarks = "Task remarks";
+                task1.Remarks = "Это первая тестовая Задача.";
                 //task info
                 task1.TaskStartDate = new DateTime(2023, 01, 01);
                 task1.TaskCompletionDate = new DateTime(2023, 01, 02);
-                task1.TaskResult = "Result for this task";
+                task1.TaskResult = "Перечислите здесь результаты задачи как цели, которые необходимо достичь, и опишите их текущее состояние. После завершения задачи отметьте состояние каждой из перечисленных тут целей.";
                 task1.TaskState = EnumTaskState.Run;
                 //tags
                 task1.Tags.Add(3, null);
