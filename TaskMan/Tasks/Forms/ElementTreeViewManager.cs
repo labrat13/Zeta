@@ -33,8 +33,6 @@ namespace Tasks.Forms
 
         #region *** Constants and Fields ***
 
-
-
         //----- Константы цвета текста для TreeView -----
 
         /// <summary>
@@ -111,8 +109,14 @@ namespace Tasks.Forms
         /// </summary>
         protected int m_startElementId;
 
+        /// <summary>
+        /// Проверять отсутствие нарушения иерархии при выборе родительского элемента в этой форме.
+        /// </summary>
+        protected bool m_checkHierarchy;
+
         //объекты шрифтов для нод дерева, зависят от потока.
         //Чтобы изменить шрифт дерева, измените его в контроле дерева.
+
         /// <summary>
         ///Шрифт нормальный, используется по умолчанию для нод всех элементов.
         /// </summary>
@@ -143,17 +147,19 @@ namespace Tasks.Forms
         /// <param name="engine">Task Engine reference for database access.</param>
         /// <param name="startElementId">Идентификатор элемента, представляющего начало обозреваемого дерева элементов.</param>
         /// <param name="elementType">Фильтр типа отображаемых элементов.</param>
+        /// <param name="checkHierarchy">Проверять отсутствие нарушения иерархии при выборе родительского элемента в этой форме</param>
         /// <remarks>
         /// Тип отображаемого элемента: Определяет тип элемента, который можно выбрать для возврата. 
         /// Категории отображаются независимо от этого значения, так как они соединяют всю структуру элементов разных типов.
         /// </remarks>
-        public ElementTreeViewManager(TreeView tw, CEngine engine, int startElementId, EnumElementType elementType)
+        public ElementTreeViewManager(TreeView tw, CEngine engine, int startElementId, EnumElementType elementType, bool checkHierarchy)
         {
             this.m_treeView = tw;
             this.m_AllowedElementTypes = elementType;
             this.m_engine = engine;
             this.m_result = null;
             this.m_startElementId = startElementId;
+            this.m_checkHierarchy = checkHierarchy;
 
             //set fonts
             this.m_FontNormal = new Font(tw.Font, FontStyle.Regular);
@@ -173,12 +179,13 @@ namespace Tasks.Forms
             get { return m_result; }
             set { m_result = value; }
         }
+
         #endregion
 
         /// <summary>
         /// NT-очистить дерево элементов для следующего запуска диалога
         /// </summary>
-        internal void ClearTree()
+        public void ClearTree()
         {
             this.m_treeView.BeginUpdate();
             this.m_treeView.Nodes.Clear();
@@ -187,10 +194,336 @@ namespace Tasks.Forms
             return;
         }
 
+        #region *** Get expanded nodes functions ***  
+        
+        /// <summary>
+        /// NT-Получить список ид открытых нод дерева.
+        /// </summary>
+        /// <returns></returns>
+        public List<int> getExpandedNodesElementIdList()
+        {
+            List<int> lid = new List<int>();
+            TreeNodeCollection nodes = this.m_treeView.Nodes;
+            this.getExpandedNodesSub(lid, nodes);
+
+            return lid;
+        }
+
+        /// <summary>
+        /// NT-Рекурсивно обойти дерево по открытым нодам и внести ид элементов открытых нод в список.
+        /// </summary>
+        /// <param name="lid">Список ид открытых нод дерева.</param>
+        /// <param name="nodes">Коллекция субнод очередной ноды.</param>
+        private void getExpandedNodesSub(List<int> lid, TreeNodeCollection nodes)
+        {
+            foreach (TreeNode treeNode in nodes)
+            {
+                //в открытых нодах не может быть временных субнод.
+                if (treeNode.IsExpanded)
+                {
+                    CElement elem = (CElement) treeNode.Tag;
+                    lid.Add(elem.Id);
+                    if (treeNode.Nodes.Count > 0)
+                        this.getExpandedNodesSub(lid, treeNode.Nodes);
+                }
+            }
+        }
+
+        #endregion
+
+        #region *** Функции обновления дерева после изменений в БД ***
+    
+        /// <summary>
+        /// NT-Обновить дерево после изменения БД и снова раскрыть и выбрать прежние элементы.
+        /// </summary>
+        public void UpdateTree()
+        {
+            //Тут BeginUpdate() и AfterUpdate() неудобно вызывать. Поэтому и их и курсор менять на часы - надо в вызывающем коде. 
+            
+            //получить список раскрытых нод дерева
+            List<int> expandedNodesIdList = this.getExpandedNodesElementIdList();
+            //получить ид элемента выбранной ноды
+            CElement elem = (CElement)null;
+            TreeNode selectedNode = this.m_treeView.SelectedNode;
+            if (selectedNode != null)
+                elem = (CElement)selectedNode.Tag;
+            //свернуть все дерево
+            this.m_treeView.CollapseAll();
+            //для каждого ид из списка раскрытых нод найти его ноду в дереве
+            // и если нашел, раскрыть ее. Это приведет к загрузке субнод и можно будет продолжать поиск.
+            foreach (int elemId in expandedNodesIdList)
+            {
+                TreeNode nodeByElementId = this.findNodeByElementId(elemId);
+                if (nodeByElementId != null)
+                    nodeByElementId.Expand();
+            }
+            //теперь найти ноду , бывшую ранее выбранной.
+            TreeNode nodeByElementId1 = this.findNodeByElementId(elem.Id);
+            //если нода не найдена, выйти.
+            //если нода найдена, сделать ее видимой и выбранной нодой.
+            if (nodeByElementId1 == null)
+                return;
+            nodeByElementId1.EnsureVisible();
+            this.m_treeView.SelectedNode = nodeByElementId1;
+
+            return;
+        }
+
+        //Ищем ноду в дереве по ид элемента.
+        //но дерево тогда должно быть раскрыто, ведь субноды загружаются только при раскрытии ноды.
+        //поэтому поиск идет только по раскрытым нодам дерева.
+
+        /// <summary>
+        /// NT-Ищем ноду в дереве по ид элемента.
+        /// </summary>
+        /// <param name="objid">ИД элемента</param>
+        /// <returns>Функция возвращает ноду с элементом с указанным идентификатором, либо null если ничего не найдено.</returns>
+        private TreeNode findNodeByElementId(int objid)
+        {
+            TreeNodeCollection nodes = this.m_treeView.Nodes;
+
+            return this.findNodeByElementIdSub(objid, nodes);
+        }
+
+        /// <summary>
+        /// NT-Рекурсивно ищем ноду в дереве по ид элемента.
+        /// </summary>
+        /// <param name="objid">ИД элемента</param>
+        /// <param name="nodes">Коллекция субнод.</param>
+        /// <returns>Функция возвращает ноду с элементом с указанным идентификатором, либо null если ничего не найдено.</returns>
+        private TreeNode findNodeByElementIdSub(int objid, TreeNodeCollection nodes)
+        {
+            TreeNode resultNode = (TreeNode)null;
+            //для каждой ноды в коллекции нод
+            foreach (TreeNode tn in nodes)
+            {
+                //извлечь объект из поля тега ноды
+                CElement elem = (CElement)tn.Tag;
+                //если объект не нуль, и ид==требуемому и тип элемента==требуемому
+                if ((elem != null) && (objid == elem.Id))
+                {
+                    //возвращаем найденную ноду
+                    resultNode = tn;
+                    break;
+                }
+                //если у ноды есть субноды, запускаем поиск для каждой из них.
+                //Если такой поиск найдет ноду, возвращаем ее, а если не найдет - возвращаем нуль. 
+                if (tn.Nodes.Count > 0)
+                {
+                    resultNode = this.findNodeByElementIdSub(objid, tn.Nodes);
+                    if (resultNode != null)
+                        break;
+                }
+            }
+            return resultNode;
+        }
+
+        #endregion
+
+        #region *** Функции коллекции иконок для дерева ***
+
+        //тут нужны функции, управляющие коллекцией иконок для нод дерева.
+        //базовые иконки загружаются при старте формы
+        //плюс иконки раздела корзины и ее элементов
+        //плюс иконки раздела файлы и его элементов - тут планируется извлекать иконку из шелла и добавлять в эту коллекцию, чтобы коллекция использовала родные иконки.
+        //для файлов документов это будут иконки по расширению, и ключ - расширение, с точкой мили без?
+        //для исполняемых файлов ключом будет название файла-приложения - левая часть до первой точки.
+        //если иконка не найдена или еще что, то будет использоваться иконка ошибки.
+        //вот эти все функции надо бы вынести в отдельный класс, но пока здесь все свалим в кучу.
+
+        ///// <summary>
+        ///// NT-Adds the icon for TreeView.
+        ///// </summary>
+        ///// <param name="icon">The icon.</param>
+        ///// <returns></returns>
+        ///// <exception cref="System.ArgumentException">Размер иконки более допустимого 32х32</exception>
+        //private int addIconForTreeView(Image icon)
+        //{
+        //    if (icon.Height > 32 || icon.Width > 32)
+        //        throw new ArgumentException("Размер иконки более допустимого 32х32");
+
+        //    string md5Hash = CImageProcessor.GetMD5Hash(icon);
+
+        //    ImageList imageList = this.m_treeView.ImageList;
+        //    if (imageList.Images.IndexOfKey(md5Hash) < 0)
+        //        imageList.Images.Add(md5Hash, icon);
+
+        //    return imageList.Images.IndexOfKey(md5Hash);
+        //}
+
+
+        //private void ClearIconList()
+        //{
+        //    this.m_treeView.ImageList.Images.Clear();
+        //}
+
+        #endregion
+
+        #region *** Обработчики событий дерева от формы. ***    
+        
+        /// <summary>
+        /// NT-Клик по ноде сворачивает-разворачивает ноду.
+        /// Подключите этот обработчик, если надо разворачивать ноды дерева одиночным кликом.
+        /// </summary>
+        /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs"/> instance containing the event data.</param>
+        public void NodeClick(TreeNodeMouseClickEventArgs e)
+        {
+            e.Node.Toggle();
+        }
+
+        /// <summary>
+        /// NT-Node Before expand event.
+        /// </summary>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        public void TreeViewBeforeExpand(TreeViewCancelEventArgs e)
+        {
+            ////если сворачивание-разворачивание заблокировано
+            //if (!this.m_TreeNodeCollapseEventHandlersEnabled)
+            //    return;
+
+            //skip invalid actions
+            if (e.Action != TreeViewAction.Expand)
+                return;
+            //разворачиваемая нода
+            TreeNode node = e.Node;
+            if (node == null)
+                return;
+            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
+            node.Nodes.Clear();
+            //получить ид элемента. если нуль, то выйти.
+            CElement el = (CElement)node.Tag;
+            if (el == null)
+                return;
+            //start update treeview
+            this.m_treeView.BeginUpdate();
+            this.m_treeView.UseWaitCursor = true;
+            //загрузить субноды
+            TreeNode[] nodes = this.makeElementSubNodes(el.Id);
+                node.Nodes.AddRange(nodes);
+            //finish update
+            this.m_treeView.UseWaitCursor = false;
+            this.m_treeView.EndUpdate();
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-Node Before collapse event.
+        /// </summary>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        public void TreeViewBeforeCollapse(TreeViewCancelEventArgs e)
+        {
+            //skip invalid actions
+            if (e.Action != TreeViewAction.Collapse)
+                return;
+            ////skip collapse if blocked
+            //if (!this.m_TreeNodeCollapseEventHandlersEnabled)
+            //    return;
+            //нода сворачивается - вставить в нее временную субноду.
+            TreeNode node = e.Node;
+            if (node == null)
+                return;
+            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
+            node.Nodes.Clear();
+            //вставить субноду
+            node.Nodes.Add("temp node");
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-пользователь что-то выбрал в дереве, вот событие из дерева.
+        /// </summary>
+        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        /// <returns>Функция возвращает выбранный объект либо null при ошибке.</returns>
+        public CElement NodeSelected(TreeViewEventArgs e)
+        {
+            if (e.Action == TreeViewAction.Unknown)
+                return null;
+            //надо передать в диалог объект данных выделенного элемента
+            TreeNode node = e.Node;
+            if (node == null)
+                return null;
+            CElement obj = (CElement)node.Tag;
+            if (obj == null)
+                return null;
+            //записать объект как результат
+            this.m_result = obj;
+            //вернуть объект элемента в диалог, чтобы он мог отобразить его описание и включить-выключить кнопку выбора элемента.
+            return obj;
+        }
+
+        #endregion
+
+
+
+
+        #region oldCode
+        /// <summary>
+        /// NR-Node Before expand event.
+        /// </summary>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        public void TreeViewBeforeExpandOld( TreeViewCancelEventArgs e)
+        {
+            //skip invalid actions
+            if (e.Action != TreeViewAction.Expand)
+                return;
+            //нода раскрывается - вставить в нее субноды элементов, если они есть.
+            TreeNode node = e.Node;
+            if (node == null)
+                return;
+            CElement el = (CElement)node.Tag;
+            if (el == null)
+                return;
+
+            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
+            node.Nodes.Clear();
+            //теперь открыть бд, получить все суб-элементы, добавить их как суб-ноды, закрыть БД
+            int parentId = el.Id;
+            //start update
+            try
+            {
+                this.m_treeView.BeginUpdate();
+                this.m_treeView.UseWaitCursor = true;
+                this.m_engine.DbAdapter.Open();
+
+                //get child elements
+                List<CElement> childs = this.m_engine.DbAdapter.SelectElementsByParentId(parentId);
+                //foreach childs - add to subnodes as new node 
+                foreach (CElement ch in childs)
+                {
+                    //filter by type and then by id chain
+                    //игнорировать элементы, помеченные удаленными.
+                    if (ch.IsDeleted())
+                        continue;
+                    //игнорировать элементы любого типа, кроме категорий и указанного в m_AllowedElementType
+                    if (!this.IsAllowedElementType(ch.ElementType))
+                        continue;
+                    //теперь элементы добавить в дерево как папки.
+                    //свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
+                    bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(ch.Id) > 0);
+                    node.Nodes.Add(makeTreeNode(ch, subnodesExists));
+                }
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+            finally
+            {
+                //finish update
+                this.m_engine.DbAdapter.Close();
+                this.m_treeView.UseWaitCursor = false;
+                this.m_treeView.EndUpdate();
+            }
+
+            return;
+        }
+
         /// <summary>
         /// NR-Показать ноды для указанного типа элементов
         /// </summary>
-        internal void ShowTree()
+        internal void ShowTreeOld()
         {
 
             //создание дерева сделано, не тестировано, а остальные фишки - не сделаны.
@@ -270,6 +603,7 @@ namespace Tasks.Forms
             //TODO: остальное смотреть в Инвентарь.CTreeViewManager
             return;
         }
+
         /// <summary>
         /// NT-Раскрыть узлы дерева по цепочке идентификаторов элементов. 
         /// </summary>
@@ -304,30 +638,6 @@ namespace Tasks.Forms
             return;
         }
 
-
-
-        /// <summary>
-        /// NT-пользователь что-то выбрал в дереве, вот событие из дерева.
-        /// </summary>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
-        /// <returns></returns>
-        internal CElement NodeSelected(TreeViewEventArgs e)
-        {
-            if (e.Action == TreeViewAction.Unknown)
-                return null;
-            //надо передать в диалог объект данных выделенного элемента
-            TreeNode node = e.Node;
-            if (node == null)
-                return null;
-            CElement obj = (CElement)node.Tag;
-            if (obj == null)
-                return null;
-            //записать объект как результат
-            this.m_result = obj;
-            //вернуть объект элемента в диалог, чтобы он мог отобразить его описание
-            return obj;
-        }
-
         /// <summary>
         /// NT-Alloweds the type of the element.
         /// </summary>
@@ -342,23 +652,13 @@ namespace Tasks.Forms
             return ((elementType == EnumElementType.Category) || ((this.m_AllowedElementTypes & elementType) > 0));
         }
 
-        /// <summary>
-        /// NT-Проверить, допустим ли указанный элемент для выбора в качестве выбранного элемента..
-        /// </summary>
-        /// <param name="checkHierarchy">Проверять иерархию дерева во избежание кольцевания.</param>
-        /// <param name="toCheck">Проверяемый элемент.</param>
-        /// <returns>
-        ///   <c>true</c> if [is allowed element] [the specified check hierarchy]; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsAllowedElement(bool checkHierarchy, CElement toCheck)
-        {
-            bool isAllowedElementType = ((this.m_AllowedElementTypes & toCheck.ElementType) > 0);
-            bool isAllowedHierarchyChain = true;
-            if (checkHierarchy == true)
-                isAllowedHierarchyChain = this.checkHierarchyChain(this.m_startElementId, toCheck.Id);
 
-            return isAllowedElementType && isAllowedHierarchyChain;
-        }
+
+        #endregion
+
+
+
+        #region ***  Вспомогательные функции ***
 
         /// <summary>
         /// NT-Проверить цепочку иерархии элементов дерева на отсутствие колец.
@@ -383,6 +683,64 @@ namespace Tasks.Forms
             this.m_engine.DbAdapter.Close();
 
             return result;
+        }
+
+        /// <summary>
+        /// NT-Создать массив субнод для текущей ноды элемента
+        /// </summary>
+        /// <param name="id">Идентификатор элемента.</param>
+        /// <returns>Функция возвращает массив субнод для ноды элемента.</returns>
+        private TreeNode[] makeElementSubNodes(int id)
+        {
+            //Заполнить элементами выходной список так, чтобы:
+            //1. удаленные элементы не отображались.
+            //2. отображались только категории и разрешенные типы элементов (теги, заметки, задачи)
+            //3. элементы были группированы по типам: сверху Категории, потом Заметки, снизу Задачи.
+            //4. внутри типа элементы были сортированы по алфавиту.
+
+            List<TreeNode> nodes = new List<TreeNode>();
+            //получить дочерние элементы из БД
+            List<CElement> elements = this.m_engine.DbAdapter.SelectElementsByParentId(id);
+            //если субэлементов нет, быстро завершить функцию.
+            if (elements.Count == 0)
+                return nodes.ToArray();
+
+            //удалить из списка удаленные элементы, чтобы меньше сортировать было. (правило 1)
+            //удалить из списка не разрешенные фильтром элементы, кроме категорий. (правило 2)
+            elements = CElement.FilterElements(elements, this.m_AllowedElementTypes | EnumElementType.Category);
+            //сортировать по типу и алфавиту (правила 3 и 4)
+            if (elements.Count > 1)
+                elements = CElement.SortElementsByTypeAndTitle(elements, this.m_AllowedElementTypes | EnumElementType.Category);
+            //TODO: Объединить это в одну функцию как второй вариант. Сейчас это слишком много памяти и процессора занимает.
+
+            //теперь элементы добавить в дерево как папки.
+            //свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
+            foreach (CElement el in elements)
+            {
+                bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(el.Id) > 0);
+                nodes.Add(makeTreeNode(el, subnodesExists));
+            }
+
+            return nodes.ToArray();
+        }
+
+
+        /// <summary>
+        /// NT-Проверить, допустим ли указанный элемент для выбора в качестве выбранного элемента..
+        /// </summary>
+        /// <param name="checkHierarchy">Проверять иерархию дерева во избежание кольцевания.</param>
+        /// <param name="toCheck">Проверяемый элемент.</param>
+        /// <returns>
+        ///   <c>true</c> if [is allowed element] [the specified check hierarchy]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAllowedElement(CElement toCheck)
+        {
+            bool isAllowedElementType = ((this.m_AllowedElementTypes & toCheck.ElementType) > 0);
+            bool isAllowedHierarchyChain = true;
+            if (this.m_checkHierarchy == true)
+                isAllowedHierarchyChain = this.checkHierarchyChain(this.m_startElementId, toCheck.Id);
+
+            return isAllowedElementType && isAllowedHierarchyChain;
         }
 
         /// <summary>
@@ -450,7 +808,6 @@ namespace Tasks.Forms
             return;
         }
 
-
         /// <summary>
         /// NT-Gets the index of the node image.
         /// </summary>
@@ -506,90 +863,7 @@ namespace Tasks.Forms
         //    return ElementTreeViewManager.Color_NormalElement;
         //}
 
+#endregion
 
-        /// <summary>
-        /// NR-Node Before expand event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
-        internal void TreeViewBeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            //skip invalid actions
-            if (e.Action != TreeViewAction.Expand)
-                return;
-            //нода раскрывается - вставить в нее субноды элементов, если они есть.
-            TreeNode node = e.Node;
-            if (node == null)
-                return;
-            CElement el = (CElement)node.Tag;
-            if (el == null)
-                return;
-
-            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
-            node.Nodes.Clear();
-            //теперь открыть бд, получить все суб-элементы, добавить их как суб-ноды, закрыть БД
-            int parentId = el.Id;
-            //start update
-            try
-            {
-                this.m_treeView.BeginUpdate();
-                this.m_treeView.UseWaitCursor = true;
-                this.m_engine.DbAdapter.Open();
-
-                //get child elements
-                List<CElement> childs = this.m_engine.DbAdapter.SelectElementsByParentId(parentId);
-                //foreach childs - add to subnodes as new node 
-                foreach (CElement ch in childs)
-                {
-                    //filter by type and then by id chain
-                    //игнорировать элементы, помеченные удаленными.
-                    if (ch.IsDeleted())
-                        continue;
-                    //игнорировать элементы любого типа, кроме категорий и указанного в m_AllowedElementType
-                    if (!this.IsAllowedElementType(ch.ElementType))
-                        continue;
-                    //теперь элементы добавить в дерево как папки.
-                    //свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
-                    bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(ch.Id) > 0);
-                    node.Nodes.Add(makeTreeNode(ch, subnodesExists));
-                }
-            }
-            catch (Exception ex)
-            {
-                ;
-            }
-            finally
-            {
-                //finish update
-                this.m_engine.DbAdapter.Close();
-                this.m_treeView.UseWaitCursor = false;
-                this.m_treeView.EndUpdate();
-            }
-
-            return;
-        }
-
-        /// <summary>
-        /// NT-Node Before collapse event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
-        internal void TreeViewBeforeCollapse(object sender, TreeViewCancelEventArgs e)
-        {
-            //skip invalid actions
-            if (e.Action != TreeViewAction.Collapse)
-                return;
-            //нода сворачивается - вставить в нее временную субноду.
-            TreeNode node = e.Node;
-            if (node == null)
-                return;
-
-            //сначала удалить все имеющиеся субноды - это должна быть только одна субнода временная.
-            node.Nodes.Clear();
-            //вставить субноду
-            node.Nodes.Add("temp node");
-
-            return;
-        }
     }
 }

@@ -34,5 +34,53 @@ namespace Tasks.Properties {
                 this["AutoStartStorage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400, 400")]
+        public global::System.Drawing.Size SelectElementFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["SelectElementFormSize"]));
+            }
+            set {
+                this["SelectElementFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point SelectElementFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["SelectElementFormPosition"]));
+            }
+            set {
+                this["SelectElementFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 600")]
+        public global::System.Drawing.Size MainFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["MainFormSize"]));
+            }
+            set {
+                this["MainFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point ПарамеMainFormPositionтр {
+            get {
+                return ((global::System.Drawing.Point)(this["ПарамеMainFormPositionтр"]));
+            }
+            set {
+                this["ПарамеMainFormPositionтр"] = value;
+            }
+        }
     }
 }

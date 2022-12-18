@@ -74,7 +74,7 @@ namespace TaskEngine
             this.m_ModiTime = DateTime.Now;
             this.m_Parent = new CElementRef(0);
             this.m_Remarks = String.Empty;
-            this.m_Tags = new CElementRefCollection(); 
+            this.m_Tags = new CElementRefCollection();
             this.m_Title = String.Empty;
             //this.m_isModified = false;
 
@@ -179,11 +179,11 @@ namespace TaskEngine
             String digits = this.m_eid.ToString("D3");
             //if title included
             String title = String.Empty;
-            if(withTitle == true)
+            if (withTitle == true)
                 title = StringUtility.MakeSafeTitle(this.m_Title);
             //create result string
             return abbrev + digits + ":" + title;
-}
+        }
 
         /// <summary>
         /// NT-Получить степень заполненности карточки элемента.
@@ -214,9 +214,9 @@ namespace TaskEngine
             bool ok = true;
             if (String.IsNullOrEmpty(this.m_Description.Trim())) ok = false;
             if (this.m_ElementState == EnumElementState.Default) ok = false;
-            if(String.IsNullOrEmpty(this.m_Remarks.Trim())) ok = false;
-            
-            if(ok == true)
+            if (String.IsNullOrEmpty(this.m_Remarks.Trim())) ok = false;
+
+            if (ok == true)
                 state |= EnumCardState.SecondValues;
 
             //check complete 
@@ -286,6 +286,147 @@ namespace TaskEngine
             return this.m_ElementState == EnumElementState.Deleted;
         }
 
+        #region *** Filter and sort elements for treenode ***
+
+        //TODO: Объединить этов одну функцию как второй вариант.
+        
+        /// <summary>
+        /// NT-Отобрать нужные элементы: не удаленные и разрешенного типа.
+        /// </summary>
+        /// <param name="elements">Список элементов.</param>
+        /// <param name="allowedTypes">Разрешенные типы элементов.</param>
+        /// <returns>Функция возвращает новый список, содержащий отобранные элементы.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public static List<CElement> FilterElements(List<CElement> elements, EnumElementType allowedTypes)
+        {
+            //удалить из списка удаленные элементы, чтобы меньше сортировать было. 
+            //удалить из списка не разрешенные фильтром элементы, кроме категорий. 
+            // Чтобы отображались только категории и разрешенные типы элементов (теги, заметки, задачи)
+
+            List<CElement> result = new List<CElement>();
+            foreach (CElement el in elements)
+            {
+                //skip if  state = Deleted
+                if (el.m_ElementState == EnumElementState.Deleted)
+                    continue;
+                //skip if filter by any of allowed types
+                if ((el.m_ElementType & allowedTypes) == 0)
+                    continue;
+                //add to result list
+                result.Add(el);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// NT-Comparison: Sorts the elements by title.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        public static int SortElementsByTitle(CElement x, CElement y)
+        {
+
+            if (x == null)
+            {
+                if (y == null)
+                    return 0;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (y == null)
+                    return 1;
+                else
+                {
+                    //compare by title length
+                    String xTitle = x.m_Title;
+                    String yTitle = y.m_Title;
+                    int retval = xTitle.Length.CompareTo(yTitle.Length);
+
+                    if (retval != 0)
+                        // If the strings are not of equal length, the longer string is greater.
+                        return retval;
+                    else
+                    {
+                        // If the strings are of equal length, sort them with ordinary string comparison.
+                        return xTitle.CompareTo(yTitle);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// NT-Sorts the elements by type and title.
+        /// </summary>
+        /// <param name="elemlist">Список элементов.</param>
+        /// <returns></returns>
+        public static List<CElement> SortElementsByTypeAndTitle(List<CElement> elemlist, EnumElementType allowedTypes)
+        {
+            //сортировать по типу и алфавиту
+            //элементы должны быть группированы по типам: сверху Категории, потом Заметки, снизу Задачи.
+            //внутри типа элементы должны быть сортированы по алфавиту.
+            List<CElement> result = new List<CElement>();
+            List<CElement> categories = new List<CElement>();
+            List<CElement> notes = new List<CElement>();
+            List<CElement> tasks = new List<CElement>();
+            List<CElement> tags = new List<CElement>();
+
+            //рассортируем по типам
+            foreach (CElement elem in elemlist)
+            {
+                //разложить по спискам согласно типу элемента
+                switch (elem.m_ElementType)
+                {
+                    case EnumElementType.Category:
+                        categories.Add(elem);
+                        break;
+                    case EnumElementType.Note:
+                        notes.Add(elem);
+                        break;
+                    case EnumElementType.Task:
+                        tasks.Add(elem);
+                        break;
+                    case EnumElementType.Tag:
+                        tags.Add(elem);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //теперь сортировать списки и добавить в выходной список элементы в правильном порядке
+            if ((allowedTypes & EnumElementType.Category) > 0)
+            {
+                categories.Sort(SortElementsByTitle);
+                result.AddRange(categories);
+            }
+            if ((allowedTypes & EnumElementType.Note) > 0)
+            {
+                notes.Sort(SortElementsByTitle);
+                result.AddRange(notes);
+            }
+            if ((allowedTypes & EnumElementType.Task) > 0)
+            {
+                tasks.Sort(SortElementsByTitle);
+                result.AddRange(tasks);
+            }
+            if ((allowedTypes & EnumElementType.Tag) > 0)
+            {
+                tags.Sort(SortElementsByTitle);
+                result.AddRange(tags);
+            }
+
+            categories.Clear();
+            notes.Clear();
+            tasks.Clear();
+            tags.Clear();
+
+            return result;
+        }
+
+        #endregion
 
     }
 }
