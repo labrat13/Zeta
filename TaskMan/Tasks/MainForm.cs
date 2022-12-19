@@ -530,8 +530,28 @@ namespace Tasks
 
         private void тест1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //SelectElementForm f = new SelectElementForm(this.m_Engine, EnumElementType.AllTypes, 5, false, MainForm.MainFormTitle + " - Выбрать элемент:", "Выберите элемент для тестирования:");
-            int selectedId = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
+            //String msg;
+            //CElement result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
+            //if (result != null)
+            //    msg = result.GetStringElementIdentifier(true);
+            //else msg = "NULL";
+            //MessageBox.Show(msg);
+            //result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Task", this.m_Engine,  EnumElementType.Task, 5, false, "Выберите элемент для тестирования:");
+            //if (result != null)
+            //    msg = result.GetStringElementIdentifier(true);
+            //else msg = "NULL";
+            //MessageBox.Show(msg);
+            //result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Note", this.m_Engine,  EnumElementType.Task | EnumElementType.Note , 5, false, "Выберите элемент для тестирования:");
+            //if (result != null)
+            //    msg = result.GetStringElementIdentifier(true);
+            //else msg = "NULL";
+            //MessageBox.Show(msg);
+            //result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Tag", this.m_Engine,  EnumElementType.Tag, 5, false, "Выберите элемент для тестирования:");
+            //if (result != null)
+            //    msg = result.GetStringElementIdentifier(true);
+            //else msg = "NULL";
+            //MessageBox.Show(msg);
+
 
             return;
         }

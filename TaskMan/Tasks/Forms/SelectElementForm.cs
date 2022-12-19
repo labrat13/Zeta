@@ -13,7 +13,7 @@ namespace Tasks.Forms
     {
 
         //TODO: убрать неиспользуемые поля здесь - после отладки этой формы.
-        //TODO: адаптер Бд лучше бы держать открытым на все время существования этой модальной формы:
+        //DONE: адаптер Бд лучше бы держать открытым на все время существования этой модальной формы:
         //от Form.Load  до Form.Closing, а то сложно тут с событиями получается, они все Бд используют и когда попало вызываются.
         //а так - исключение поймал - и форму закрыл, и БД закрыл  - все хорошо.
 
@@ -69,7 +69,10 @@ namespace Tasks.Forms
             InitializeComponent();
             this.m_treeManager = new ElementTreeViewManager(this.treeView_Elements, engine, startElementId, elementType, checkHierarchy);
             this.Text = title;
-            this.label_Information.Text = information; 
+            this.label_Information.Text = information;
+            //Выключить кнопку ОК, чтобы при пустом дереве нельзя было закрыть форму с ОК и вернуть null в качестве выбранного элемента.
+            //Поскольку события выбора ноды не происходит при пустом дереве, то и кнопка не выключается.
+            this.button_OK.Enabled = false;
 
             return;
         }
@@ -147,6 +150,8 @@ namespace Tasks.Forms
             String description)
         {
             //перехватывать исключения будем только в вызывающем коде!
+            //в обработчике исключения надо закрыть БД, если она открыта.
+
             SelectElementForm f = new SelectElementForm(engine, elementType, startElementId, checkHierarchy, title, description);
 
             //DONE: добавить загрузку размера и позиции формы из файла настроек приложения
@@ -176,6 +181,8 @@ namespace Tasks.Forms
 
             f.Dispose();
             f = null;
+            //сборка мусора перед закрытием формы.
+            GC.Collect();
 
             return result;
         }
@@ -258,7 +265,7 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         private void treeView_Elements_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            this.m_treeManager.TreeViewBeforeExpand(sender, e);
+            this.m_treeManager.TreeViewBeforeExpand( e);
         }
 
         /// <summary>
@@ -268,7 +275,7 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         private void treeView_Elements_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            this.m_treeManager.TreeViewBeforeCollapse(sender, e);
+            this.m_treeManager.TreeViewBeforeCollapse( e);
         }
 
         /// <summary>

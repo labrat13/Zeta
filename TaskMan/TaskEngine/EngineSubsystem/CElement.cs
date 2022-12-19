@@ -138,7 +138,22 @@ namespace TaskEngine
         //    get { return this.IsModified || this.m_Childs.IsModified || this.m_Tags.IsModified; }
         //}
 
-        #endregion        
+        #endregion
+
+        /// <summary>
+        /// NT-Возвращает true если элемент помечен как неактивный.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> если элемент помечен как неактивный; в противном случае, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// Эта функция упрощает проверки состояния активности элемента в некоторых функциях.
+        /// </remarks>
+        public bool IsDeleted()
+        {
+            return this.m_ElementState == EnumElementState.Deleted;
+        }
+
         /// <summary>
         /// NT-Converts to string.
         /// </summary>
@@ -154,7 +169,7 @@ namespace TaskEngine
         /// </summary>
         /// <param name="v">Include element title</param>
         /// <returns>Return string like "TASK001:Task_title"</returns>
-        private string GetStringElementIdentifier(bool withTitle)
+        public string GetStringElementIdentifier(bool withTitle)
         {
             String abbrev = null;
             switch (this.m_ElementType)
@@ -262,29 +277,18 @@ namespace TaskEngine
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("Описание: {0}", StringUtility.GetStringTextNull(this.m_Description)); sb.AppendLine();
-            sb.AppendFormat("ID: {0}", this.m_eid); sb.AppendLine();
+            sb.AppendFormat("ID: {0}", this.GetStringElementIdentifier(false)); sb.AppendLine();
             sb.AppendFormat("Тип: {0}", this.m_ElementType); sb.AppendLine();
             sb.AppendFormat("Название: {0}", StringUtility.GetStringTextNull(this.m_Title)); sb.AppendLine();
-            sb.Append("Активен: "); sb.AppendLine(StringUtility.GetStringYesNo(this.m_ElementState == EnumElementState.Deleted));
+            sb.Append("Активен: "); sb.AppendLine(StringUtility.GetStringYesNo(this.m_ElementState != EnumElementState.Deleted));
+            //timestamps
             sb.AppendFormat("Дата создания: {0}", StringUtility.StringFromDateTime(this.m_CreaTime)); sb.AppendLine();
             sb.AppendFormat("Дата изменения: {0}", StringUtility.StringFromDateTime(this.m_ModiTime)); sb.AppendLine();
 
             return sb.ToString();
         }
 
-        /// <summary>
-        /// NT-Возвращает true если элемент помечен как неактивный.
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> если элемент помечен как неактивный; в противном случае, <c>false</c>.
-        /// </returns>
-        /// <remarks>
-        /// Эта функция упрощает проверки состояния активности элемента в некоторых функциях.
-        /// </remarks>
-        public bool IsDeleted()
-        {
-            return this.m_ElementState == EnumElementState.Deleted;
-        }
+
 
         #region *** Filter and sort elements for treenode ***
 

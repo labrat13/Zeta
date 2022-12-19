@@ -20,3 +20,5 @@ C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.StorageSho
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\ЛицензионноеСоглашение.txt
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\Справка.chm
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.SelectElementForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\MyControlsLibrary.dll
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\MyControlsLibrary.pdb
