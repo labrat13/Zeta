@@ -19,26 +19,6 @@ namespace Tasks.Forms
 
         #region *** Constants and fields ***
 
-        ///// <summary>
-        ///// Идентификатор элемента, представляющего начало обозреваемого дерева элементов.
-        ///// </summary>
-        //private int m_StartElementId;
-        ///// <summary>
-        ///// Идентификатор выбранного элемента.
-        ///// </summary>
-        //private int m_SelectedElementId;
-        ///// <summary>
-        ///// Фильтр типа отображаемых элементов.
-        ///// </summary>
-        //private TaskEngine.EnumElementType m_ElementType;
-        ///// <summary>
-        ///// Task Engine reference
-        ///// </summary>
-        //private CEngine m_Engine;
-        ///// <summary>
-        ///// Проверять отсутствие нарушения иерархии при выборе родительского элемента в этой форме.
-        ///// </summary>
-        //private bool m_checkHierarchy;
         /// <summary>
         /// Менеджер дерева элементов
         /// </summary>
@@ -79,50 +59,6 @@ namespace Tasks.Forms
 
         #region *** Properties ***
 
-        ///// <summary>
-        ///// Идентификатор элемента, представляющего начало обозреваемого дерева элементов.
-        ///// </summary>
-        ///// <value>
-        ///// The start element identifier.
-        ///// </value>
-        //public int StartElementId { get => m_StartElementId; set => m_StartElementId = value; }
-
-        ///// <summary>
-        ///// Идентификатор выбранного элемента, либо -1 как значение ошибки.
-        ///// </summary>
-        ///// <value>
-        ///// The selected element identifier.
-        ///// </value>
-        //public int SelectedElementId { get => m_SelectedElementId; set => m_SelectedElementId = value; }
-
-        ///// <summary>
-        ///// Фильтр типа отображаемых элементов.
-        ///// </summary>
-        ///// <value>
-        ///// The type of the element.
-        ///// </value>
-        //public EnumElementType ElementType { get => m_ElementType; set => m_ElementType = value; }
-
-        ///// <summary>
-        ///// Task Engine reference for database access.
-        ///// </summary>
-        ///// <value>
-        ///// The engine.
-        ///// </value>
-        //public CEngine Engine { get => m_Engine; set => m_Engine = value; }
-
-        ///// <summary>
-        ///// Текстовое описание выполняемой операции в верхней части формы.
-        ///// </summary>
-        ///// <value>
-        ///// The information.
-        ///// </value>
-        //public String Description
-        //{
-        //    get { return this.label_Description.Text; }
-        //    set { this.label_Description.Text = value; }
-        //}
-
         #endregion
 
         /// <summary>
@@ -154,16 +90,6 @@ namespace Tasks.Forms
 
             SelectElementForm f = new SelectElementForm(engine, elementType, startElementId, checkHierarchy, title, description);
 
-            //DONE: добавить загрузку размера и позиции формы из файла настроек приложения
-            Size formSize = Properties.Settings.Default.SelectElementFormSize;
-            //limit min size
-            if (formSize.Height < f.MinimumSize.Height)
-                formSize.Height = f.MinimumSize.Height;
-            if (formSize.Width < f.MinimumSize.Width)
-                formSize.Width = f.MinimumSize.Width;
-            //set form size
-            f.Size = formSize;
-
             //show form
             //Держать БД открытой на время показа формы, так как в дереве много неупорядоченных операций с доступом к БД, но без изменения БД.
             //TODO: убрать все операции открытия-закрытия БД из кода формы.
@@ -174,10 +100,6 @@ namespace Tasks.Forms
             CElement result = null;
             if (dr == DialogResult.OK)
                 result = f.m_treeManager.Result;
-
-            //DONE: добавить сохранение размера и позиции формы в файл настроек приложения 
-            Properties.Settings.Default.SelectElementFormSize = f.Size;
-            Properties.Settings.Default.SelectElementFormPosition = f.Location;
 
             f.Dispose();
             f = null;
@@ -196,12 +118,21 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SelectElementForm_Load(object sender, EventArgs e)
         {
+            //DONE: добавить загрузку размера и позиции формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.SelectElementFormSize;
+            //limit min size
+            if (formSize.Height < this.MinimumSize.Height)
+                formSize.Height = this.MinimumSize.Height;
+            if (formSize.Width < this.MinimumSize.Width)
+                formSize.Width = this.MinimumSize.Width;
+            //set form size
+            this.Size = formSize;
             //поместить окно в позицию из настроек приложения.
             Point pt = Properties.Settings.Default.SelectElementFormPosition;
             //TODO: проверить координаты окна, чтобы его не потерять за пределами дисплея 
             if (pt.X > 1000) pt.X = 1000;
             if (pt.Y > 1000) pt.Y = 1000;
-            Location = pt;
+            this.Location = pt;
             //тут заполнить дерево элементов
             this.m_treeManager.ShowTree();
 
@@ -218,6 +149,10 @@ namespace Tasks.Forms
             //тут очистить дерево элементов и коллекцию иконок
             //для следующего запуска диалога
             this.m_treeManager.ClearTree();
+
+            //DONE: добавить сохранение размера и позиции формы в файл настроек приложения 
+            Properties.Settings.Default.SelectElementFormSize = this.Size;
+            Properties.Settings.Default.SelectElementFormPosition = this.Location;
 
             return;
         }

@@ -74,12 +74,197 @@ namespace Tasks.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
-        public global::System.Drawing.Point ПарамеMainFormPositionтр {
+        public global::System.Drawing.Point MainFormPosition {
             get {
-                return ((global::System.Drawing.Point)(this["ПарамеMainFormPositionтр"]));
+                return ((global::System.Drawing.Point)(this["MainFormPosition"]));
             }
             set {
-                this["ПарамеMainFormPositionтр"] = value;
+                this["MainFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Категория")]
+        public string TemplateCategoryTitle {
+            get {
+                return ((string)(this["TemplateCategoryTitle"]));
+            }
+            set {
+                this["TemplateCategoryTitle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Кратко описать категорию")]
+        public string TemplateCategoryDescription {
+            get {
+                return ((string)(this["TemplateCategoryDescription"]));
+            }
+            set {
+                this["TemplateCategoryDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Описание и заметки по этой категории:\r\n\r\n\r\n")]
+        public string TemplateCategoryRemarks {
+            get {
+                return ((string)(this["TemplateCategoryRemarks"]));
+            }
+            set {
+                this["TemplateCategoryRemarks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Заметка")]
+        public string TemplateNoteTitle {
+            get {
+                return ((string)(this["TemplateNoteTitle"]));
+            }
+            set {
+                this["TemplateNoteTitle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Кратко описать заметку")]
+        public string TemplateNoteDescription {
+            get {
+                return ((string)(this["TemplateNoteDescription"]));
+            }
+            set {
+                this["TemplateNoteDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"Добавить содержание заметки:
+- Заметки предлагается использовать для описания некоторого правила при работе в данной теме.
+Или другой подобной информации. Они подобны краткой инструкции Работать здесь, но полезно будет указать причину их возникновения или цель, которой они служат.
+
+.")]
+        public string TemplateNoteRemarks {
+            get {
+                return ((string)(this["TemplateNoteRemarks"]));
+            }
+            set {
+                this["TemplateNoteRemarks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Задача")]
+        public string TemplateTaskTitle {
+            get {
+                return ((string)(this["TemplateTaskTitle"]));
+            }
+            set {
+                this["TemplateTaskTitle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Кратко описать задачу")]
+        public string TemplateTaskDescription {
+            get {
+                return ((string)(this["TemplateTaskDescription"]));
+            }
+            set {
+                this["TemplateTaskDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"Описание и замечания по этой задаче:
+
+1. Что собственно требуется сделать?
+- todo:  Не забудьте добавить требуемые результаты задачи  в  поле списка целей задачи.
+
+2. Каким образом это можно сделать?
+- перечислите тут известные способы выполнения задачи.
+
+3. Какие потребуются ресурсы?
+- перечислите необходимые ресурсы  для каждого из выбранных способов выполнения задачи.
+- для добычи каждого ресурса следует создать собственную подзадачу к этой задаче.
+
+4. Какие еще причины мешают вам просто сделать уже эту работу? 
+- Опишите здесь текущее состояние работы по задаче, проблемы и полезные замечания.
+
+5. Ход выполнения работы
+- можно ли описать работу над задачей  как последовательность действий?
+Это пригодилось бы при выполнении подобной задачи.
+- если да, создайте под-задачу для составления такого плана действий.
+
+
+  
+")]
+        public string TemplateTaskRemarks {
+            get {
+                return ((string)(this["TemplateTaskRemarks"]));
+            }
+            set {
+                this["TemplateTaskRemarks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Перечислите здесь результаты задачи как цели, которые необходимо достичь, и опиши" +
+            "те их текущее состояние. \r\nПосле завершения задачи отметьте состояние каждой из " +
+            "перечисленных тут целей.\r\n\r\nЦели данной задачи:\r\n1. \r\n2. \r\n3. \r\n\r\n")]
+        public string TemplateTaskResults {
+            get {
+                return ((string)(this["TemplateTaskResults"]));
+            }
+            set {
+                this["TemplateTaskResults"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Тег")]
+        public string TemplateTagTitle {
+            get {
+                return ((string)(this["TemplateTagTitle"]));
+            }
+            set {
+                this["TemplateTagTitle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Кратко описать тег")]
+        public string TemplateTagDescription {
+            get {
+                return ((string)(this["TemplateTagDescription"]));
+            }
+            set {
+                this["TemplateTagDescription"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Описания и замечания по этому тегу:\r\n\r\n- Какие сущности  должен описывать этот те" +
+            "г?\r\n\r\n- Каковы критерии присвоения некоторой сущности именно этого тега?")]
+        public string TemplateTagRemarks {
+            get {
+                return ((string)(this["TemplateTagRemarks"]));
+            }
+            set {
+                this["TemplateTagRemarks"] = value;
             }
         }
     }

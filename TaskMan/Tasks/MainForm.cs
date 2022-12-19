@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using TaskEngine;
@@ -53,6 +54,21 @@ namespace Tasks
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //DONE: добавить загрузку размера и позиции формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.MainFormSize;
+            //limit min size
+            if (formSize.Height < this.MinimumSize.Height)
+                formSize.Height = this.MinimumSize.Height;
+            if (formSize.Width < this.MinimumSize.Width)
+                formSize.Width = this.MinimumSize.Width;
+            //set form size
+            this.Size = formSize;
+            //поместить окно в позицию из настроек приложения.
+            Point pt = Properties.Settings.Default.MainFormPosition;
+            //TODO: проверить координаты окна, чтобы его не потерять за пределами дисплея 
+            if (pt.X > 1000) pt.X = 1000;
+            if (pt.Y > 1000) pt.Y = 1000;
+            this.Location = pt;
             //set default form title
             this.setMainFormTitle(null, false);
             //set default status text
@@ -68,15 +84,35 @@ namespace Tasks
             return;
         }
 
+        /// <summary>
+        /// NR-Handles the FormClosing event of the MainForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            
+            //this function run before main form closed
             //TODO: Add code here
         }
 
+        /// <summary>
+        /// NT-Handles the FormClosed event of the MainForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosedEventArgs"/> instance containing the event data.</param>
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //TODO: Add code here
+            //DONE: добавить сохранение размера и позиции формы в файл настроек приложения 
+            Properties.Settings.Default.MainFormSize = this.Size;
+            Properties.Settings.Default.MainFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
+            //close Storage if not closed now
+            if((this.m_Engine != null) && (this.m_Engine.Ready == true))
+                this.closeStorage();
+
+            //TODO: Add closing application code here
+            return; 
         }
 
         #endregion
@@ -530,27 +566,27 @@ namespace Tasks
 
         private void тест1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //String msg;
-            //CElement result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
-            //if (result != null)
-            //    msg = result.GetStringElementIdentifier(true);
-            //else msg = "NULL";
-            //MessageBox.Show(msg);
-            //result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Task", this.m_Engine,  EnumElementType.Task, 5, false, "Выберите элемент для тестирования:");
-            //if (result != null)
-            //    msg = result.GetStringElementIdentifier(true);
-            //else msg = "NULL";
-            //MessageBox.Show(msg);
-            //result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Note", this.m_Engine,  EnumElementType.Task | EnumElementType.Note , 5, false, "Выберите элемент для тестирования:");
-            //if (result != null)
-            //    msg = result.GetStringElementIdentifier(true);
-            //else msg = "NULL";
-            //MessageBox.Show(msg);
-            //result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Tag", this.m_Engine,  EnumElementType.Tag, 5, false, "Выберите элемент для тестирования:");
-            //if (result != null)
-            //    msg = result.GetStringElementIdentifier(true);
-            //else msg = "NULL";
-            //MessageBox.Show(msg);
+            String msg;
+            CElement result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Task", this.m_Engine, EnumElementType.Task, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Note", this.m_Engine, EnumElementType.Task | EnumElementType.Note, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Tag", this.m_Engine, EnumElementType.Tag, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
 
 
             return;

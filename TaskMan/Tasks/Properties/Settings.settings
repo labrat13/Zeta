@@ -14,8 +14,88 @@
     <Setting Name="MainFormSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">800, 600</Value>
     </Setting>
-    <Setting Name="ПарамеMainFormPositionтр" Type="System.Drawing.Point" Scope="User">
+    <Setting Name="MainFormPosition" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">100, 100</Value>
+    </Setting>
+    <Setting Name="TemplateCategoryTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Категория</Value>
+    </Setting>
+    <Setting Name="TemplateCategoryDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Кратко описать категорию</Value>
+    </Setting>
+    <Setting Name="TemplateCategoryRemarks" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Описание и заметки по этой категории:
+
+
+</Value>
+    </Setting>
+    <Setting Name="TemplateNoteTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Заметка</Value>
+    </Setting>
+    <Setting Name="TemplateNoteDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Кратко описать заметку</Value>
+    </Setting>
+    <Setting Name="TemplateNoteRemarks" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Добавить содержание заметки:
+- Заметки предлагается использовать для описания некоторого правила при работе в данной теме.
+Или другой подобной информации. Они подобны краткой инструкции Работать здесь, но полезно будет указать причину их возникновения или цель, которой они служат.
+
+.</Value>
+    </Setting>
+    <Setting Name="TemplateTaskTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Задача</Value>
+    </Setting>
+    <Setting Name="TemplateTaskDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Кратко описать задачу</Value>
+    </Setting>
+    <Setting Name="TemplateTaskRemarks" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Описание и замечания по этой задаче:
+
+1. Что собственно требуется сделать?
+- todo:  Не забудьте добавить требуемые результаты задачи  в  поле списка целей задачи.
+
+2. Каким образом это можно сделать?
+- перечислите тут известные способы выполнения задачи.
+
+3. Какие потребуются ресурсы?
+- перечислите необходимые ресурсы  для каждого из выбранных способов выполнения задачи.
+- для добычи каждого ресурса следует создать собственную подзадачу к этой задаче.
+
+4. Какие еще причины мешают вам просто сделать уже эту работу? 
+- Опишите здесь текущее состояние работы по задаче, проблемы и полезные замечания.
+
+5. Ход выполнения работы
+- можно ли описать работу над задачей  как последовательность действий?
+Это пригодилось бы при выполнении подобной задачи.
+- если да, создайте под-задачу для составления такого плана действий.
+
+
+  
+</Value>
+    </Setting>
+    <Setting Name="TemplateTaskResults" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Перечислите здесь результаты задачи как цели, которые необходимо достичь, и опишите их текущее состояние. 
+После завершения задачи отметьте состояние каждой из перечисленных тут целей.
+
+Цели данной задачи:
+1. 
+2. 
+3. 
+
+</Value>
+    </Setting>
+    <Setting Name="TemplateTagTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Тег</Value>
+    </Setting>
+    <Setting Name="TemplateTagDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Кратко описать тег</Value>
+    </Setting>
+    <Setting Name="TemplateTagRemarks" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Описания и замечания по этому тегу:
+
+- Какие сущности  должен описывать этот тег?
+
+- Каковы критерии присвоения некоторой сущности именно этого тега?</Value>
     </Setting>
   </Settings>
 </SettingsFile>
