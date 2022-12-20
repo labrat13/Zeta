@@ -200,7 +200,7 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         private void treeView_Elements_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            this.m_treeManager.TreeViewBeforeExpand( e);
+            this.m_treeManager.NodeBeforeExpand( e);
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         private void treeView_Elements_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            this.m_treeManager.TreeViewBeforeCollapse( e);
+            this.m_treeManager.NodeBeforeCollapse( e);
         }
 
         /// <summary>

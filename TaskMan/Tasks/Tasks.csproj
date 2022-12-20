@@ -50,6 +50,7 @@
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ElementTreeViewManager.cs" />
+    <Compile Include="Forms\MainFormTreeViewManager.cs" />
     <Compile Include="Forms\SelectElementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,7 +69,8 @@
     <Compile Include="Forms\StorageShortInfoForm.Designer.cs">
       <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormUtility.cs" />
+    <Compile Include="Forms\TreeViewManagerBase.cs" />
+    <Compile Include="Utilities\FormUtility.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +79,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\StringIntCache.cs" />
     <EmbeddedResource Include="AboutBoxForm.resx">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -99,6 +102,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.config" />
+    <None Include="Forms\TreeViewManagerClassDiagram.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
