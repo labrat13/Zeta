@@ -77,6 +77,10 @@ namespace TaskEngine
         /// </summary>
         protected SQLiteCommand m_cmdUpdateElement;
 
+        /// <summary>
+        /// SQL Command for SelectElementTitle function
+        /// </summary>
+        protected SQLiteCommand m_cmdSelectElementTitle;
         #endregion        
 
         /// <summary>
@@ -93,6 +97,8 @@ namespace TaskEngine
 
             this.m_cmdInsertElement = null;
             this.m_cmdUpdateElement = null;
+
+            m_cmdSelectElementTitle = null;
 
             return;
         }
@@ -125,6 +131,8 @@ namespace TaskEngine
 
             this.m_cmdInsertElement = null;
             this.m_cmdUpdateElement = null;
+
+            this.m_cmdSelectElementTitle = null;
 
             return;
         }
@@ -468,7 +476,7 @@ namespace TaskEngine
         }
 
         /// <summary>
-        /// NT-Subread specified element
+        /// NT-Полностью загрузить указанный элемент, с данными Задачи и Тегами, если есть.
         /// </summary>
         /// <param name="elementId">The element identifier.</param>
         /// <param name="element">The CElement object from Elements table.</param>
@@ -528,6 +536,7 @@ namespace TaskEngine
 
             return result;
         }
+
         /// <summary>
         /// NT-Selects the parent identifier by element identifier.
         /// </summary>
@@ -571,6 +580,123 @@ namespace TaskEngine
         #endregion
 
         #region *** Функции Статистики ***     
+
+        /// <summary>
+        /// NT-Fills the storage information object.
+        /// </summary>
+        /// <param name="info">The storage information object.</param>
+        /// <returns>Функция возвращает строку сообщения с информацией о возникших ошибках.</returns>
+        public String FillStorageInfo(TaskStorageInfo info)
+        {
+            //DONE: тут должны быть заполнены поля:
+            //info.TaskCount
+            //info.StoppedTaskCount
+            //info.FinishedTaskCount
+            //info.RunTaskCount
+            //info.NotesCount
+            //info.CategoriesCount
+            //info.TagsCount
+            //info.DeletedCount
+
+            int DeletedCount = this.GetCountOfElements(EnumElementState.Deleted);
+
+            int TagsCount = this.GetCountOfElements(EnumElementType.Tag, EnumElementState.Normal);
+            int TagsCountProtected = this.GetCountOfElements(EnumElementType.Tag, EnumElementState.ProtectedFromDelete);
+
+            int CategoryCount = this.GetCountOfElements(EnumElementType.Category, EnumElementState.Normal);
+            int CategoryCountProtected = this.GetCountOfElements(EnumElementType.Category, EnumElementState.ProtectedFromDelete);
+
+            int NotesCount = this.GetCountOfElements(EnumElementType.Note, EnumElementState.Normal);
+            int NotesCountProtected = this.GetCountOfElements(EnumElementType.Note, EnumElementState.ProtectedFromDelete);
+            //получить число задач, включая удаленные.
+            //TODO: Количество задач считается неправильно - нужно учитывать флаг удаления элемента, но он находится в другой таблице - Elements.
+            int AllTaskCount = this.GetRowCount(TaskDbAdapter.TableTasks, "id", this.m_Timeout);
+            int RunTaskCount = this.GetCountOfTasks(EnumTaskState.Run);
+            int PausedTaskCount = this.GetCountOfTasks(EnumTaskState.Paused);
+            int CompletedTaskCount = this.GetCountOfTasks(EnumTaskState.Completed);
+
+            //check values and write
+            List<String> titles = new List<string>();
+            if (DeletedCount < 0)
+            {
+                DeletedCount = 0;
+                titles.Add("DeletedCount");
+            }
+
+            if (TagsCount < 0)
+            {
+                TagsCount = 0;
+                titles.Add("TagsCount");
+            }
+            if (TagsCountProtected < 0)
+            {
+                TagsCountProtected = 0;
+                titles.Add("TagsCountProtected");
+            }
+
+            if (CategoryCount < 0)
+            {
+                CategoryCount = 0;
+                titles.Add("CategoryCount");
+            }
+            if (CategoryCountProtected < 0)
+            {
+                CategoryCountProtected = 0;
+                titles.Add("CategoryCountProtected");
+            }
+
+            if (NotesCount < 0)
+            {
+                NotesCount = 0;
+                titles.Add("NotesCount");
+            }
+            if (NotesCountProtected < 0)
+            {
+                NotesCountProtected = 0;
+                titles.Add("NotesCountProtected");
+            }
+
+            if (AllTaskCount < 0)
+            {
+                AllTaskCount = 0;
+                titles.Add("AllTaskCount");
+            }
+            if (RunTaskCount < 0)
+            {
+                RunTaskCount = 0;
+                titles.Add("RunTaskCount");
+            }
+            if (PausedTaskCount < 0)
+            {
+                PausedTaskCount = 0;
+                titles.Add("PausedTaskCount");
+            }
+            if (CompletedTaskCount < 0)
+            {
+                CompletedTaskCount = 0;
+                titles.Add("CompletedTaskCount");
+            }
+            //form message string
+            String msgText = "All counters is OK.";
+            if (titles.Count > 0)
+            {
+                String titlestr = String.Join(", ", titles.ToArray());
+                msgText = "Errors: wrong counters " + titlestr;
+            }
+            titles.Clear();//destroy list of titles
+            titles = null;
+            //write to info
+            info.DeletedCount = DeletedCount;
+            info.TagsCount = TagsCount + TagsCountProtected;
+            info.CategoriesCount = CategoryCount + CategoryCountProtected;
+            info.NotesCount = NotesCount + NotesCountProtected;
+            info.TaskCount = AllTaskCount;
+            info.StoppedTaskCount = PausedTaskCount;
+            info.FinishedTaskCount = CompletedTaskCount;
+            info.RunTaskCount = RunTaskCount;
+
+            return msgText;
+        }
 
         /// <summary>
         /// NT-Показать число элементов указанного типа и состояния
@@ -736,8 +862,9 @@ namespace TaskEngine
             return ps.ExecuteNonQuery();
         }
 
+
         /// <summary>
-        /// NR-Select element by id
+        /// NT-Select element by id
         /// </summary>
         /// <param name="id">Идентификатор элемента</param>
         /// <returns>Return CElement object or null if id not found.</returns>
@@ -779,10 +906,10 @@ namespace TaskEngine
         }
 
         /// <summary>
-        /// NT-Select element by parent id
+        /// NT-Субфункция Выбрать все элементы по их parent id
         /// </summary>
         /// <param name="parentid">Идентификатор родительского элемента</param>
-        /// <returns>Returns list of CElement objects</returns>
+        /// <returns>Возвращает список найденных CElement люъектов.</returns>
         private List<CElement> intSelectElementsByParent(int parentid)
         {
             List<CElement> result = new List<CElement>();
@@ -790,9 +917,8 @@ namespace TaskEngine
             SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
             if (reader.HasRows)
                 while (reader.Read())
-                {
                     result.Add( intReadElement(reader));
-                }
+
             // close command and result set objects
             reader.Close();
 
@@ -1038,122 +1164,148 @@ namespace TaskEngine
 
         #endregion
 
+        #region *** Функции для Корзины ***
+
         /// <summary>
-        /// NT-Fills the storage information object.
+        /// NT-Selects the element title.
         /// </summary>
-        /// <param name="info">The storage information object.</param>
-        /// <returns>Функция возвращает строку сообщения с информацией о возникших ошибках.</returns>
-        internal String fillStorageInfo(TaskStorageInfo info)
+        /// <param name="id">Идентификатор элемента.</param>
+        /// <returns>Функция возвращает строку названия элемента либо null если элемент не найден в таблице элементов БД.</returns>
+        /// <remarks>
+        /// Функция вызывается в редких случаях, но помногу - примерно, для каждого элемента дерева.
+        /// Поэтому для нее важно быстродействие.
+        /// </remarks>
+        public String SelectElementTitle(int id)
         {
-            //TODO: тут должны быть заполнены поля:
-            //info.TaskCount
-            //info.StoppedTaskCount
-            //info.FinishedTaskCount
-            //info.RunTaskCount
-            //info.NotesCount
-            //info.CategoriesCount
-            //info.TagsCount
-            //info.DeletedCount
+            String result = null;
+            SQLiteCommand cmd = this.m_cmdSelectElementTitle;
+            // create if not exists
+            if (cmd == null)
+            {
+                String query = "SELECT \"title\" FROM \"Elements\" WHERE ( \"id\" = ?);";
+                cmd = new SQLiteCommand(query, this.m_connection, this.m_transaction);
+                // set timeout here
+                cmd.CommandTimeout = this.m_Timeout;
+                cmd.Parameters.Add("a0", DbType.Int32);
+                // write back
+                this.m_cmdSelectElementTitle = cmd;
+            }
+            // set parameters
+            cmd.Parameters[0].Value = id;
 
-            int DeletedCount = this.GetCountOfElements(EnumElementState.Deleted);
-    
-            int TagsCount = this.GetCountOfElements(EnumElementType.Tag, EnumElementState.Normal);
-            int TagsCountProtected = this.GetCountOfElements(EnumElementType.Tag, EnumElementState.ProtectedFromDelete);
+            //execute command
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+                while (reader.Read())
+                {
+                    result = reader.GetString(0);
+                }
+            // close command and result set objects
+            reader.Close();
 
-            int CategoryCount = this.GetCountOfElements(EnumElementType.Category, EnumElementState.Normal);
-            int CategoryCountProtected = this.GetCountOfElements(EnumElementType.Category, EnumElementState.ProtectedFromDelete);
-
-            int NotesCount = this.GetCountOfElements(EnumElementType.Note, EnumElementState.Normal);
-            int NotesCountProtected = this.GetCountOfElements(EnumElementType.Note, EnumElementState.ProtectedFromDelete);
-            //получить число задач, включая удаленные.
-            //TODO: Количество задач считается неправильно - нужно учитывать флаг удаления элемента, но он находится в другой таблице - Elements.
-            int AllTaskCount = this.GetRowCount(TaskDbAdapter.TableTasks, "id", this.m_Timeout);
-            int RunTaskCount = this.GetCountOfTasks(EnumTaskState.Run);
-            int PausedTaskCount = this.GetCountOfTasks(EnumTaskState.Paused);
-            int CompletedTaskCount = this.GetCountOfTasks(EnumTaskState.Completed);
-
-            //check values and write
-            List<String> titles = new List<string>();
-            if(DeletedCount < 0)
-            {
-                DeletedCount = 0;
-                titles.Add("DeletedCount");
-            }
-
-            if(TagsCount < 0)
-            {
-                TagsCount = 0;
-                titles.Add("TagsCount");
-            }
-            if (TagsCountProtected < 0)
-            {
-                TagsCountProtected = 0;
-                titles.Add("TagsCountProtected");
-            }
-
-            if (CategoryCount < 0)
-            {
-                CategoryCount = 0;
-                titles.Add("CategoryCount");
-            }
-            if (CategoryCountProtected < 0)
-            {
-                CategoryCountProtected = 0;
-                titles.Add("CategoryCountProtected");
-            }
-
-            if (NotesCount < 0)
-            {
-                NotesCount = 0;
-                titles.Add("NotesCount");
-            }
-            if (NotesCountProtected < 0)
-            {
-                NotesCountProtected = 0;
-                titles.Add("NotesCountProtected");
-            }
-
-            if (AllTaskCount < 0)
-            {
-                AllTaskCount = 0;
-                titles.Add("AllTaskCount");
-            }
-            if (RunTaskCount < 0)
-            {
-                RunTaskCount = 0;
-                titles.Add("RunTaskCount");
-            }
-            if (PausedTaskCount < 0)
-            {
-                PausedTaskCount = 0;
-                titles.Add("PausedTaskCount");
-            }
-            if (CompletedTaskCount < 0)
-            {
-                CompletedTaskCount = 0;
-                titles.Add("CompletedTaskCount");
-            }
-            //form message string
-            String msgText = "All counters is OK.";
-            if (titles.Count > 0)
-            {
-                String titlestr = String.Join(", ", titles.ToArray());
-                msgText = "Errors: wrong counters " + titlestr;
-            }
-            titles.Clear();//destroy list of titles
-            titles = null;
-            //write to info
-            info.DeletedCount = DeletedCount;
-            info.TagsCount = TagsCount + TagsCountProtected;
-            info.CategoriesCount = CategoryCount + CategoryCountProtected;
-            info.NotesCount = NotesCount + NotesCountProtected;
-            info.TaskCount = AllTaskCount;
-            info.StoppedTaskCount = PausedTaskCount;
-            info.FinishedTaskCount = CompletedTaskCount;
-            info.RunTaskCount = RunTaskCount;
-
-            return msgText;
+            return result;
         }
+
+        /// <summary>
+        /// NT-Выбрать все элементы по их состоянию активности.
+        /// </summary>
+        /// <param name="state">Требуемое состояние активности элемента.</param>
+        /// <returns>Функция возвращает список найденных элементов, полностью загруженных, с тегами.</returns>
+        /// <remarks>
+        /// Функция вызывается в редких случаях - при показе содержимого Корзины.
+        /// Требуемре быстродействие функции - среднее.
+        /// </remarks>
+        public List<CElement> SelectElementsByElementState(EnumElementState state)
+        {
+            List<CElement> result = new List<CElement>();
+            //get elements by state
+            List<CElement> elements = this.intSelectElementsByElementState(state);
+            foreach (CElement element in elements)
+            {
+                int elementId = element.Id;
+                CElement elt = subSelectElement(elementId, element);
+                if (elt == null)
+                    throw new Exception("Task record with id=" + elementId.ToString() + " not found!");
+                //add to result list
+                result.Add(elt);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// NT-Субфункция Выбрать все элементы по их состоянию активности.
+        /// </summary>
+        /// <param name="state">Требуемое состояние активности элемента.</param>
+        /// <returns>Возвращает список найденных CElement объектов.</returns>
+        /// <remarks>
+        /// Функция вызывается в редких случаях - при показе содержимого Корзины.
+        /// Требуемое быстродействие функции - среднее.
+        /// </remarks>
+        private List<CElement> intSelectElementsByElementState(EnumElementState state)
+        {
+            List<CElement> result = new List<CElement>();
+            String query = "SELECT * FROM \"Elements\" WHERE (\"elstate\" = " + ((int)state).ToString() + ");";
+            SQLiteDataReader reader = this.ExecuteReader(query, this.m_Timeout);
+            if (reader.HasRows)
+                while (reader.Read())
+                    result.Add(intReadElement(reader));
+
+            // close command and result set objects
+            reader.Close();
+
+            return result;
+        }
+        
+        /// <summary>
+        /// NT-Получить состояние активности элемента с указанным идентификатором.
+        /// </summary>
+        /// <param name="id">Идентификатор элемента.</param>
+        /// <returns>Функция возвращает состояние активности элемента.</returns>
+        /// <exception cref="Exception">Элемент с указанным ид не найден в таблице элементов БД.</exception>
+        public EnumElementState GetElementStateByElementId(int id)
+        {
+            String query = "SELECT \"elstate\" FROM \"Elements\" WHERE (\"id\" = " + id.ToString() + ");";
+            int result = this.ExecuteScalar(query, this.m_Timeout);
+            //check result
+            if (result < 0)
+                throw new Exception("Элемент с идентификатором " + id.ToString() + " не найден в таблице элементов БД.");
+
+            return (EnumElementState)result;
+        }
+
+        /// <summary>
+        /// NT-Проверка, что все элементы в цепочке не являются удаленными.
+        /// </summary>
+        /// <param name="idChain">Цепочка (или просто список) идентификаторов элементов.</param>
+        /// <returns>
+        ///  Функция возвращает <c>true</c>, если все элементы, указанные в цепочке, не помечены удаленными; в противном случае, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// Функция вызывается предположительно один раз за процедуру восстановления элемента из корзины.
+        /// Требуемое быстродействие - среднее.
+        /// </remarks>
+        public bool IsAllElementsActive(List<int> idChain)
+        {
+            //if deleted element found, return false immediately
+            foreach (int id in idChain)
+            {
+                //Если ид соответствует любому из предопределенных элементов, защищенных от удаления, то пропускаем проверку - экономим время на запрос к БД.
+                //TODO: добавить сюда константы идентификаторов сех предопределенных элементов, защищенных от удаления.
+                if ((id == TaskDbAdapter.ElementId_Root) || (id == TaskDbAdapter.ElementId_TaskRoot) || (id == TaskDbAdapter.ElementId_TagRoot))
+                    continue;
+                ////if deleted element found, return false immediately
+                EnumElementState s = this.GetElementStateByElementId(id);
+                if (s == EnumElementState.Deleted)
+                    return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+
 
 
     }

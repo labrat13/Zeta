@@ -193,13 +193,20 @@
           Класс ElementTreeViewManager наследует члены ьазового класса, старый лишний код из него удален, класс скомпилирован, протестирован.
     + класс кеша на основе словаря <int id, string title>  - добавлен Utilities.StringIntCache
       + из mycodelibrary? Там свалка недоделок.
-    - Функции запросов к БД:
-      - выборка получения имени по ид элемента: SELECT title FROM Elements WHERE (id = ?);
-      - выборка всех удаленных элементов
-      - выборка получения состояния удаления по ид элемента: SELECT ? FROM Elements WHERE (id = ?); 
+    + Функции запросов к БД:
+      + выборка получения имени по ид элемента: SELECT title FROM Elements WHERE (id = ?); 
+        + сделано:  public String SelectElementTitle(int id)
+      + выборка всех удаленных элементов: SELECT * FROM Elements WHERE (elstate = ?)
+        + сделано: public List<CElement> SelectElementsByElementState(EnumElementState state)
+      - выборка получения состояния удаления по ид элемента: SELECT elstate FROM Elements WHERE (id = ?); 
+        + сделано: public EnumElementState GetElementStateByElementId(int id)
       - проверка, что все элементы в цепочке (кроме последнего?) не являются удаленными.
+        + сделано: public bool IsAllElementsActive(List<int> idChain)
     - иконку Корзины в коллекцию иконок дерева и ее индекс в константы индексов иконок дерева.
       - в классе TreeViewManagerBase.
+    - решено не добавлять: элемент Корзина в БД и ее константу в класс адаптера БД.
+      - убедиться, что константа учитывается в остальном коде, где используются прочие константы.
+      - выписать места, где константы используются вообще, положит около самих констант.
     - обработчики событий ноды: надо составить список.
     - функцию сортировки элементов по убыванию даты изменения элемента. В класс CElement.
 
