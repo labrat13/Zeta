@@ -141,6 +141,7 @@
             this.imageList_treeViewMain.Images.SetKeyName(1, "tag.png");
             this.imageList_treeViewMain.Images.SetKeyName(2, "task.png");
             this.imageList_treeViewMain.Images.SetKeyName(3, "note.png");
+            this.imageList_treeViewMain.Images.SetKeyName(4, "Trashcan16.png");
             // 
             // MenuStrip_MainMenuStrip
             // 

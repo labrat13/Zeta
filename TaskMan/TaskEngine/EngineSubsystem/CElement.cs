@@ -292,8 +292,102 @@ namespace TaskEngine
 
         #region *** Filter and sort elements for treenode ***
 
-        //TODO: Объединить этов одну функцию как второй вариант.
-        
+        /// <summary>
+        /// NT-Filter and sort elements by type and title.
+        /// </summary>
+        /// <param name="elements">Список элементов.</param>
+        /// <param name="allowedTypes">Разрешенные типы элементов.</param>
+        /// <returns>кция возвращает новый список, содержащий отобранные и сортированные в правильном порядке элементы.</returns>
+        public static List<CElement> FilterAndSortElementsByTypeAndTitle(List<CElement> elements, EnumElementType allowedTypes)
+        {
+            List<CElement> categories = new List<CElement>();
+            List<CElement> notes = new List<CElement>();
+            List<CElement> tasks = new List<CElement>();
+            List<CElement> tags = new List<CElement>();
+
+            List<CElement> result = new List<CElement>();
+
+            //1. удалить из списка удаленные элементы, чтобы меньше сортировать было. 
+            //удалить из списка не разрешенные фильтром элементы, кроме категорий. 
+            // Чтобы отображались только категории и разрешенные типы элементов (теги, заметки, задачи)
+
+            foreach (CElement elem in elements)
+            {
+                //skip if  state = Deleted
+                if (elem.m_ElementState == EnumElementState.Deleted)
+                    continue;
+
+                //skip if filtered by any of allowed types
+                if ((elem.m_ElementType & allowedTypes) == 0)
+                    continue;
+
+                //2. сортировать по типу и алфавиту
+                //элементы должны быть группированы по типам: сверху Категории, потом Заметки, снизу Задачи.
+                //внутри типа элементы должны быть сортированы по алфавиту.
+
+                //разложить по спискам согласно типу элемента
+                switch (elem.m_ElementType)
+                {
+                    case EnumElementType.Category:
+                        categories.Add(elem);
+                        break;
+                    case EnumElementType.Note:
+                        notes.Add(elem);
+                        break;
+                    case EnumElementType.Task:
+                        tasks.Add(elem);
+                        break;
+                    case EnumElementType.Tag:
+                        tags.Add(elem);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //теперь сортировать списки и добавить в выходной список элементы в правильном порядке
+            if ((allowedTypes & EnumElementType.Category) > 0)
+            {
+                if (categories.Count > 0)
+                {
+                    categories.Sort(SortElementsByTitle);
+                    result.AddRange(categories);
+                }
+            }
+            if ((allowedTypes & EnumElementType.Note) > 0)
+            {
+                if (notes.Count > 0)
+                {
+                    notes.Sort(SortElementsByTitle);
+                    result.AddRange(notes);
+                }
+            }
+            if ((allowedTypes & EnumElementType.Task) > 0)
+            {
+                if (tasks.Count > 0)
+                {
+                    tasks.Sort(SortElementsByTitle);
+                    result.AddRange(tasks);
+                }
+            }
+            if ((allowedTypes & EnumElementType.Tag) > 0)
+            {
+                if (tags.Count > 0)
+                {
+                    tags.Sort(SortElementsByTitle);
+                    result.AddRange(tags);
+                }
+            }
+
+            categories.Clear();
+            notes.Clear();
+            tasks.Clear();
+            tags.Clear();
+
+            return result;
+        }
+
+        //А это старая версия сортировки элементов, разделенная на две функции. Авось пригодится.
+
         /// <summary>
         /// NT-Отобрать нужные элементы: не удаленные и разрешенного типа.
         /// </summary>
@@ -321,45 +415,6 @@ namespace TaskEngine
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// NT-Comparison: Sorts the elements by title.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <returns></returns>
-        public static int SortElementsByTitle(CElement x, CElement y)
-        {
-
-            if (x == null)
-            {
-                if (y == null)
-                    return 0;
-                else
-                    return -1;
-            }
-            else
-            {
-                if (y == null)
-                    return 1;
-                else
-                {
-                    //compare by title length
-                    String xTitle = x.m_Title;
-                    String yTitle = y.m_Title;
-                    int retval = xTitle.Length.CompareTo(yTitle.Length);
-
-                    if (retval != 0)
-                        // If the strings are not of equal length, the longer string is greater.
-                        return retval;
-                    else
-                    {
-                        // If the strings are of equal length, sort them with ordinary string comparison.
-                        return xTitle.CompareTo(yTitle);
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -429,6 +484,80 @@ namespace TaskEngine
 
             return result;
         }
+
+        //А это функции-компараторы дляч сортировки списков по разным критериям.
+
+        /// <summary>
+        /// NT-Comparison: Sorts the elements by title.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        public static int SortElementsByTitle(CElement x, CElement y)
+        {
+
+            if (x == null)
+            {
+                if (y == null)
+                    return 0;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (y == null)
+                    return 1;
+                else
+                {
+                    //compare by title length
+                    String xTitle = x.m_Title;
+                    String yTitle = y.m_Title;
+                    int retval = xTitle.Length.CompareTo(yTitle.Length);
+
+                    if (retval != 0)
+                        // If the strings are not of equal length, the longer string is greater.
+                        return retval;
+                    else
+                    {
+                        // If the strings are of equal length, sort them with ordinary string comparison.
+                        return xTitle.CompareTo(yTitle);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// NT-Comparison: Sorts the elements by Modification timestamp.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        public static int SortElementsByModificationTime(CElement x, CElement y)
+        {
+
+            if (x == null)
+            {
+                if (y == null)
+                    return 0;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (y == null)
+                    return 1;
+                else
+                {
+                    //compare by title length
+                    DateTime xdt = x.m_ModiTime;
+                    DateTime ydt = y.m_ModiTime;
+                    int retval = xdt.CompareTo(ydt);
+                    //return reversed order sort 
+                    return (0 - retval);
+                }
+            }
+        }
+
 
         #endregion
 

@@ -58,6 +58,11 @@ namespace Tasks.Forms
         /// </summary>
         public const int IconIndex_Note = 3;
 
+        /// <summary>
+        /// Индекс иконки дерева: Корзина.
+        /// </summary>
+        public const int IconIndex_Trashcan = 4;
+
         //----- Переменные класса -----
         //TODO: удалить переменные, которые не вошли в базовый класс.
 

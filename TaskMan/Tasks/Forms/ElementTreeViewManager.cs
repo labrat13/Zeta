@@ -320,13 +320,14 @@ namespace Tasks.Forms
                 return nodes.ToArray();
 
             //удалить из списка удаленные элементы, чтобы меньше сортировать было. (правило 1)
-            //удалить из списка не разрешенные фильтром элементы, кроме категорий. (правило 2)
-            elements = CElement.FilterElements(elements, this.m_AllowedElementTypes | EnumElementType.Category);
-            //сортировать по типу и алфавиту (правила 3 и 4)
-            if (elements.Count > 1)
-                elements = CElement.SortElementsByTypeAndTitle(elements, this.m_AllowedElementTypes | EnumElementType.Category);
-            //TODO: Объединить это в одну функцию как второй вариант. Сейчас это слишком много памяти и процессора занимает.
-
+            ////удалить из списка не разрешенные фильтром элементы, кроме категорий. (правило 2)
+            //elements = CElement.FilterElements(elements, this.m_AllowedElementTypes | EnumElementType.Category);
+            ////сортировать по типу и алфавиту (правила 3 и 4)
+            //if (elements.Count > 1)
+            //    elements = CElement.SortElementsByTypeAndTitle(elements, this.m_AllowedElementTypes | EnumElementType.Category);
+            //DONE: Объединить это в одну функцию как второй вариант. Сейчас это слишком много памяти и процессора занимает.
+            elements = CElement.FilterAndSortElementsByTypeAndTitle(elements, this.m_AllowedElementTypes | EnumElementType.Category);
+            
             //теперь элементы добавить в дерево как папки.
             //свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
             foreach (CElement el in elements)
