@@ -255,26 +255,6 @@ namespace Tasks.Forms
                 List<int> idChain = this.m_engine.DbAdapter.GetChainOfElementIds(this.m_startElementId, true);
                 //последовательно найти и раскрыть каждую ноду из имеющихся в цепочке.
 
-                //TODO: remove this commented code after full test
-
-                ////для каждого ид из списка раскрытых нод найти его ноду в дереве
-                //// и если нашел, раскрыть ее. Это приведет к загрузке субнод и можно будет продолжать поиск.
-                //foreach (int elemId in idChain)
-                //{
-                //    TreeNode nodeByElementId = this.FindNodeByElementId(elemId);
-                //    if (nodeByElementId != null)
-                //        nodeByElementId.Expand();
-                //}
-                ////теперь найти ноду , бывшую ранее выбранной.
-                //TreeNode nodeByElementId1 = this.FindNodeByElementId(this.m_startElementId);
-                ////выбрать элемент this.m_startElementId
-                ////если нода не найдена, выйти.
-                ////если нода найдена, сделать ее видимой и выбранной нодой.
-                //if (nodeByElementId1 == null)
-                //    return;
-                //nodeByElementId1.EnsureVisible();
-                //this.m_treeView.SelectedNode = nodeByElementId1;
-
                 TreeNode selectedNode = this.MakeTreeChain(idChain);
                 //выбрать ноду элемента this.m_startElementId
                 //если нода не найдена, выйти.

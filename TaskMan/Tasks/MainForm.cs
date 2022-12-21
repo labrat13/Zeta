@@ -24,14 +24,32 @@ namespace Tasks
         /// </summary>
         private CEngine m_Engine;
 
-        #endregion
+        /// <summary>
+        /// TreeView control manager
+        /// </summary>
+        private MainFormTreeViewManager m_TreeManager;
 
+        #endregion        
+        /// <summary>
+        /// NT-Initializes a new instance of the <see cref="MainForm"/> class.
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
-
+            //create new engine object
             this.m_Engine = new CEngine();
+            //create context menu collection object
+            Tasks.Forms.NodeContextMenuCollection nc = new Tasks.Forms.NodeContextMenuCollection();
+            nc.TrashcanItemContextMenu = this.contextMenuStrip_TreeItemTrashcanItem;
+            nc.Add(EnumElementType.Category, this.contextMenuStrip_treeItemCategory);
+            nc.Add(EnumElementType.Note, this.contextMenuStrip_treeItemNote);
+            nc.Add(EnumElementType.Task, this.contextMenuStrip_TreeItemTask);
+            nc.Add(EnumElementType.Tag, this.contextMenuStrip_TreeItemTag);
+            //create tree view manager
+            this.m_TreeManager = new MainFormTreeViewManager(this.m_Engine, this.treeView_TaskTreeView, nc);
             //TODO: add code here
+
+            return;
         }
 
         #region  *** Properties ***
@@ -54,7 +72,7 @@ namespace Tasks
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //DONE: добавить загрузку размера и позиции формы из файла настроек приложения
+            //загрузить размеры и позицию формы из файла настроек приложения
             Size formSize = Properties.Settings.Default.MainFormSize;
             //limit min size
             if (formSize.Height < this.MinimumSize.Height)
@@ -65,7 +83,7 @@ namespace Tasks
             this.Size = formSize;
             //поместить окно в позицию из настроек приложения.
             Point pt = Properties.Settings.Default.MainFormPosition;
-            //TODO: проверить координаты окна, чтобы его не потерять за пределами дисплея 
+            // проверить координаты окна, чтобы его не потерять за пределами дисплея 
             if (pt.X > 1000) pt.X = 1000;
             if (pt.Y > 1000) pt.Y = 1000;
             this.Location = pt;
@@ -92,6 +110,7 @@ namespace Tasks
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             //this function run before main form closed
+            //Тут можно бы отменить закрытие окна, если оно заблокировано неким установленным флагом.
             //TODO: Add code here
         }
 
@@ -202,6 +221,51 @@ namespace Tasks
         }
 
         #endregion
+
+        #region *** Обработчики меню Инструменты главного меню ***        
+        /// <summary>
+        /// NT-Handles the Click event of the тест1ToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void тест1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String msg;
+            CElement result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Task", this.m_Engine, EnumElementType.Task, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Note", this.m_Engine, EnumElementType.Task | EnumElementType.Note, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Tag", this.m_Engine, EnumElementType.Tag, 5, false, "Выберите элемент для тестирования:");
+            if (result != null)
+                msg = result.GetStringElementIdentifier(true);
+            else msg = "NULL";
+            MessageBox.Show(msg);
+
+            return;
+        }
+
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_TrashcanClear control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void toolStripMenuItem_TrashcanClear_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();//TODO: add code here//TODO: add code here
+        }
+
+#endregion
 
         /// <summary>
         /// NT-Установить новый текст статусбара
@@ -325,13 +389,19 @@ namespace Tasks
         /// </summary>
         private void setEmptyTreeItems()
         {
+            //TODO:  можно ли это перенести в TreeViewManager?
             this.treeView_TaskTreeView.BeginUpdate();
             this.treeView_TaskTreeView.Nodes.Clear();
             this.treeView_TaskTreeView.Nodes.Add("Нет элементов.");
             this.treeView_TaskTreeView.EndUpdate();
+            //disable treeview
+            //this.treeView_TaskTreeView.SelectedNode = null;
+            this.treeView_TaskTreeView.Enabled = false; 
 
             return;
         }
+
+#region *** Функции открытия и закрытия Хранилища ***
 
         /// <summary>
         /// NT-Creates the storage.
@@ -472,9 +542,9 @@ namespace Tasks
                     //else work next as readOnly mode
                 }
                 //7 собрать и показать дерево элементов в форме
-                this.showMainElementTree();
+                this.ShowMainElementTree();
                 //8 собрать и показать СписокСегодня
-                this.showTodayTaksPanel();
+                this.ShowTodayTaksPanel();
                 //9 строку состояния изменить на Хранилище открыто
                 this.setStatusBarText("Хранилище успешно открыто: " + storagePath, false);
                 //10 заголовок формы заменить на новую с путем хранилища.
@@ -507,17 +577,22 @@ namespace Tasks
         /// <summary>
         /// NR-собрать и показать СписокСегодня
         /// </summary>
-        private void showTodayTaksPanel()
+        private void ShowTodayTaksPanel()
         {
             //TODO: add code here
         }
 
         /// <summary>
-        /// NR-собрать и показать дерево элементов в форме.
+        /// NT-собрать и показать дерево элементов в форме.
         /// </summary>
-        private void showMainElementTree()
+        private void ShowMainElementTree()
         {
-            //TODO: add code here
+            //enable treeview
+            this.treeView_TaskTreeView.Enabled = true;
+            //show tree content
+            this.m_TreeManager.ShowTree();
+
+            return;
         }
 
         /// <summary>
@@ -534,6 +609,8 @@ namespace Tasks
 
             return;
         }
+
+#endregion
 
         /// <summary>
         /// NT-Sets the main form empty.
@@ -564,32 +641,69 @@ namespace Tasks
             return;
         }
 
-        private void тест1ToolStripMenuItem_Click(object sender, EventArgs e)
+        #region *** Обработчики событий Дерева элементов главного окна ***        
+        
+        /// <summary>
+        /// NR-Handles the NodeMouseClick event of the treeView_TaskTreeView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs"/> instance containing the event data.</param>
+        private void treeView_TaskTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            String msg;
-            CElement result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент:", this.m_Engine, EnumElementType.AllTypes, 5, false, "Выберите элемент для тестирования:");
-            if (result != null)
-                msg = result.GetStringElementIdentifier(true);
-            else msg = "NULL";
-            MessageBox.Show(msg);
-            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Task", this.m_Engine, EnumElementType.Task, 5, false, "Выберите элемент для тестирования:");
-            if (result != null)
-                msg = result.GetStringElementIdentifier(true);
-            else msg = "NULL";
-            MessageBox.Show(msg);
-            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Note", this.m_Engine, EnumElementType.Task | EnumElementType.Note, 5, false, "Выберите элемент для тестирования:");
-            if (result != null)
-                msg = result.GetStringElementIdentifier(true);
-            else msg = "NULL";
-            MessageBox.Show(msg);
-            result = SelectElementForm.ShowSelectElementForm(this, MainForm.MainFormTitle + " - Выбрать элемент: Tag", this.m_Engine, EnumElementType.Tag, 5, false, "Выберите элемент для тестирования:");
-            if (result != null)
-                msg = result.GetStringElementIdentifier(true);
-            else msg = "NULL";
-            MessageBox.Show(msg);
-
+            this.m_TreeManager.NodeClick(e);
 
             return;
         }
+        
+        /// <summary>
+        /// NR-Handles the NodeMouseDoubleClick event of the treeView_TaskTreeView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs"/> instance containing the event data.</param>
+        private void treeView_TaskTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            this.m_TreeManager.NodeDoubleClick(e);
+
+            return;
+        }
+        
+        /// <summary>
+        /// NR-Handles the BeforeExpand event of the treeView_TaskTreeView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        private void treeView_TaskTreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            this.m_TreeManager.NodeBeforeExpand(e);
+
+            return;
+        }
+        
+        /// <summary>
+        /// NR-Handles the BeforeCollapse event of the treeView_TaskTreeView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
+        private void treeView_TaskTreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            this.m_TreeManager.NodeBeforeCollapse(e);
+
+            return;
+        }
+
+        /// <summary>
+        /// NR-Handles the AfterSelect event of the treeView_TaskTreeView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        private void treeView_TaskTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            CElement elem = this.m_TreeManager.NodeSelected(e);
+            //TODO: add code here
+            return;
+        }
+
+        #endregion
+
     }
 }

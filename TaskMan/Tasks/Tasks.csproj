@@ -70,6 +70,7 @@
       <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TreeViewManagerBase.cs" />
+    <Compile Include="Forms\NodeContextMenuCollection.cs" />
     <Compile Include="Utilities\FormUtility.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -100,6 +101,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="Forms\TreeViewManagerClassDiagram.cd" />
@@ -118,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme-Tasks.txt" />
+    <None Include="Resources\Trashcan16.png" />
     <Content Include="ToDo-Tasks.txt" />
     <Content Include="Version-Tasks.txt" />
     <Content Include="ЛицензионноеСоглашение.txt">

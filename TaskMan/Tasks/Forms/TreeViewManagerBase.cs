@@ -170,7 +170,7 @@ namespace Tasks.Forms
         /// </summary>
         public virtual void ShowTree()
         {
-
+            return;
         }
 
         #region *** Get expanded nodes functions ***  
@@ -365,7 +365,7 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         public virtual void NodeBeforeExpand(TreeViewCancelEventArgs e)
         {
-
+            return;
         }
 
         /// <summary>
@@ -526,7 +526,7 @@ namespace Tasks.Forms
         /// <param name="obj">Элемент</param>
         /// <param name="addTempSubnode">Добавить временную субноду, чтобы ноду можно было раскрыть. </param>
         /// <returns>Функция возвращает ноду для дерева элементов.</returns>
-        protected TreeNode MakeTreeNode(CElement obj, bool addTempSubnode)
+        protected virtual TreeNode MakeTreeNode(CElement obj, bool addTempSubnode)
         {
             TreeNode tn = new TreeNode();
             //get icon index
@@ -552,7 +552,7 @@ namespace Tasks.Forms
         /// </summary>
         /// <param name="tn">Объект ноды.</param>
         /// <param name="obj">Объект Элемента.</param>
-        private void SelectNodeFontAndColor(TreeNode tn, CElement obj)
+        protected void SelectNodeFontAndColor(TreeNode tn, CElement obj)
         {
             //deleted element color
             if (obj.IsDeleted())
@@ -591,7 +591,7 @@ namespace Tasks.Forms
         /// <param name="t">Тип элемента</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Неправильный тип элемента: " + t.ToString()</exception>
-        private int GetNodeImageIndex(EnumElementType t)
+        protected int GetNodeImageIndex(EnumElementType t)
         {
             int result;
 

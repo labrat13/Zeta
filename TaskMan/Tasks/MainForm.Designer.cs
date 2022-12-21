@@ -50,11 +50,18 @@
             this.инструментыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.тест1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_TrashcanClear = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.просмотрСправкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
+            this.contextMenuStrip_treeItemCategory = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip_treeItemNote = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip_TreeItemTask = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip_TreeItemTag = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip_TreeItemTrashcanItem = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -85,8 +92,8 @@
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MenuStrip_MainMenuStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MainToolStrip);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MenuStrip_MainMenuStrip);
             // 
             // MainStatusStrip
             // 
@@ -132,6 +139,11 @@
             this.treeView_TaskTreeView.SelectedImageIndex = 0;
             this.treeView_TaskTreeView.Size = new System.Drawing.Size(266, 371);
             this.treeView_TaskTreeView.TabIndex = 0;
+            this.treeView_TaskTreeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_TaskTreeView_BeforeCollapse);
+            this.treeView_TaskTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_TaskTreeView_BeforeExpand);
+            this.treeView_TaskTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_TaskTreeView_AfterSelect);
+            this.treeView_TaskTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_TaskTreeView_NodeMouseClick);
+            this.treeView_TaskTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_TaskTreeView_NodeMouseDoubleClick);
             // 
             // imageList_treeViewMain
             // 
@@ -152,7 +164,7 @@
             this.правкаToolStripMenuItem,
             this.инструментыToolStripMenuItem,
             this.справкаToolStripMenuItem});
-            this.MenuStrip_MainMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.MenuStrip_MainMenuStrip.Location = new System.Drawing.Point(0, 25);
             this.MenuStrip_MainMenuStrip.Name = "MenuStrip_MainMenuStrip";
             this.MenuStrip_MainMenuStrip.Size = new System.Drawing.Size(800, 28);
             this.MenuStrip_MainMenuStrip.TabIndex = 0;
@@ -225,7 +237,9 @@
             // 
             this.инструментыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_Settings,
-            this.тест1ToolStripMenuItem});
+            this.тест1ToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.toolStripMenuItem_TrashcanClear});
             this.инструментыToolStripMenuItem.Name = "инструментыToolStripMenuItem";
             this.инструментыToolStripMenuItem.Size = new System.Drawing.Size(117, 24);
             this.инструментыToolStripMenuItem.Text = "Инструменты";
@@ -233,15 +247,29 @@
             // toolStripMenuItem_Settings
             // 
             this.toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-            this.toolStripMenuItem_Settings.Size = new System.Drawing.Size(167, 26);
+            this.toolStripMenuItem_Settings.Size = new System.Drawing.Size(219, 26);
             this.toolStripMenuItem_Settings.Text = "Настройки";
             // 
             // тест1ToolStripMenuItem
             // 
             this.тест1ToolStripMenuItem.Name = "тест1ToolStripMenuItem";
-            this.тест1ToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
+            this.тест1ToolStripMenuItem.Size = new System.Drawing.Size(219, 26);
             this.тест1ToolStripMenuItem.Text = "Тест1";
             this.тест1ToolStripMenuItem.Click += new System.EventHandler(this.тест1ToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(216, 6);
+            // 
+            // toolStripMenuItem_TrashcanClear
+            // 
+            this.toolStripMenuItem_TrashcanClear.Image = global::Tasks.Properties.Resources.Trashcan16;
+            this.toolStripMenuItem_TrashcanClear.ImageTransparentColor = System.Drawing.Color.White;
+            this.toolStripMenuItem_TrashcanClear.Name = "toolStripMenuItem_TrashcanClear";
+            this.toolStripMenuItem_TrashcanClear.Size = new System.Drawing.Size(219, 26);
+            this.toolStripMenuItem_TrashcanClear.Text = "Очистить Корзину";
+            this.toolStripMenuItem_TrashcanClear.Click += new System.EventHandler(this.toolStripMenuItem_TrashcanClear_Click);
             // 
             // справкаToolStripMenuItem
             // 
@@ -276,10 +304,40 @@
             // 
             this.MainToolStrip.Dock = System.Windows.Forms.DockStyle.None;
             this.MainToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.MainToolStrip.Location = new System.Drawing.Point(4, 28);
+            this.MainToolStrip.Location = new System.Drawing.Point(4, 0);
             this.MainToolStrip.Name = "MainToolStrip";
             this.MainToolStrip.Size = new System.Drawing.Size(112, 25);
             this.MainToolStrip.TabIndex = 1;
+            // 
+            // contextMenuStrip_treeItemCategory
+            // 
+            this.contextMenuStrip_treeItemCategory.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_treeItemCategory.Name = "contextMenuStrip_treeItemCategory";
+            this.contextMenuStrip_treeItemCategory.Size = new System.Drawing.Size(61, 4);
+            // 
+            // contextMenuStrip_treeItemNote
+            // 
+            this.contextMenuStrip_treeItemNote.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_treeItemNote.Name = "contextMenuStrip_treeItemNote";
+            this.contextMenuStrip_treeItemNote.Size = new System.Drawing.Size(61, 4);
+            // 
+            // contextMenuStrip_TreeItemTask
+            // 
+            this.contextMenuStrip_TreeItemTask.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTask.Name = "contextMenuStrip_TreeItemTask";
+            this.contextMenuStrip_TreeItemTask.Size = new System.Drawing.Size(61, 4);
+            // 
+            // contextMenuStrip_TreeItemTag
+            // 
+            this.contextMenuStrip_TreeItemTag.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTag.Name = "contextMenuStrip_TreeItemTag";
+            this.contextMenuStrip_TreeItemTag.Size = new System.Drawing.Size(61, 4);
+            // 
+            // contextMenuStrip_TreeItemTrashcanItem
+            // 
+            this.contextMenuStrip_TreeItemTrashcanItem.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTrashcanItem.Name = "contextMenuStrip_TreeItemTrashcanItem";
+            this.contextMenuStrip_TreeItemTrashcanItem.Size = new System.Drawing.Size(61, 4);
             // 
             // MainForm
             // 
@@ -335,5 +393,12 @@
         private System.Windows.Forms.TreeView treeView_TaskTreeView;
         private System.Windows.Forms.ImageList imageList_treeViewMain;
         private System.Windows.Forms.ToolStripMenuItem тест1ToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_treeItemCategory;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_treeItemNote;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_TreeItemTask;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_TreeItemTag;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_TreeItemTrashcanItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_TrashcanClear;
     }
 }
