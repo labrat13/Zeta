@@ -326,9 +326,9 @@ namespace TaskEngine
 
 
             //get from database:
-            this.m_dbAdapter.Open();
+            //this.m_dbAdapter.Open();
             String errmsg = this.m_dbAdapter.FillStorageInfo(info);
-            this.m_dbAdapter.Close();
+            //this.m_dbAdapter.Close();
             //TODO: строку сообщения об ошибках надо как-то показать пользователю
             //тут должны быть заполнены поля:
             //info.TaskCount - TODO: сейчас включая задачи в Корзине.

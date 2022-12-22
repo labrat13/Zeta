@@ -37,6 +37,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView_TaskTreeView = new System.Windows.Forms.TreeView();
             this.imageList_treeViewMain = new System.Windows.Forms.ImageList(this.components);
+            this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.MenuStrip_MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CreateStorage = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,12 +57,12 @@
             this.просмотрСправкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.contextMenuStrip_treeItemCategory = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip_treeItemNote = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip_TreeItemTask = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip_TreeItemTag = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip_TreeItemTrashcanItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.изменитьШаблоныToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -155,6 +156,15 @@
             this.imageList_treeViewMain.Images.SetKeyName(3, "note.png");
             this.imageList_treeViewMain.Images.SetKeyName(4, "Trashcan16.png");
             // 
+            // MainToolStrip
+            // 
+            this.MainToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.MainToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MainToolStrip.Location = new System.Drawing.Point(4, 0);
+            this.MainToolStrip.Name = "MainToolStrip";
+            this.MainToolStrip.Size = new System.Drawing.Size(112, 25);
+            this.MainToolStrip.TabIndex = 1;
+            // 
             // MenuStrip_MainMenuStrip
             // 
             this.MenuStrip_MainMenuStrip.Dock = System.Windows.Forms.DockStyle.None;
@@ -246,28 +256,30 @@
             // 
             // toolStripMenuItem_Settings
             // 
+            this.toolStripMenuItem_Settings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.изменитьШаблоныToolStripMenuItem});
             this.toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-            this.toolStripMenuItem_Settings.Size = new System.Drawing.Size(219, 26);
+            this.toolStripMenuItem_Settings.Size = new System.Drawing.Size(224, 26);
             this.toolStripMenuItem_Settings.Text = "Настройки";
             // 
             // тест1ToolStripMenuItem
             // 
             this.тест1ToolStripMenuItem.Name = "тест1ToolStripMenuItem";
-            this.тест1ToolStripMenuItem.Size = new System.Drawing.Size(219, 26);
+            this.тест1ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.тест1ToolStripMenuItem.Text = "Тест1";
             this.тест1ToolStripMenuItem.Click += new System.EventHandler(this.тест1ToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
             // 
             // toolStripMenuItem_TrashcanClear
             // 
             this.toolStripMenuItem_TrashcanClear.Image = global::Tasks.Properties.Resources.Trashcan16;
             this.toolStripMenuItem_TrashcanClear.ImageTransparentColor = System.Drawing.Color.White;
             this.toolStripMenuItem_TrashcanClear.Name = "toolStripMenuItem_TrashcanClear";
-            this.toolStripMenuItem_TrashcanClear.Size = new System.Drawing.Size(219, 26);
+            this.toolStripMenuItem_TrashcanClear.Size = new System.Drawing.Size(224, 26);
             this.toolStripMenuItem_TrashcanClear.Text = "Очистить Корзину";
             this.toolStripMenuItem_TrashcanClear.Click += new System.EventHandler(this.toolStripMenuItem_TrashcanClear_Click);
             // 
@@ -300,15 +312,6 @@
             this.оПрограммеToolStripMenuItem.Text = "О программе...";
             this.оПрограммеToolStripMenuItem.Click += new System.EventHandler(this.оПрограммеToolStripMenuItem_Click);
             // 
-            // MainToolStrip
-            // 
-            this.MainToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.MainToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.MainToolStrip.Location = new System.Drawing.Point(4, 0);
-            this.MainToolStrip.Name = "MainToolStrip";
-            this.MainToolStrip.Size = new System.Drawing.Size(112, 25);
-            this.MainToolStrip.TabIndex = 1;
-            // 
             // contextMenuStrip_treeItemCategory
             // 
             this.contextMenuStrip_treeItemCategory.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -338,6 +341,13 @@
             this.contextMenuStrip_TreeItemTrashcanItem.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip_TreeItemTrashcanItem.Name = "contextMenuStrip_TreeItemTrashcanItem";
             this.contextMenuStrip_TreeItemTrashcanItem.Size = new System.Drawing.Size(61, 4);
+            // 
+            // изменитьШаблоныToolStripMenuItem
+            // 
+            this.изменитьШаблоныToolStripMenuItem.Name = "изменитьШаблоныToolStripMenuItem";
+            this.изменитьШаблоныToolStripMenuItem.Size = new System.Drawing.Size(231, 26);
+            this.изменитьШаблоныToolStripMenuItem.Text = "Изменить шаблоны";
+            this.изменитьШаблоныToolStripMenuItem.Click += new System.EventHandler(this.изменитьШаблоныToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -400,5 +410,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_TreeItemTrashcanItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_TrashcanClear;
+        private System.Windows.Forms.ToolStripMenuItem изменитьШаблоныToolStripMenuItem;
     }
 }

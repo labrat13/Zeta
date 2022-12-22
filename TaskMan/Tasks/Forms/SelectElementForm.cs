@@ -93,9 +93,9 @@ namespace Tasks.Forms
             //show form
             //Держать БД открытой на время показа формы, так как в дереве много неупорядоченных операций с доступом к БД, но без изменения БД.
             //TODO: убрать все операции открытия-закрытия БД из кода формы.
-            engine.DbAdapter.Open();
+            //engine.DbAdapter.Open();
             DialogResult dr = f.ShowDialog(owner);
-            engine.DbAdapter.Close();
+            //engine.DbAdapter.Close();
             //get result
             CElement result = null;
             if (dr == DialogResult.OK)

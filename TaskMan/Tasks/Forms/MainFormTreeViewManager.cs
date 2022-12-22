@@ -329,16 +329,16 @@ namespace Tasks.Forms
             //получить удаленные элементы из БД
             List<CElement> elements = this.m_engine.DbAdapter.SelectElementsByElementState(EnumElementState.Deleted);
             //если субэлементов нет, быстро завершить функцию.
-            if (elements.Count == 0)
-                return nodes.ToArray();
-            //сортировать элементы в списке по времени модификации
-            elements.Sort(CElement.SortElementsByModificationTime);
-            //теперь элементы добавить в дерево без субнод.
-            foreach (CElement el in elements)
+            if (elements.Count != 0)
             {
-                nodes.Add( MakeTrashcanItemNode(el, false));
+                //сортировать элементы в списке по времени модификации
+                elements.Sort(CElement.SortElementsByModificationTime);
+                //теперь элементы добавить в дерево без субнод.
+                foreach (CElement el in elements)
+                {
+                    nodes.Add(MakeTrashcanItemNode(el, false));
+                }
             }
-
             //finish update
             this.m_treeView.UseWaitCursor = false;
             this.m_treeView.EndUpdate();

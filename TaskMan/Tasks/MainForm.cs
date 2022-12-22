@@ -17,7 +17,7 @@ namespace Tasks
         /// <summary>
         /// Название окна приложения
         /// </summary>
-        private const String MainFormTitle = "Менеджер Задач";
+        public const String MainFormTitle = "Менеджер Задач";
 
         /// <summary>
         /// Task engine object
@@ -264,8 +264,22 @@ namespace Tasks
         {
             throw new NotImplementedException();//TODO: add code here//TODO: add code here
         }
+        /// <summary>
+        /// NT-Handles the Click event of the изменитьШаблоныToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void изменитьШаблоныToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Tasks.Forms.SettingTemplatesForm f = new SettingTemplatesForm();
+            f.ShowDialog();
+            f.Dispose();
+            f = null;
 
-#endregion
+            return;
+        }
+
+        #endregion
 
         /// <summary>
         /// NT-Установить новый текст статусбара
@@ -541,6 +555,9 @@ namespace Tasks
                         throw new Exception("Открытие Хранилища отменено пользователем.");
                     //else work next as readOnly mode
                 }
+                //Тут из-за дерева нод придется держать БД открытой постоянно.
+                //Это нежелательно, но другой способ - держать всю БД в памяти как кеш - был сразу отметен как неподходящий, а теперь поздно переделывать.
+                this.m_Engine.DbAdapter.Open();//он закрывается при закрытии Хранилища.
                 //7 собрать и показать дерево элементов в форме
                 this.ShowMainElementTree();
                 //8 собрать и показать СписокСегодня
@@ -704,6 +721,7 @@ namespace Tasks
         }
 
         #endregion
+
 
     }
 }
