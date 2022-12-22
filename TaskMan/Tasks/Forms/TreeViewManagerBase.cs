@@ -179,6 +179,9 @@ namespace Tasks.Forms
         /// NT-Получить список ид открытых нод дерева.
         /// </summary>
         /// <returns></returns>
+        /// <remarks>
+        /// Если нода не содержит объект элемента в поле Tag, например, Корзина, то игнорировать ее, и далее через нее не проходить.
+        /// </remarks>
         public List<int> GetExpandedNodesElementIdList()
         {
             List<int> lid = new List<int>();
@@ -193,6 +196,9 @@ namespace Tasks.Forms
         /// </summary>
         /// <param name="lid">Список ид открытых нод дерева.</param>
         /// <param name="nodes">Коллекция субнод очередной ноды.</param>
+        /// <remarks>
+        /// Если нода не содержит объект элемента в поле Tag, например, Корзина, то игнорировать ее, и далее через нее не проходить.
+        /// </remarks>
         private void GetExpandedNodesSub(List<int> lid, TreeNodeCollection nodes)
         {
             foreach (TreeNode treeNode in nodes)
@@ -200,10 +206,15 @@ namespace Tasks.Forms
                 //в открытых нодах не может быть временных субнод.
                 if (treeNode.IsExpanded)
                 {
+                    //если нода не содержит объект элемента в поле Tag, например, Корзина,
+                    //то игнорировать ее, и далее через нее не проходить.
                     CElement elem = (CElement)treeNode.Tag;
-                    lid.Add(elem.Id);
-                    if (treeNode.Nodes.Count > 0)
-                        this.GetExpandedNodesSub(lid, treeNode.Nodes);
+                    if (elem != null)
+                    {
+                        lid.Add(elem.Id);
+                        if (treeNode.Nodes.Count > 0)
+                            this.GetExpandedNodesSub(lid, treeNode.Nodes);
+                    }
                 }
             }
         }
@@ -217,8 +228,9 @@ namespace Tasks.Forms
         /// </summary>
         public virtual void UpdateTree()
         {
-            //Тут BeginUpdate() и AfterUpdate() неудобно вызывать. Поэтому и их и курсор менять на часы - надо в вызывающем коде. 
-
+            //start update treeview
+            this.m_treeView.BeginUpdate();
+            this.m_treeView.UseWaitCursor = true;
             //получить список раскрытых нод дерева
             List<int> expandedNodesIdList = this.GetExpandedNodesElementIdList();
             //получить ид элемента выбранной ноды
@@ -237,13 +249,19 @@ namespace Tasks.Forms
                     nodeByElementId.Expand();
             }
             //теперь найти ноду , бывшую ранее выбранной.
-            TreeNode nodeByElementId1 = this.FindNodeByElementId(elem.Id);
+            TreeNode nodeByElementId1 = null;
+            if (elem != null)
+                nodeByElementId1 = this.FindNodeByElementId(elem.Id);
             //если нода не найдена, выйти.
             //если нода найдена, сделать ее видимой и выбранной нодой.
-            if (nodeByElementId1 == null)
-                return;
-            nodeByElementId1.EnsureVisible();
-            this.m_treeView.SelectedNode = nodeByElementId1;
+            if (nodeByElementId1 != null)
+            {
+                nodeByElementId1.EnsureVisible();
+                this.m_treeView.SelectedNode = nodeByElementId1;
+            }
+            //finish update treeview
+            this.m_treeView.UseWaitCursor = false;
+            this.m_treeView.EndUpdate();
 
             return;
         }
@@ -257,6 +275,9 @@ namespace Tasks.Forms
         /// </summary>
         /// <param name="objid">ИД элемента</param>
         /// <returns>Функция возвращает ноду с элементом с указанным идентификатором, либо null если ничего не найдено.</returns>
+        /// <remarks>
+        /// Если нода не содержит объект элемента в поле Tag, например, Корзина, то игнорировать ее, и далее через нее не проходить.
+        /// </remarks>
         protected TreeNode FindNodeByElementId(int objid)
         {
             TreeNodeCollection nodes = this.m_treeView.Nodes;
@@ -270,16 +291,23 @@ namespace Tasks.Forms
         /// <param name="objid">ИД элемента</param>
         /// <param name="nodes">Коллекция субнод.</param>
         /// <returns>Функция возвращает ноду с элементом с указанным идентификатором, либо null если ничего не найдено.</returns>
+        /// <remarks>
+        /// Если нода не содержит объект элемента в поле Tag, например, Корзина, то игнорировать ее, и далее через нее не проходить.
+        /// </remarks>
         private TreeNode FindNodeByElementIdSub(int objid, TreeNodeCollection nodes)
         {
             TreeNode resultNode = (TreeNode)null;
             //для каждой ноды в коллекции нод
             foreach (TreeNode tn in nodes)
             {
-                //извлечь объект из поля тега ноды
+                //извлечь объект элемента из поля тега ноды
                 CElement elem = (CElement)tn.Tag;
-                //если объект не нуль, и ид==требуемому и тип элемента==требуемому
-                if ((elem != null) && (objid == elem.Id))
+                //если объект = null, ноду и еесубноды пропускаем. 
+                if (elem == null)
+                    continue;
+                //else проверяем эту ноду и ее субноды 
+                //если ид == требуемому 
+                if (objid == elem.Id)
                 {
                     //возвращаем найденную ноду
                     resultNode = tn;
@@ -292,8 +320,9 @@ namespace Tasks.Forms
                     resultNode = this.FindNodeByElementIdSub(objid, tn.Nodes);
                     if (resultNode != null)
                         break;
-                }
+                }    
             }
+
             return resultNode;
         }
 

@@ -507,6 +507,7 @@ namespace TaskEngine
         /// <returns>Функция возвращает количество подэлементов для данного элемента.</returns>
         public int GetCountOfElementsByParentId(int parentId)
         {
+            //TODO: ускорить эту функцию, она часто вызывается.
             String query = "SELECT COUNT(\"id\") FROM \"Elements\" WHERE (\"parent\" = " + parentId.ToString() + ");";
             int result = this.ExecuteScalar(query, this.m_Timeout);
 
@@ -521,6 +522,7 @@ namespace TaskEngine
         /// <exception cref="Exception">Task record with id=" + elementId.ToString() + " not found!</exception>
         public List<CElement> SelectElementsByParentId(int parentId)
         {
+            //TODO: ускорить эту функцию, она часто вызывается.
             List<CElement> result = new List<CElement>();
             //get elements by parent id
             List<CElement> elements = this.intSelectElementsByParent(parentId);

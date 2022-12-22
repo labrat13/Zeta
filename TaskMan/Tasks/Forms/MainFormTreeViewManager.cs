@@ -11,11 +11,20 @@ namespace Tasks.Forms
     /// </summary>
     public class MainFormTreeViewManager : TreeViewManagerBase
     {
+        //Для корзины надо создать виртуальную ноду с полем Tag = null.
+        //В функции NodeExpand() когда Tag == null, обнаружить ноду Корзины и запустить функцию заполнения ноды Корзины субнодами.
+        //Для этого ссылку на ноду Корзины сразу после создания надо записать в переменную класса.
+        //Функция NodeCollapse() подходит без изменения.
 
         /// <summary>
         /// Словарь контекстных меню для нод элементов.
         /// </summary>
         private NodeContextMenuCollection m_menus;
+
+        /// <summary>
+        /// Объект корневой ноды Корзины, для нахождения ее в дереве.
+        /// </summary>
+        private TreeNode m_TrashcanRootNode;
 
         /// <summary>
         /// NR-Initializes a new instance of the <see cref="MainFormTreeViewManager"/> class.
@@ -25,6 +34,7 @@ namespace Tasks.Forms
         public MainFormTreeViewManager(CEngine engine, TreeView treeView, NodeContextMenuCollection menus) : base(engine, treeView)
         {
             this.m_menus = menus;
+            this.m_TrashcanRootNode = null;
 
             return;
         }
@@ -66,11 +76,48 @@ namespace Tasks.Forms
         }
 
         /// <summary>
-        /// NR-Обновить дерево после изменения БД и снова раскрыть и выбрать прежние элементы.
+        /// NT-Обновить дерево после изменения БД и снова раскрыть и выбрать прежние элементы.
         /// </summary>
         public override void UpdateTree()
         {
-            base.UpdateTree();
+            //start update treeview
+            this.m_treeView.BeginUpdate();
+            this.m_treeView.UseWaitCursor = true;
+
+            //получить список раскрытых нод дерева, исключая Корзину и ее субноды.
+            List<int> expandedNodesIdList = this.GetExpandedNodesElementIdList();
+            //получить ид элемента выбранной ноды
+            CElement elem = (CElement)null;
+            TreeNode selectedNode = this.m_treeView.SelectedNode;
+            if (selectedNode != null)
+                elem = (CElement)selectedNode.Tag;
+            //свернуть все дерево, чтобы остались только корневые ноды, и потом заново загружать структуру дерева из БД, развертывая ноды.
+            this.m_treeView.CollapseAll();
+            //для каждого ид из списка раскрытых нод найти его ноду в дереве
+            // и если нашел, раскрыть ее. Это приведет к загрузке субнод и можно будет продолжать поиск.
+            foreach (int elemId in expandedNodesIdList)
+            {
+                TreeNode nodeByElementId = this.FindNodeByElementId(elemId);
+                if (nodeByElementId != null)
+                    nodeByElementId.Expand();
+            }
+            //теперь найти ноду, бывшую ранее выбранной.
+            TreeNode nodeByElementId1 = null;
+            if (elem != null)
+                nodeByElementId1 = this.FindNodeByElementId(elem.Id);
+            //если нода не найдена, выйти.
+            //если нода найдена, сделать ее видимой и выбранной нодой.
+            if (nodeByElementId1 != null)
+            {
+                nodeByElementId1.EnsureVisible();
+                this.m_treeView.SelectedNode = nodeByElementId1;
+            }
+
+            //finish update treeview
+            this.m_treeView.UseWaitCursor = false;
+            this.m_treeView.EndUpdate();
+
+            return;
         }
 
 
@@ -108,21 +155,29 @@ namespace Tasks.Forms
                 //TODO: вот тут надо как-то определить, какая это нода:
                 //А) неправильная
                 //Б) корневая нода Корзина
+                if (node == this.m_TrashcanRootNode)
+                    //запустить функцию заполнения ноды Корзины
+                    node.Nodes.AddRange(this.TrashcanRootNodeFill());
                 //В) корневая нода ХранилищеФайлов
                 //и соответственно запустить процедуру их развертывания.
             }
-            //start update treeview
-            this.m_treeView.BeginUpdate();
-            this.m_treeView.UseWaitCursor = true;
-            //загрузить субноды
-            TreeNode[] nodes = this.MakeElementSubNodes(el.Id);
-            node.Nodes.AddRange(nodes);
-            //finish update
-            this.m_treeView.UseWaitCursor = false;
-            this.m_treeView.EndUpdate();
-
+            else
+            {
+                //start update treeview
+                this.m_treeView.BeginUpdate();
+                this.m_treeView.UseWaitCursor = true;
+                //загрузить субноды
+                TreeNode[] nodes = this.MakeElementSubNodes(el.Id);
+                node.Nodes.AddRange(nodes);
+                //finish update
+                this.m_treeView.UseWaitCursor = false;
+                this.m_treeView.EndUpdate();
+            }
             return;
         }
+
+
+
         /// <summary>
         /// NR-Клик по ноде сворачивает-разворачивает ноду.
         /// Подключите этот обработчик, если надо разворачивать ноды дерева одиночным кликом.
@@ -185,6 +240,43 @@ namespace Tasks.Forms
         }
 
 
+        /// <summary>
+        /// NT-Создать массив субнод для текущей ноды элемента
+        /// </summary>
+        /// <param name="id">Идентификатор элемента.</param>
+        /// <returns>Функция возвращает массив субнод для ноды элемента.</returns>
+        private TreeNode[] MakeElementSubNodes(int id)
+        {
+            //Заполнить элементами выходной список так, чтобы:
+            //1. удаленные элементы не отображались.
+            //2. отображались все типы элементов: категории, теги, заметки, задачи.
+            //3. элементы были группированы по типам: сверху Категории, Заметки, Задачи, в конце Теги.
+            //4. внутри типа элементы были сортированы по алфавиту.
+
+            List<TreeNode> nodes = new List<TreeNode>();
+            //получить дочерние элементы из БД
+            List<CElement> elements = this.m_engine.DbAdapter.SelectElementsByParentId(id);
+            //если субэлементов нет, быстро завершить функцию.
+            if (elements.Count == 0)
+                return nodes.ToArray();
+
+            //удалить из списка удаленные элементы, чтобы меньше сортировать было. (правило 1)
+            //сортировать по типу и алфавиту (правила 3 и 4)
+            elements = CElement.FilterAndSortElementsByTypeAndTitle(elements, EnumElementType.AllTypes);
+
+            //теперь элементы добавить в дерево как папки.
+            //свернутыми с временной нодой внутри для возможности развернуть ее при необходимости.
+            foreach (CElement el in elements)
+            {
+                bool subnodesExists = (this.m_engine.DbAdapter.GetCountOfElementsByParentId(el.Id) > 0);
+                nodes.Add(MakeTreeNode(el, subnodesExists));
+            }
+
+            return nodes.ToArray();
+        }
+
+
+
         #region *** Trashcan functions ***
 
         /// <summary>
@@ -210,9 +302,51 @@ namespace Tasks.Forms
             //добавить пустую ноду, если надо
             if (addTempSubnode)
                 tn.Nodes.Add("temp node");
+            //Записать  эту ноду в переменную класса, чтобы найти ее в NodeExpand()
+            this.m_TrashcanRootNode = tn;
 
             return tn;
         }
+
+        /// <summary>
+        /// NT-функция заполнения ноды Корзины
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private TreeNode[] TrashcanRootNodeFill()
+        {
+            //start update treeview
+            this.m_treeView.BeginUpdate();
+            this.m_treeView.UseWaitCursor = true;
+
+            //Заполнить элементами выходной список так, чтобы:
+            //1. отображались только удаленные элементы.
+            //2. отображались все типы элементов: категории, теги, заметки, задачи.
+            //3. элементы были сортированыы по дате последнего изменения
+            //4. не обязательно: элементы были группированы по типам: сверху Категории, Заметки, Задачи, в конце Теги.
+            //5. не обязательно: внутри элементы были группированы по алфавиту.
+
+            List<TreeNode> nodes = new List<TreeNode>();
+            //получить удаленные элементы из БД
+            List<CElement> elements = this.m_engine.DbAdapter.SelectElementsByElementState(EnumElementState.Deleted);
+            //если субэлементов нет, быстро завершить функцию.
+            if (elements.Count == 0)
+                return nodes.ToArray();
+            //сортировать элементы в списке по времени модификации
+            elements.Sort(CElement.SortElementsByModificationTime);
+            //теперь элементы добавить в дерево без субнод.
+            foreach (CElement el in elements)
+            {
+                nodes.Add( MakeTrashcanItemNode(el, false));
+            }
+
+            //finish update
+            this.m_treeView.UseWaitCursor = false;
+            this.m_treeView.EndUpdate();
+            
+            return nodes.ToArray();
+        }
+
+
 
         /// <summary>
         /// NT-Создать для Корзины ноду по данным объекта, без актуальных субнод.
@@ -244,7 +378,9 @@ namespace Tasks.Forms
             return tn;
         }
 
-#endregion
+
+
+        #endregion
 
 
     }
