@@ -63,6 +63,12 @@
             this.contextMenuStrip_TreeItemTask = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip_TreeItemTag = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip_TreeItemTrashcanItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem_cmstiCategory_Prop = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_cmstiNote_Prop = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_TreeViewControl = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem_twcExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_twcCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_twcRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -71,6 +77,9 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.MenuStrip_MainMenuStrip.SuspendLayout();
+            this.contextMenuStrip_treeItemCategory.SuspendLayout();
+            this.contextMenuStrip_treeItemNote.SuspendLayout();
+            this.contextMenuStrip_TreeViewControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -128,6 +137,7 @@
             // 
             // treeView_TaskTreeView
             // 
+            this.treeView_TaskTreeView.ContextMenuStrip = this.contextMenuStrip_TreeViewControl;
             this.treeView_TaskTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_TaskTreeView.ImageIndex = 0;
             this.treeView_TaskTreeView.ImageList = this.imageList_treeViewMain;
@@ -323,14 +333,18 @@
             // contextMenuStrip_treeItemCategory
             // 
             this.contextMenuStrip_treeItemCategory.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_treeItemCategory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_cmstiCategory_Prop});
             this.contextMenuStrip_treeItemCategory.Name = "contextMenuStrip_treeItemCategory";
-            this.contextMenuStrip_treeItemCategory.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStrip_treeItemCategory.Size = new System.Drawing.Size(152, 28);
             // 
             // contextMenuStrip_treeItemNote
             // 
             this.contextMenuStrip_treeItemNote.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_treeItemNote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_cmstiNote_Prop});
             this.contextMenuStrip_treeItemNote.Name = "contextMenuStrip_treeItemNote";
-            this.contextMenuStrip_treeItemNote.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStrip_treeItemNote.Size = new System.Drawing.Size(152, 28);
             // 
             // contextMenuStrip_TreeItemTask
             // 
@@ -349,6 +363,49 @@
             this.contextMenuStrip_TreeItemTrashcanItem.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip_TreeItemTrashcanItem.Name = "contextMenuStrip_TreeItemTrashcanItem";
             this.contextMenuStrip_TreeItemTrashcanItem.Size = new System.Drawing.Size(61, 4);
+            // 
+            // toolStripMenuItem_cmstiCategory_Prop
+            // 
+            this.toolStripMenuItem_cmstiCategory_Prop.Name = "toolStripMenuItem_cmstiCategory_Prop";
+            this.toolStripMenuItem_cmstiCategory_Prop.Size = new System.Drawing.Size(151, 24);
+            this.toolStripMenuItem_cmstiCategory_Prop.Text = "Свойства...";
+            // 
+            // toolStripMenuItem_cmstiNote_Prop
+            // 
+            this.toolStripMenuItem_cmstiNote_Prop.Name = "toolStripMenuItem_cmstiNote_Prop";
+            this.toolStripMenuItem_cmstiNote_Prop.Size = new System.Drawing.Size(151, 24);
+            this.toolStripMenuItem_cmstiNote_Prop.Text = "Свойства...";
+            // 
+            // contextMenuStrip_TreeViewControl
+            // 
+            this.contextMenuStrip_TreeViewControl.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeViewControl.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_twcExpandAll,
+            this.toolStripMenuItem_twcCollapseAll,
+            this.toolStripMenuItem_twcRefresh});
+            this.contextMenuStrip_TreeViewControl.Name = "contextMenuStrip_TreeViewControl";
+            this.contextMenuStrip_TreeViewControl.Size = new System.Drawing.Size(211, 76);
+            // 
+            // toolStripMenuItem_twcExpandAll
+            // 
+            this.toolStripMenuItem_twcExpandAll.Name = "toolStripMenuItem_twcExpandAll";
+            this.toolStripMenuItem_twcExpandAll.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem_twcExpandAll.Text = "Развернуть дерево";
+            this.toolStripMenuItem_twcExpandAll.Click += new System.EventHandler(this.toolStripMenuItem_twcExpandAll_Click);
+            // 
+            // toolStripMenuItem_twcCollapseAll
+            // 
+            this.toolStripMenuItem_twcCollapseAll.Name = "toolStripMenuItem_twcCollapseAll";
+            this.toolStripMenuItem_twcCollapseAll.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem_twcCollapseAll.Text = "Свернуть дерево";
+            this.toolStripMenuItem_twcCollapseAll.Click += new System.EventHandler(this.toolStripMenuItem_twcCollapseAll_Click);
+            // 
+            // toolStripMenuItem_twcRefresh
+            // 
+            this.toolStripMenuItem_twcRefresh.Name = "toolStripMenuItem_twcRefresh";
+            this.toolStripMenuItem_twcRefresh.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem_twcRefresh.Text = "Обновить";
+            this.toolStripMenuItem_twcRefresh.Click += new System.EventHandler(this.toolStripMenuItem_twcRefresh_Click);
             // 
             // MainForm
             // 
@@ -374,6 +431,9 @@
             this.splitContainer1.ResumeLayout(false);
             this.MenuStrip_MainMenuStrip.ResumeLayout(false);
             this.MenuStrip_MainMenuStrip.PerformLayout();
+            this.contextMenuStrip_treeItemCategory.ResumeLayout(false);
+            this.contextMenuStrip_treeItemNote.ResumeLayout(false);
+            this.contextMenuStrip_TreeViewControl.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -412,5 +472,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_TrashcanClear;
         private System.Windows.Forms.ToolStripMenuItem изменитьШаблоныToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiCategory_Prop;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiNote_Prop;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_TreeViewControl;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_twcExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_twcCollapseAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_twcRefresh;
     }
 }

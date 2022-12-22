@@ -810,8 +810,26 @@ namespace Tasks
             return;
         }
 
-#endregion
 
+        #endregion
 
+#region *** Обработчики контекстного меню контрола дерева ***
+
+        private void toolStripMenuItem_twcExpandAll_Click(object sender, EventArgs e)
+        {
+            this.treeView_TaskTreeView.ExpandAll();
+        }
+
+        private void toolStripMenuItem_twcCollapseAll_Click(object sender, EventArgs e)
+        {
+            this.treeView_TaskTreeView.CollapseAll();
+        }
+
+        private void toolStripMenuItem_twcRefresh_Click(object sender, EventArgs e)
+        {
+            this.m_TreeManager.UpdateTree();
+        }
+        
+        #endregion
     }
 }
