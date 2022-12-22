@@ -667,7 +667,8 @@ namespace Tasks
         /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs"/> instance containing the event data.</param>
         private void treeView_TaskTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            this.m_TreeManager.NodeClick(e);
+            //свернуть или развернуть ноду
+            //e.Node.Toggle();
 
             return;
         }
@@ -679,11 +680,53 @@ namespace Tasks
         /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs"/> instance containing the event data.</param>
         private void treeView_TaskTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            this.m_TreeManager.NodeDoubleClick(e);
+            //для ноды корзины надо проверить, что кликнутая нода  - это нода корзины.
+            TreeNode node = e.Node;
+            if (node == null) return;
+            CElement elem = (CElement) node.Tag;
+            if(elem == null)
+            {
+                //check node is Trashcan
+                if (this.m_TreeManager.IsTrashcanRootNode(node))
+                    LeftPanelAction_TrashcanRootDoubleClicked(node);
+            }
+            else
+            {
+                LeftPanelAction_ElementDoubleClicked(elem);
+            }
 
             return;
         }
-        
+
+        /// <summary>
+        /// ТК-Handles the AfterSelect event of the treeView_TaskTreeView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        private void treeView_TaskTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+           //skip startup selection
+            if (e.Action == TreeViewAction.Unknown)
+                return;
+            //
+            if(e.Node != null) 
+                e.Node.Toggle();
+            //get element from selected node
+            CElement elem = this.m_TreeManager.NodeSelected(e);
+            if (elem == null)
+            {
+                //check node is Trashcan
+                if (this.m_TreeManager.IsTrashcanRootNode(e.Node))
+                    LeftPanelAction_TrashcanRootSelect(e.Node);
+            }
+            else
+            {
+                LeftPanelAction_ElementSelect(elem);
+            }
+
+            return;
+        }
+
         /// <summary>
         /// NR-Handles the BeforeExpand event of the treeView_TaskTreeView control.
         /// </summary>
@@ -713,14 +756,61 @@ namespace Tasks
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
-        private void treeView_TaskTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+
+        #endregion
+
+#region *** Функции событий левой панели с деревом элементов. ***
+
+        /// <summary>
+        /// NR-Обработать событие выделения Корзины в левой панели главного окна
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void LeftPanelAction_TrashcanRootSelect(TreeNode node)
         {
-            CElement elem = this.m_TreeManager.NodeSelected(e);
+            String msg = node.Text;
+            MessageBox.Show(msg, "Selected Trashcan");
             //TODO: add code here
             return;
         }
 
-        #endregion
+        /// <summary>
+        /// NR-Обработать событие выделения элемента в левой панели главного окна
+        /// </summary>
+        /// <param name="elem">Элемент.</param>
+        private void LeftPanelAction_ElementSelect(CElement elem)
+        {
+            String msg = elem.GetStringElementIdentifier(true);
+            MessageBox.Show(msg, "Selected element");
+            //TODO: add code here
+            return;
+        }
+
+        /// <summary>
+        /// NR-Обработать событие двойного клика Корзины в левой панели главного окна
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void LeftPanelAction_TrashcanRootDoubleClicked(TreeNode node)
+        {
+            String msg = node.Text;
+            MessageBox.Show(msg, "Double clicked Trashcan");
+            //TODO: add code here
+            return;
+        }
+        /// <summary>
+        /// NR-Обработать событие двойного клика элемента в левой панели главного окна
+        /// </summary>
+        /// <param name="elem">The elem.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void LeftPanelAction_ElementDoubleClicked(CElement elem)
+        {
+            String msg = elem.GetStringElementIdentifier(true);
+            MessageBox.Show(msg, "Double clicked element");
+            //TODO: add code here
+            return;
+        }
+
+#endregion
 
 
     }

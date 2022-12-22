@@ -155,7 +155,7 @@ namespace Tasks.Forms
                 //TODO: вот тут надо как-то определить, какая это нода:
                 //А) неправильная
                 //Б) корневая нода Корзина
-                if (node == this.m_TrashcanRootNode)
+                if (IsTrashcanRootNode(node))
                     //запустить функцию заполнения ноды Корзины
                     node.Nodes.AddRange(this.TrashcanRootNodeFill());
                 //В) корневая нода ХранилищеФайлов
@@ -173,10 +173,19 @@ namespace Tasks.Forms
                 this.m_treeView.UseWaitCursor = false;
                 this.m_treeView.EndUpdate();
             }
+
             return;
         }
 
-
+        /// <summary>
+        /// NT-Проверить что проверяемая нода является корневой нодой Корзины.
+        /// </summary>
+        /// <param name="node">Проверяемая нода</param>
+        /// <returns></returns>
+        public bool IsTrashcanRootNode(TreeNode node)
+        {
+            return (node == this.m_TrashcanRootNode); 
+        }
 
         /// <summary>
         /// NR-Клик по ноде сворачивает-разворачивает ноду.
@@ -185,7 +194,9 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs" /> instance containing the event data.</param>
         public override void NodeClick(TreeNodeMouseClickEventArgs e)
         {
-            base.NodeClick(e);
+             base.NodeClick(e);
+
+             return;
         }
         /// <summary>
         /// NR-Двойной клик по ноде
@@ -194,6 +205,8 @@ namespace Tasks.Forms
         public override void NodeDoubleClick(TreeNodeMouseClickEventArgs e)
         {
             base.NodeDoubleClick(e);
+            
+            return;
         }
         /// <summary>
         /// NR-пользователь что-то выбрал в дереве, вот событие из дерева.
@@ -329,7 +342,7 @@ namespace Tasks.Forms
             //получить удаленные элементы из БД
             List<CElement> elements = this.m_engine.DbAdapter.SelectElementsByElementState(EnumElementState.Deleted);
             //если субэлементов нет, быстро завершить функцию.
-            if (elements.Count != 0)
+            if (elements.Count > 0)
             {
                 //сортировать элементы в списке по времени модификации
                 elements.Sort(CElement.SortElementsByModificationTime);
@@ -339,6 +352,14 @@ namespace Tasks.Forms
                     nodes.Add(MakeTrashcanItemNode(el, false));
                 }
             }
+            else
+            {
+                //вставить ноду пустую, чтобы нода корзины сворачивалась
+                TreeNode tn = new TreeNode("Нет элементов", TreeViewManagerBase.IconIndex_EmptyDoc, TreeViewManagerBase.IconIndex_EmptyDoc);
+                tn.ToolTipText = "Корзина пустая, голодная и злая.";
+                nodes.Add(tn);
+            }
+
             //finish update
             this.m_treeView.UseWaitCursor = false;
             this.m_treeView.EndUpdate();
