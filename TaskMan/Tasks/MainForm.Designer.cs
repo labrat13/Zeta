@@ -99,11 +99,11 @@
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_TrashcanItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_TreeItemTrashcanRoot = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmi_TrashcanClear = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_Prop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_RestoreAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TrashcanClear = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -202,19 +202,19 @@
             this.toolStripMenuItem_twcCollapseAll,
             this.toolStripMenuItem_twcRefresh});
             this.contextMenuStrip_TreeViewControl.Name = "contextMenuStrip_TreeViewControl";
-            this.contextMenuStrip_TreeViewControl.Size = new System.Drawing.Size(215, 110);
+            this.contextMenuStrip_TreeViewControl.Size = new System.Drawing.Size(188, 82);
             // 
             // toolStripMenuItem_twcExpandAll
             // 
             this.toolStripMenuItem_twcExpandAll.Name = "toolStripMenuItem_twcExpandAll";
-            this.toolStripMenuItem_twcExpandAll.Size = new System.Drawing.Size(214, 26);
+            this.toolStripMenuItem_twcExpandAll.Size = new System.Drawing.Size(187, 26);
             this.toolStripMenuItem_twcExpandAll.Text = "Развернуть все";
             this.toolStripMenuItem_twcExpandAll.Click += new System.EventHandler(this.toolStripMenuItem_twcExpandAll_Click);
             // 
             // toolStripMenuItem_twcCollapseAll
             // 
             this.toolStripMenuItem_twcCollapseAll.Name = "toolStripMenuItem_twcCollapseAll";
-            this.toolStripMenuItem_twcCollapseAll.Size = new System.Drawing.Size(214, 26);
+            this.toolStripMenuItem_twcCollapseAll.Size = new System.Drawing.Size(187, 26);
             this.toolStripMenuItem_twcCollapseAll.Text = "Свернуть все";
             this.toolStripMenuItem_twcCollapseAll.Click += new System.EventHandler(this.toolStripMenuItem_twcCollapseAll_Click);
             // 
@@ -222,7 +222,7 @@
             // 
             this.toolStripMenuItem_twcRefresh.Image = global::Tasks.Properties.Resources.arrowRefresh;
             this.toolStripMenuItem_twcRefresh.Name = "toolStripMenuItem_twcRefresh";
-            this.toolStripMenuItem_twcRefresh.Size = new System.Drawing.Size(214, 26);
+            this.toolStripMenuItem_twcRefresh.Size = new System.Drawing.Size(187, 26);
             this.toolStripMenuItem_twcRefresh.Text = "Обновить";
             this.toolStripMenuItem_twcRefresh.Click += new System.EventHandler(this.toolStripMenuItem_twcRefresh_Click);
             // 
@@ -268,6 +268,7 @@
             // 
             // toolStripMenuItem_CreateStorage
             // 
+            this.toolStripMenuItem_CreateStorage.Image = global::Tasks.Properties.Resources.databaseCreate;
             this.toolStripMenuItem_CreateStorage.Name = "toolStripMenuItem_CreateStorage";
             this.toolStripMenuItem_CreateStorage.Size = new System.Drawing.Size(241, 26);
             this.toolStripMenuItem_CreateStorage.Text = "Создать Хранилище..";
@@ -280,6 +281,7 @@
             // 
             // toolStripMenuItem_OpenStorage
             // 
+            this.toolStripMenuItem_OpenStorage.Image = global::Tasks.Properties.Resources.databaseOpen;
             this.toolStripMenuItem_OpenStorage.Name = "toolStripMenuItem_OpenStorage";
             this.toolStripMenuItem_OpenStorage.Size = new System.Drawing.Size(241, 26);
             this.toolStripMenuItem_OpenStorage.Text = "Открыть Хранилище..";
@@ -292,6 +294,7 @@
             // 
             // toolStripMenuItem_CloseStorage
             // 
+            this.toolStripMenuItem_CloseStorage.Image = global::Tasks.Properties.Resources.database;
             this.toolStripMenuItem_CloseStorage.Name = "toolStripMenuItem_CloseStorage";
             this.toolStripMenuItem_CloseStorage.Size = new System.Drawing.Size(241, 26);
             this.toolStripMenuItem_CloseStorage.Text = "Закрыть Хранилище";
@@ -374,6 +377,7 @@
             // 
             // просмотрСправкиToolStripMenuItem
             // 
+            this.просмотрСправкиToolStripMenuItem.Image = global::Tasks.Properties.Resources.Help;
             this.просмотрСправкиToolStripMenuItem.Name = "просмотрСправкиToolStripMenuItem";
             this.просмотрСправкиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.просмотрСправкиToolStripMenuItem.Text = "Просмотр справки";
@@ -386,6 +390,7 @@
             // 
             // оПрограммеToolStripMenuItem
             // 
+            this.оПрограммеToolStripMenuItem.Image = global::Tasks.Properties.Resources.application;
             this.оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
             this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.оПрограммеToolStripMenuItem.Text = "О программе...";
@@ -696,19 +701,6 @@
             this.contextMenuStrip_TreeItemTrashcanRoot.Name = "contextMenuStrip_TreeItemTrashcanRoot";
             this.contextMenuStrip_TreeItemTrashcanRoot.Size = new System.Drawing.Size(277, 94);
             // 
-            // tsmi_TrashcanClear
-            // 
-            this.tsmi_TrashcanClear.Image = global::Tasks.Properties.Resources.cross;
-            this.tsmi_TrashcanClear.Name = "tsmi_TrashcanClear";
-            this.tsmi_TrashcanClear.Size = new System.Drawing.Size(276, 26);
-            this.tsmi_TrashcanClear.Text = "Очистить Корзину...";
-            this.tsmi_TrashcanClear.Click += new System.EventHandler(this.tsmi_TrashcanClear_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(273, 6);
-            // 
             // tsmi_Prop
             // 
             this.tsmi_Prop.Image = global::Tasks.Properties.Resources.property;
@@ -729,6 +721,19 @@
             this.tsmi_RestoreAll.Size = new System.Drawing.Size(276, 26);
             this.tsmi_RestoreAll.Text = "Восстановить все элементы";
             this.tsmi_RestoreAll.Click += new System.EventHandler(this.tsmi_RestoreAll_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(273, 6);
+            // 
+            // tsmi_TrashcanClear
+            // 
+            this.tsmi_TrashcanClear.Image = global::Tasks.Properties.Resources.cross;
+            this.tsmi_TrashcanClear.Name = "tsmi_TrashcanClear";
+            this.tsmi_TrashcanClear.Size = new System.Drawing.Size(276, 26);
+            this.tsmi_TrashcanClear.Text = "Очистить Корзину...";
+            this.tsmi_TrashcanClear.Click += new System.EventHandler(this.tsmi_TrashcanClear_Click);
             // 
             // MainForm
             // 

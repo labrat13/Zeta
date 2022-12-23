@@ -152,6 +152,12 @@
     <None Include="Resources\arrowRefresh.png" />
     <None Include="Resources\arrowReturn.png" />
     <None Include="Resources\cross.png" />
+    <None Include="Resources\database.png" />
+    <None Include="Resources\databaseCreate.png" />
+    <None Include="Resources\databaseExport.png" />
+    <None Include="Resources\databaseImport.png" />
+    <None Include="Resources\databaseInfo.png" />
+    <None Include="Resources\databaseOpen.png" />
     <Content Include="ToDo-Tasks.txt" />
     <Content Include="Version-Tasks.txt" />
     <Content Include="ЛицензионноеСоглашение.txt">
