@@ -1139,20 +1139,39 @@ namespace TaskEngine
         #endregion
 
         #region *** Выборка задач для Сегодня ***      
-        
+
         /// <summary>
         /// NT-Gets the list of task identifier before date.
         /// </summary>
-        /// <param name="d">Date before.</param>
+        /// <param name="start">Date start.</param>
+        /// <param name="end">Date end.</param>
+        /// <param name="state1">task state filter 1</param>
+        /// <param name="state2">task state filter 2</param>
+        /// <param name="state3">task state filter 3</param>
         /// <returns>Returns list of task element id.</returns>
-        public List<int> GetListOfTaskIdBeforeDate(DateTime d)
+        /// <example>
+        /// Пример вызова функции:
+        /// Функция возвращает список ид задач с соответствующим состоянием. 
+        /// Поскольку таких состояний всего 3, то можно выбрать любую комбинацию этих состояний.
+        /// Например, если надо выбрать только рабочие задачи, то: 
+        /// <code>
+        /// List"int" result = (start, end, EnumtaskState.Run, EnumtaskState.Run, EnumtaskState.Run);
+        /// </code>
+        /// Функция возвращает только список ид, поскольку нельзя загрузить за один вызов объекты Задач из трех таблиц.
+        /// Функция возвращает ид всех задач, включая удаленные. 
+        /// Затем по каждому ид надо загрузить объект Задачи и отобрать нужные и соответствующим образом их отсортировать.
+        /// </example>
+        public List<int> GetListOfTaskIdDateRange(DateTime start, DateTime end, EnumTaskState state1, EnumTaskState state2, EnumTaskState state3)
         {
+            //TODO: подумать сделать версию функции сразу с полной загрузкой, отбором активных задач и сортировкой по возрастанию даты.
+            //можно попробовать получать нужные поля под-запросом к таблице элементов.
             List<int> result = new List<int>();
             //setup temporary command
-            String query = String.Format("SELECT \"id\" FROM \"{0}\" WHERE ((\"starttime\" < ?) AND ((\"state\" = {1}) OR (\"state\" = {2})));");
+            String query = String.Format("SELECT \"id\" FROM \"{0}\" WHERE ((\"starttime\" <= ?) AND (\"comptime\" > ?) AND ((\"state\" = {1}) OR (\"state\" = {2}) OR (\"state\" = {3})));", TaskDbAdapter.TableTasks, (int)state1, (int)state2, (int)state3);
             SQLiteCommand cmd = new SQLiteCommand(query, this.m_connection, this.m_transaction);
             cmd.CommandTimeout = this.m_Timeout;
-            cmd.Parameters.Add("a0", DbType.DateTime).Value = d;
+            cmd.Parameters.Add("a0", DbType.DateTime).Value = start;
+            cmd.Parameters.Add("a1", DbType.DateTime).Value = end;
             //execute command
             SQLiteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)

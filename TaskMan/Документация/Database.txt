@@ -1,21 +1,40 @@
+Скрипты создания БД сейчас:
+
+                "CREATE TABLE \"" + TaskDbAdapter.TableTasks + "\" (\"id\" Integer PRIMARY KEY NOT NULL, \"state\" Integer  NOT NULL   DEFAULT(0), \"prio\" Integer  NOT NULL   DEFAULT(0), \"starttime\" Integer  NOT NULL   DEFAULT(0), \"comptime\" Integer  NOT NULL   DEFAULT(0), \"result\" Text  NOT NULL DEFAULT '');";
+
+                "CREATE TABLE \"" + TaskDbAdapter.TableElements + "\" (\"id\" Integer PRIMARY KEY NOT NULL, \"parent\" Integer  NOT NULL DEFAULT (0), \"title\" Text  NOT NULL, \"descr\" Text  NOT NULL, \"remark\" Text NOT NULL, \"creatime\" Integer  NOT NULL DEFAULT (0), \"moditime\" Integer  NOT NULL DEFAULT (0), \"eltype\" Integer  NOT NULL DEFAULT (0),  \"elstate\" Integer  NOT NULL DEFAULT (0));";
+                "CREATE TABLE \"" + TaskDbAdapter.TableTagged + "\" (\"id\" Integer Primary Key Autoincrement  NOT NULL, \"elid\" Integer  NOT NULL DEFAULT (0), \"tagid\" Integer  NOT NULL DEFAULT (0));";
+
+                "CREATE TABLE \"" + TaskDbAdapter.TableSetting + "\" ( \"id\" INTEGER PRIMARY KEY AUTOINCREMENT, \"ns\" TEXT NOT NULL DEFAULT '', \"title\" TEXT NOT NULL DEFAULT '', \"descr\" TEXT NOT NULL DEFAULT '', \"val\" TEXT NOT NULL DEFAULT '' )";
+
+
+                // create index
+                "CREATE INDEX ix_tagged_tagid ON Tagged(tagid ASC);";
+
+                "CREATE INDEX ix_tagged_elid ON Tagged(elid ASC);";
+
+                "CREATE INDEX ix_tasks_parent ON Elements(parent ASC);";
+
+
+
 
 Таблица Elements - хранение данных всех элементов
-- id		int		table id
-- elid		int		CElementId eid							Идентификатор элемента
+- id		int		table id                                Идентификатор элемента	
+- parent	int		CElementId Parent						Ссылка на родительский элемент в дереве элементов
 - title		string	String Title							Название элемента
 - descr		string	String Description						Однострочное описание элемента
 - remark	string	String Remarks							Многострочные заметки по элементу
 - creatime	?		DateTime CreaTime						Дата создания элемента
 - moditime	?		DateTime ModiTime						Дата изменения элемента
 - eltype	int		EnumElementType ElementType				Код типа элемента
-- parent	int		CElementId Parent						Ссылка на родительский элемент в дереве элементов
 - elstate	int		EnumElementState ElementState			Состояние активности элемента
 
 
 Таблица Tasks - хранение данных Задач
-- elid		int		element id								
+- id		int		element id								Идентификатор элемента
 - state		int		EnumTaskState CTask.TaskState			Состояние задачи
 - prio		int		EnumTaskPriority CTask.TaskPriority		Важность задачи
+- starttime	?		DateTime CTask.TaskStartDate		    Дата начала задачи для планировщика
 - comptime	?		DateTime CTask.TaskCompletionDate		Дата завершения задачи для планировщика
 - result	string	String CTask.TaskResult					Перечень целей задачи отдельно от описания
 
@@ -24,6 +43,21 @@
 - id		int		tableid									первичный ключ таблицы
 - elid		int		element id								идентификатор элемента
 - tagid		int		tag element id							идентификатор элемента-тега
+
+Таблица Setting - хранение настроек - создается, но сейчас не используется!
+- id		int		tableid									первичный ключ таблицы
+- ns        String  ns                                      категория настройки
+- title     String  title                                   название настройки
+- descr     String  description                             описание
+- val       String  value                                   значени енастройки
+
+Индексы:
+- Tagged.id     - primarykey
+- Tagged.tagid  - ix_tagged_tagid
+- Tagged.elid   - ix_tagged_elid
+- Element.id    - primarykey
+- Elements.parent -   ix_tasks_parent
+- Tasks.id      - primarykey
 
 ---------------------------------------
 BEGIN TRANSACTION;
@@ -42,21 +76,7 @@ COMMIT;
  - это для элементов с указанным состоянием.
 - Количество приостановленных/выполненных/активных задач:   SELECT COUNT(id) FROM Tasks WHERE (state = ?);
   - Это для Задач с указанным состоянием выполнения
--------------------------------------
-Выборка задач для планировщика: Что показывать в списке Сегодня?
- - задача должна иметь статус Задачи: активна или приостановлена. 
-   - Показывать ли приостановленные задачи в списке Сегодня?
- - задача не должна быть помечена удаленной.
- - выборка задач по дате начала:
-   - датаСегодня: начало следующего для от сегодня, в 0:00:00.
-   - дата начала задачи должна быть ранее/менее, чем датаСегодня плюс размер окна в будущее (3 дня типично).
-     - элементы списка должны быть сортированы по дате начала задачи.
-       - эту сортировку можжно сделать программно после получения выборки.
-- попробуем составить запрос: 
-  - SELECT id FROM Tasks WHERE ((starttime < ?) AND ((state = EnumTaskState.Run) OR (state = EnumTaskState.Paused)));
-  - потом по каждому идентификатору элемента получаем данные из Elements и Tasks и Tags, чтобы не писать новую функцию.
-  - потом программно сортируем по дате начала?
--------------------------------------
+
 
 
 --------------------------------------
