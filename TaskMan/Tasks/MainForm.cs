@@ -813,18 +813,33 @@ namespace Tasks
 
         #endregion
 
-        #region *** Обработчики контекстного меню контрола дерева ***
-
+        #region *** Обработчики контекстного меню контрола дерева *** 
+        
+        /// <summary>
+        /// NT-Handles the Click event of the toolStripMenuItem_twcExpandAll control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_twcExpandAll_Click(object sender, EventArgs e)
         {
             this.treeView_TaskTreeView.ExpandAll();
         }
 
+        /// <summary>
+        /// NT-Handles the Click event of the toolStripMenuItem_twcCollapseAll control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_twcCollapseAll_Click(object sender, EventArgs e)
         {
             this.treeView_TaskTreeView.CollapseAll();
         }
 
+        /// <summary>
+        /// NT-Handles the Click event of the toolStripMenuItem_twcRefresh control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_twcRefresh_Click(object sender, EventArgs e)
         {
             this.m_TreeManager.UpdateTree();
@@ -832,150 +847,272 @@ namespace Tasks
 
         #endregion
 
-        #region *** Обработчики контекстного меню дерева ноды Категория ***
+        #region *** Обработчики контекстного меню дерева ноды Категория ***        
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_Prop control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiCategory_Prop_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку выделенного в дереве элемента.
+            //Если данные элемента былиизменены, обновить дерево элементов.
         }
-        
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubCat control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiCategory_SubCat_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой категории, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubNote control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiCategory_SubNote_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой заметки, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubTask control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiCategory_SubTask_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой задачи, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubTag control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiCategory_SubTag_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания нового тега, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_Remove control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiCategory_Remove_Click(object sender, EventArgs e)
         {
-
+            //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
         }
         #endregion
 
-        #region *** Обработчики контекстного меню дерева ноды Заметка ***
+        #region *** Обработчики контекстного меню дерева ноды Заметка ***        
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_Prop control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiNote_Prop_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку выделенного в дереве элемента
+            //Если данные элемента былиизменены, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_SubTask control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiNote_SubTask_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой Задачи, где выделенная в дереве Заметка является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_SubNote control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiNote_SubNote_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой Заметки, где выделенная в дереве Заметка является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_Remove control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_cmstiNote_Remove_Click(object sender, EventArgs e)
         {
-
+            //TODO: пометить текущий выделенный элемент неактивным и обновить дерево.
         }
         #endregion
 
-        #region *** Обработчики контекстного меню дерева ноды Задача ***
+        #region *** Обработчики контекстного меню дерева ноды Задача ***        
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTaskProp control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTaskProp_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку выделенного в дереве элемента
+            //Если данные элемента былиизменены, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTaskComplet control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTaskComplet_Click(object sender, EventArgs e)
         {
-
+            //TODO: отметить выделенный элемент - задачу выполненной. Если это Задача.
+            //И обновить дерево элементов. 
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTaskSubTask control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTaskSubTask_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой задачи, где выделенная в дереве Задача является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTaskSubNote control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTaskSubNote_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой Заметки, где выделенная в дереве Задача является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTaskRemove control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTaskRemove_Click(object sender, EventArgs e)
         {
-
+            //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
         }
         #endregion
 
-        #region *** Обработчики контекстного меню дерева ноды Тег ***
-
+        #region *** Обработчики контекстного меню дерева ноды Тег ***        
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTagProp control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTagProp_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку выделенного в дереве элемента
+            //Если данные элемента былиизменены, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTag_SubNote control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTag_SubNote_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания новой Заметки, где выделенный в дереве Тег является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTag_SubTag control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTag_SubTag_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку создания нового Тега, где выделенный в дереве Тег является над-элементом
+            //Если элемент был создан, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TreeItemTag_Remove control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TreeItemTag_Remove_Click(object sender, EventArgs e)
         {
-
+            //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
         }
         #endregion
 
-        #region *** Обработчики контекстного меню дерева ноды Корзина ***
+        #region *** Обработчики контекстного меню дерева ноды Корзина ***        
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_Prop control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_Prop_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать Диалог настроек Корзины
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TrashcanClear control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TrashcanClear_Click(object sender, EventArgs e)
         {
-
+            //TODO: запросить подтверждение операции и очистить Корзину
+            //обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_RestoreAll control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_RestoreAll_Click(object sender, EventArgs e)
         {
-
+            //TODO: запросить подтверждение операции и восстановить все удаленные элементы
+            //Обновить дерево элементов.
         }
 
         #endregion
 
-        #region *** Обработчики контекстного меню дерева ноды Элемент Корзины  ***
-
+        #region *** Обработчики контекстного меню дерева ноды Элемент Корзины  ***        
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TrashcanItemProp control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TrashcanItemProp_Click(object sender, EventArgs e)
         {
-
+            //TODO: показать карточку выделенного в дереве элемента
+            //Если данные элемента былиизменены, обновить дерево элементов.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TrashcanItemRestore control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TrashcanItemRestore_Click(object sender, EventArgs e)
         {
-
+            //TODO: Запросить подтверждение операции и восстановить выделенный в дереве элемент 
+            //проверить, что элемент был помечен удаленным.
+            //Обновить дерево элементов, чтобы отразить изменения.
         }
-
+        /// <summary>
+        /// NR-Handles the Click event of the tsmi_TrashcanItemDelete control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsmi_TrashcanItemDelete_Click(object sender, EventArgs e)
         {
-
+            //TODO: Запросить подтверждение операции и удалить из БД выделенный в дереве элемент 
+            //проверить, что элемент был помечен удаленным.
+            //Обновить дерево элементов, чтобы отразить изменения.
         }
-
-
-
 
         #endregion
 
     }
-
 }
