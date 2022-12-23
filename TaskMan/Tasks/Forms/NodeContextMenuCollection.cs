@@ -26,6 +26,11 @@ namespace Tasks.Forms
         private ContextMenuStrip m_TrashcanItemContextMenu;
 
         /// <summary>
+        /// Отдельное поле для ноды корзины, поскольку его нет в EnumElementType.
+        /// </summary>
+        private ContextMenuStrip m_TrashcanRootContextMenu;
+
+        /// <summary>
         /// NT-Словарь содержимое коллекции
         /// </summary>
         private Dictionary<int, ContextMenuStrip> m_dict;
@@ -43,6 +48,11 @@ namespace Tasks.Forms
         /// Отдельное поле для итема корзины, поскольку его нет в EnumElementType.
         /// </summary>
         public ContextMenuStrip TrashcanItemContextMenu { get => m_TrashcanItemContextMenu; set => m_TrashcanItemContextMenu = value; }
+
+        /// <summary>
+        /// Отдельное поле для ноды корзины, поскольку его нет в EnumElementType.
+        /// </summary>
+        public ContextMenuStrip TrashcanRootContextMenu { get => m_TrashcanRootContextMenu; set => m_TrashcanRootContextMenu = value; }
 
         #endregion
 

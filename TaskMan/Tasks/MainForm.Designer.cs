@@ -36,8 +36,11 @@
             this.toolStripStatusLabel_MainStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView_TaskTreeView = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip_TreeViewControl = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem_twcExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_twcCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_twcRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList_treeViewMain = new System.Windows.Forms.ImageList(this.components);
-            this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.MenuStrip_MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_CreateStorage = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,16 +62,48 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_treeItemCategory = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenuStrip_treeItemNote = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenuStrip_TreeItemTask = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenuStrip_TreeItemTag = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenuStrip_TreeItemTrashcanItem = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_cmstiCategory_Prop = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_cmstiCategory_SubCat = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_cmstiCategory_SubNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_cmstiCategory_SubTask = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_cmstiCategory_SubTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_cmstiCategory_Remove = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_treeItemNote = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_cmstiNote_Prop = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip_TreeViewControl = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem_twcExpandAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_twcCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_twcRefresh = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_cmstiNote_SubNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_cmstiNote_SubTask = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_cmstiNote_Remove = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_TreeItemTask = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmi_TreeItemTaskProp = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TreeItemTaskComplet = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TreeItemTaskSubNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_TreeItemTaskSubTask = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TreeItemTaskRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_TreeItemTag = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmi_TreeItemTagProp = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TreeItemTag_SubNote = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_TreeItemTag_SubTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TreeItemTag_Remove = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_TreeItemTrashcanItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmi_TrashcanItemProp = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_TrashcanItemRestore = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_TrashcanItemDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip_TreeItemTrashcanRoot = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmi_TrashcanClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_Prop = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_RestoreAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -76,10 +111,14 @@
             this.MainStatusStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.contextMenuStrip_TreeViewControl.SuspendLayout();
             this.MenuStrip_MainMenuStrip.SuspendLayout();
             this.contextMenuStrip_treeItemCategory.SuspendLayout();
             this.contextMenuStrip_treeItemNote.SuspendLayout();
-            this.contextMenuStrip_TreeViewControl.SuspendLayout();
+            this.contextMenuStrip_TreeItemTask.SuspendLayout();
+            this.contextMenuStrip_TreeItemTag.SuspendLayout();
+            this.contextMenuStrip_TreeItemTrashcanItem.SuspendLayout();
+            this.contextMenuStrip_TreeItemTrashcanRoot.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -92,7 +131,7 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(800, 371);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(800, 396);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -102,7 +141,6 @@
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MainToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MenuStrip_MainMenuStrip);
             // 
             // MainStatusStrip
@@ -131,7 +169,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.treeView_TaskTreeView);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 371);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 396);
             this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -148,13 +186,45 @@
             this.treeView_TaskTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
             this.treeView_TaskTreeView.SelectedImageIndex = 0;
-            this.treeView_TaskTreeView.Size = new System.Drawing.Size(266, 371);
+            this.treeView_TaskTreeView.Size = new System.Drawing.Size(266, 396);
             this.treeView_TaskTreeView.TabIndex = 0;
             this.treeView_TaskTreeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_TaskTreeView_BeforeCollapse);
             this.treeView_TaskTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_TaskTreeView_BeforeExpand);
             this.treeView_TaskTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_TaskTreeView_AfterSelect);
             this.treeView_TaskTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_TaskTreeView_NodeMouseClick);
             this.treeView_TaskTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_TaskTreeView_NodeMouseDoubleClick);
+            // 
+            // contextMenuStrip_TreeViewControl
+            // 
+            this.contextMenuStrip_TreeViewControl.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeViewControl.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_twcExpandAll,
+            this.toolStripMenuItem_twcCollapseAll,
+            this.toolStripMenuItem_twcRefresh});
+            this.contextMenuStrip_TreeViewControl.Name = "contextMenuStrip_TreeViewControl";
+            this.contextMenuStrip_TreeViewControl.Size = new System.Drawing.Size(215, 110);
+            // 
+            // toolStripMenuItem_twcExpandAll
+            // 
+            this.toolStripMenuItem_twcExpandAll.Name = "toolStripMenuItem_twcExpandAll";
+            this.toolStripMenuItem_twcExpandAll.Size = new System.Drawing.Size(214, 26);
+            this.toolStripMenuItem_twcExpandAll.Text = "Развернуть все";
+            this.toolStripMenuItem_twcExpandAll.Click += new System.EventHandler(this.toolStripMenuItem_twcExpandAll_Click);
+            // 
+            // toolStripMenuItem_twcCollapseAll
+            // 
+            this.toolStripMenuItem_twcCollapseAll.Name = "toolStripMenuItem_twcCollapseAll";
+            this.toolStripMenuItem_twcCollapseAll.Size = new System.Drawing.Size(214, 26);
+            this.toolStripMenuItem_twcCollapseAll.Text = "Свернуть все";
+            this.toolStripMenuItem_twcCollapseAll.Click += new System.EventHandler(this.toolStripMenuItem_twcCollapseAll_Click);
+            // 
+            // toolStripMenuItem_twcRefresh
+            // 
+            this.toolStripMenuItem_twcRefresh.Image = global::Tasks.Properties.Resources.arrowRefresh;
+            this.toolStripMenuItem_twcRefresh.Name = "toolStripMenuItem_twcRefresh";
+            this.toolStripMenuItem_twcRefresh.Size = new System.Drawing.Size(214, 26);
+            this.toolStripMenuItem_twcRefresh.Text = "Обновить";
+            this.toolStripMenuItem_twcRefresh.Click += new System.EventHandler(this.toolStripMenuItem_twcRefresh_Click);
             // 
             // imageList_treeViewMain
             // 
@@ -167,15 +237,6 @@
             this.imageList_treeViewMain.Images.SetKeyName(4, "Trashcan16.png");
             this.imageList_treeViewMain.Images.SetKeyName(5, "DocumentHS.png");
             // 
-            // MainToolStrip
-            // 
-            this.MainToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.MainToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.MainToolStrip.Location = new System.Drawing.Point(4, 0);
-            this.MainToolStrip.Name = "MainToolStrip";
-            this.MainToolStrip.Size = new System.Drawing.Size(112, 25);
-            this.MainToolStrip.TabIndex = 1;
-            // 
             // MenuStrip_MainMenuStrip
             // 
             this.MenuStrip_MainMenuStrip.Dock = System.Windows.Forms.DockStyle.None;
@@ -185,7 +246,7 @@
             this.правкаToolStripMenuItem,
             this.инструментыToolStripMenuItem,
             this.справкаToolStripMenuItem});
-            this.MenuStrip_MainMenuStrip.Location = new System.Drawing.Point(0, 25);
+            this.MenuStrip_MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip_MainMenuStrip.Name = "MenuStrip_MainMenuStrip";
             this.MenuStrip_MainMenuStrip.Size = new System.Drawing.Size(800, 28);
             this.MenuStrip_MainMenuStrip.TabIndex = 0;
@@ -334,78 +395,340 @@
             // 
             this.contextMenuStrip_treeItemCategory.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip_treeItemCategory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_cmstiCategory_Prop});
+            this.toolStripMenuItem_cmstiCategory_Prop,
+            this.toolStripSeparator16,
+            this.toolStripMenuItem_cmstiCategory_SubCat,
+            this.toolStripMenuItem_cmstiCategory_SubNote,
+            this.toolStripMenuItem_cmstiCategory_SubTask,
+            this.toolStripMenuItem_cmstiCategory_SubTag,
+            this.toolStripSeparator15,
+            this.toolStripMenuItem_cmstiCategory_Remove});
             this.contextMenuStrip_treeItemCategory.Name = "contextMenuStrip_treeItemCategory";
-            this.contextMenuStrip_treeItemCategory.Size = new System.Drawing.Size(152, 28);
+            this.contextMenuStrip_treeItemCategory.Size = new System.Drawing.Size(259, 172);
+            // 
+            // toolStripMenuItem_cmstiCategory_Prop
+            // 
+            this.toolStripMenuItem_cmstiCategory_Prop.Image = global::Tasks.Properties.Resources.property;
+            this.toolStripMenuItem_cmstiCategory_Prop.Name = "toolStripMenuItem_cmstiCategory_Prop";
+            this.toolStripMenuItem_cmstiCategory_Prop.Size = new System.Drawing.Size(258, 26);
+            this.toolStripMenuItem_cmstiCategory_Prop.Text = "Свойства...";
+            this.toolStripMenuItem_cmstiCategory_Prop.Click += new System.EventHandler(this.toolStripMenuItem_cmstiCategory_Prop_Click);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(255, 6);
+            // 
+            // toolStripMenuItem_cmstiCategory_SubCat
+            // 
+            this.toolStripMenuItem_cmstiCategory_SubCat.Image = global::Tasks.Properties.Resources.category2;
+            this.toolStripMenuItem_cmstiCategory_SubCat.Name = "toolStripMenuItem_cmstiCategory_SubCat";
+            this.toolStripMenuItem_cmstiCategory_SubCat.Size = new System.Drawing.Size(258, 26);
+            this.toolStripMenuItem_cmstiCategory_SubCat.Text = "Создать под-Категорию...";
+            this.toolStripMenuItem_cmstiCategory_SubCat.Click += new System.EventHandler(this.toolStripMenuItem_cmstiCategory_SubCat_Click);
+            // 
+            // toolStripMenuItem_cmstiCategory_SubNote
+            // 
+            this.toolStripMenuItem_cmstiCategory_SubNote.Image = global::Tasks.Properties.Resources.note;
+            this.toolStripMenuItem_cmstiCategory_SubNote.Name = "toolStripMenuItem_cmstiCategory_SubNote";
+            this.toolStripMenuItem_cmstiCategory_SubNote.Size = new System.Drawing.Size(258, 26);
+            this.toolStripMenuItem_cmstiCategory_SubNote.Text = "Создать Заметку...";
+            this.toolStripMenuItem_cmstiCategory_SubNote.Click += new System.EventHandler(this.toolStripMenuItem_cmstiCategory_SubNote_Click);
+            // 
+            // toolStripMenuItem_cmstiCategory_SubTask
+            // 
+            this.toolStripMenuItem_cmstiCategory_SubTask.Image = global::Tasks.Properties.Resources.task;
+            this.toolStripMenuItem_cmstiCategory_SubTask.Name = "toolStripMenuItem_cmstiCategory_SubTask";
+            this.toolStripMenuItem_cmstiCategory_SubTask.Size = new System.Drawing.Size(258, 26);
+            this.toolStripMenuItem_cmstiCategory_SubTask.Text = "Создать Задачу...";
+            this.toolStripMenuItem_cmstiCategory_SubTask.Click += new System.EventHandler(this.toolStripMenuItem_cmstiCategory_SubTask_Click);
+            // 
+            // toolStripMenuItem_cmstiCategory_SubTag
+            // 
+            this.toolStripMenuItem_cmstiCategory_SubTag.Image = global::Tasks.Properties.Resources.tag;
+            this.toolStripMenuItem_cmstiCategory_SubTag.Name = "toolStripMenuItem_cmstiCategory_SubTag";
+            this.toolStripMenuItem_cmstiCategory_SubTag.Size = new System.Drawing.Size(258, 26);
+            this.toolStripMenuItem_cmstiCategory_SubTag.Text = "Создать Тег...";
+            this.toolStripMenuItem_cmstiCategory_SubTag.Click += new System.EventHandler(this.toolStripMenuItem_cmstiCategory_SubTag_Click);
+            // 
+            // toolStripSeparator15
+            // 
+            this.toolStripSeparator15.Name = "toolStripSeparator15";
+            this.toolStripSeparator15.Size = new System.Drawing.Size(255, 6);
+            // 
+            // toolStripMenuItem_cmstiCategory_Remove
+            // 
+            this.toolStripMenuItem_cmstiCategory_Remove.Image = global::Tasks.Properties.Resources.Trashcan16;
+            this.toolStripMenuItem_cmstiCategory_Remove.Name = "toolStripMenuItem_cmstiCategory_Remove";
+            this.toolStripMenuItem_cmstiCategory_Remove.Size = new System.Drawing.Size(258, 26);
+            this.toolStripMenuItem_cmstiCategory_Remove.Text = "Удалить в Корзину";
+            this.toolStripMenuItem_cmstiCategory_Remove.Click += new System.EventHandler(this.toolStripMenuItem_cmstiCategory_Remove_Click);
             // 
             // contextMenuStrip_treeItemNote
             // 
             this.contextMenuStrip_treeItemNote.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip_treeItemNote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_cmstiNote_Prop});
+            this.toolStripMenuItem_cmstiNote_Prop,
+            this.toolStripSeparator12,
+            this.toolStripMenuItem_cmstiNote_SubNote,
+            this.toolStripMenuItem_cmstiNote_SubTask,
+            this.toolStripSeparator13,
+            this.toolStripMenuItem_cmstiNote_Remove});
             this.contextMenuStrip_treeItemNote.Name = "contextMenuStrip_treeItemNote";
-            this.contextMenuStrip_treeItemNote.Size = new System.Drawing.Size(152, 28);
+            this.contextMenuStrip_treeItemNote.Size = new System.Drawing.Size(238, 120);
+            // 
+            // toolStripMenuItem_cmstiNote_Prop
+            // 
+            this.toolStripMenuItem_cmstiNote_Prop.Image = global::Tasks.Properties.Resources.property;
+            this.toolStripMenuItem_cmstiNote_Prop.Name = "toolStripMenuItem_cmstiNote_Prop";
+            this.toolStripMenuItem_cmstiNote_Prop.Size = new System.Drawing.Size(237, 26);
+            this.toolStripMenuItem_cmstiNote_Prop.Text = "Свойства...";
+            this.toolStripMenuItem_cmstiNote_Prop.Click += new System.EventHandler(this.toolStripMenuItem_cmstiNote_Prop_Click);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(234, 6);
+            // 
+            // toolStripMenuItem_cmstiNote_SubNote
+            // 
+            this.toolStripMenuItem_cmstiNote_SubNote.Image = global::Tasks.Properties.Resources.note;
+            this.toolStripMenuItem_cmstiNote_SubNote.Name = "toolStripMenuItem_cmstiNote_SubNote";
+            this.toolStripMenuItem_cmstiNote_SubNote.Size = new System.Drawing.Size(237, 26);
+            this.toolStripMenuItem_cmstiNote_SubNote.Text = "Создать под-Заметку...";
+            this.toolStripMenuItem_cmstiNote_SubNote.Click += new System.EventHandler(this.toolStripMenuItem_cmstiNote_SubNote_Click);
+            // 
+            // toolStripMenuItem_cmstiNote_SubTask
+            // 
+            this.toolStripMenuItem_cmstiNote_SubTask.Image = global::Tasks.Properties.Resources.task;
+            this.toolStripMenuItem_cmstiNote_SubTask.Name = "toolStripMenuItem_cmstiNote_SubTask";
+            this.toolStripMenuItem_cmstiNote_SubTask.Size = new System.Drawing.Size(237, 26);
+            this.toolStripMenuItem_cmstiNote_SubTask.Text = "Создать под-Задачу...";
+            this.toolStripMenuItem_cmstiNote_SubTask.Click += new System.EventHandler(this.toolStripMenuItem_cmstiNote_SubTask_Click);
+            // 
+            // toolStripSeparator13
+            // 
+            this.toolStripSeparator13.Name = "toolStripSeparator13";
+            this.toolStripSeparator13.Size = new System.Drawing.Size(234, 6);
+            // 
+            // toolStripMenuItem_cmstiNote_Remove
+            // 
+            this.toolStripMenuItem_cmstiNote_Remove.Image = global::Tasks.Properties.Resources.Trashcan16;
+            this.toolStripMenuItem_cmstiNote_Remove.Name = "toolStripMenuItem_cmstiNote_Remove";
+            this.toolStripMenuItem_cmstiNote_Remove.Size = new System.Drawing.Size(237, 26);
+            this.toolStripMenuItem_cmstiNote_Remove.Text = "Удалить в Корзину";
+            this.toolStripMenuItem_cmstiNote_Remove.Click += new System.EventHandler(this.toolStripMenuItem_cmstiNote_Remove_Click);
             // 
             // contextMenuStrip_TreeItemTask
             // 
             this.contextMenuStrip_TreeItemTask.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTask.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_TreeItemTaskProp,
+            this.toolStripSeparator9,
+            this.tsmi_TreeItemTaskComplet,
+            this.toolStripSeparator10,
+            this.tsmi_TreeItemTaskSubNote,
+            this.tsmi_TreeItemTaskSubTask,
+            this.toolStripSeparator11,
+            this.tsmi_TreeItemTaskRemove});
             this.contextMenuStrip_TreeItemTask.Name = "contextMenuStrip_TreeItemTask";
-            this.contextMenuStrip_TreeItemTask.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStrip_TreeItemTask.Size = new System.Drawing.Size(238, 152);
+            // 
+            // tsmi_TreeItemTaskProp
+            // 
+            this.tsmi_TreeItemTaskProp.Image = global::Tasks.Properties.Resources.property;
+            this.tsmi_TreeItemTaskProp.Name = "tsmi_TreeItemTaskProp";
+            this.tsmi_TreeItemTaskProp.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTaskProp.Text = "Свойства...";
+            this.tsmi_TreeItemTaskProp.Click += new System.EventHandler(this.tsmi_TreeItemTaskProp_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(234, 6);
+            // 
+            // tsmi_TreeItemTaskComplet
+            // 
+            this.tsmi_TreeItemTaskComplet.Image = global::Tasks.Properties.Resources.check;
+            this.tsmi_TreeItemTaskComplet.Name = "tsmi_TreeItemTaskComplet";
+            this.tsmi_TreeItemTaskComplet.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTaskComplet.Text = "Пометить Выполнено";
+            this.tsmi_TreeItemTaskComplet.Click += new System.EventHandler(this.tsmi_TreeItemTaskComplet_Click);
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(234, 6);
+            // 
+            // tsmi_TreeItemTaskSubNote
+            // 
+            this.tsmi_TreeItemTaskSubNote.Image = global::Tasks.Properties.Resources.note;
+            this.tsmi_TreeItemTaskSubNote.Name = "tsmi_TreeItemTaskSubNote";
+            this.tsmi_TreeItemTaskSubNote.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTaskSubNote.Text = "Создать под-Заметку...";
+            this.tsmi_TreeItemTaskSubNote.Click += new System.EventHandler(this.tsmi_TreeItemTaskSubNote_Click);
+            // 
+            // tsmi_TreeItemTaskSubTask
+            // 
+            this.tsmi_TreeItemTaskSubTask.Image = global::Tasks.Properties.Resources.task;
+            this.tsmi_TreeItemTaskSubTask.Name = "tsmi_TreeItemTaskSubTask";
+            this.tsmi_TreeItemTaskSubTask.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTaskSubTask.Text = "Создать под-Задачу...";
+            this.tsmi_TreeItemTaskSubTask.Click += new System.EventHandler(this.tsmi_TreeItemTaskSubTask_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(234, 6);
+            // 
+            // tsmi_TreeItemTaskRemove
+            // 
+            this.tsmi_TreeItemTaskRemove.Image = global::Tasks.Properties.Resources.Trashcan16;
+            this.tsmi_TreeItemTaskRemove.Name = "tsmi_TreeItemTaskRemove";
+            this.tsmi_TreeItemTaskRemove.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTaskRemove.Text = "Удалить в Корзину";
+            this.tsmi_TreeItemTaskRemove.Click += new System.EventHandler(this.tsmi_TreeItemTaskRemove_Click);
             // 
             // contextMenuStrip_TreeItemTag
             // 
             this.contextMenuStrip_TreeItemTag.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_TreeItemTagProp,
+            this.toolStripSeparator14,
+            this.tsmi_TreeItemTag_SubNote,
+            this.tsmi_TreeItemTag_SubTag,
+            this.toolStripSeparator17,
+            this.tsmi_TreeItemTag_Remove});
             this.contextMenuStrip_TreeItemTag.Name = "contextMenuStrip_TreeItemTag";
-            this.contextMenuStrip_TreeItemTag.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStrip_TreeItemTag.Size = new System.Drawing.Size(238, 120);
+            // 
+            // tsmi_TreeItemTagProp
+            // 
+            this.tsmi_TreeItemTagProp.Image = global::Tasks.Properties.Resources.property;
+            this.tsmi_TreeItemTagProp.Name = "tsmi_TreeItemTagProp";
+            this.tsmi_TreeItemTagProp.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTagProp.Text = "Свойства...";
+            this.tsmi_TreeItemTagProp.Click += new System.EventHandler(this.tsmi_TreeItemTagProp_Click);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(234, 6);
+            // 
+            // tsmi_TreeItemTag_SubNote
+            // 
+            this.tsmi_TreeItemTag_SubNote.Image = global::Tasks.Properties.Resources.note;
+            this.tsmi_TreeItemTag_SubNote.Name = "tsmi_TreeItemTag_SubNote";
+            this.tsmi_TreeItemTag_SubNote.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTag_SubNote.Text = "Создать под-Заметку...";
+            this.tsmi_TreeItemTag_SubNote.Click += new System.EventHandler(this.tsmi_TreeItemTag_SubNote_Click);
+            // 
+            // tsmi_TreeItemTag_SubTag
+            // 
+            this.tsmi_TreeItemTag_SubTag.Image = global::Tasks.Properties.Resources.tag;
+            this.tsmi_TreeItemTag_SubTag.Name = "tsmi_TreeItemTag_SubTag";
+            this.tsmi_TreeItemTag_SubTag.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTag_SubTag.Text = "Создать под-Тег...";
+            this.tsmi_TreeItemTag_SubTag.Click += new System.EventHandler(this.tsmi_TreeItemTag_SubTag_Click);
+            // 
+            // toolStripSeparator17
+            // 
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(234, 6);
+            // 
+            // tsmi_TreeItemTag_Remove
+            // 
+            this.tsmi_TreeItemTag_Remove.Image = global::Tasks.Properties.Resources.Trashcan16;
+            this.tsmi_TreeItemTag_Remove.Name = "tsmi_TreeItemTag_Remove";
+            this.tsmi_TreeItemTag_Remove.Size = new System.Drawing.Size(237, 26);
+            this.tsmi_TreeItemTag_Remove.Text = "Удалить в Корзину";
+            this.tsmi_TreeItemTag_Remove.Click += new System.EventHandler(this.tsmi_TreeItemTag_Remove_Click);
             // 
             // contextMenuStrip_TreeItemTrashcanItem
             // 
             this.contextMenuStrip_TreeItemTrashcanItem.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTrashcanItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_TrashcanItemProp,
+            this.tsmi_TrashcanItemRestore,
+            this.toolStripSeparator8,
+            this.tsmi_TrashcanItemDelete});
             this.contextMenuStrip_TreeItemTrashcanItem.Name = "contextMenuStrip_TreeItemTrashcanItem";
-            this.contextMenuStrip_TreeItemTrashcanItem.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStrip_TreeItemTrashcanItem.Size = new System.Drawing.Size(178, 88);
             // 
-            // toolStripMenuItem_cmstiCategory_Prop
+            // tsmi_TrashcanItemProp
             // 
-            this.toolStripMenuItem_cmstiCategory_Prop.Name = "toolStripMenuItem_cmstiCategory_Prop";
-            this.toolStripMenuItem_cmstiCategory_Prop.Size = new System.Drawing.Size(151, 24);
-            this.toolStripMenuItem_cmstiCategory_Prop.Text = "Свойства...";
+            this.tsmi_TrashcanItemProp.Image = global::Tasks.Properties.Resources.property;
+            this.tsmi_TrashcanItemProp.Name = "tsmi_TrashcanItemProp";
+            this.tsmi_TrashcanItemProp.Size = new System.Drawing.Size(177, 26);
+            this.tsmi_TrashcanItemProp.Text = "Свойства...";
+            this.tsmi_TrashcanItemProp.Click += new System.EventHandler(this.tsmi_TrashcanItemProp_Click);
             // 
-            // toolStripMenuItem_cmstiNote_Prop
+            // tsmi_TrashcanItemRestore
             // 
-            this.toolStripMenuItem_cmstiNote_Prop.Name = "toolStripMenuItem_cmstiNote_Prop";
-            this.toolStripMenuItem_cmstiNote_Prop.Size = new System.Drawing.Size(151, 24);
-            this.toolStripMenuItem_cmstiNote_Prop.Text = "Свойства...";
+            this.tsmi_TrashcanItemRestore.Image = global::Tasks.Properties.Resources.arrowReturn;
+            this.tsmi_TrashcanItemRestore.Name = "tsmi_TrashcanItemRestore";
+            this.tsmi_TrashcanItemRestore.Size = new System.Drawing.Size(177, 26);
+            this.tsmi_TrashcanItemRestore.Text = "Восстановить";
+            this.tsmi_TrashcanItemRestore.Click += new System.EventHandler(this.tsmi_TrashcanItemRestore_Click);
             // 
-            // contextMenuStrip_TreeViewControl
+            // toolStripSeparator8
             // 
-            this.contextMenuStrip_TreeViewControl.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip_TreeViewControl.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_twcExpandAll,
-            this.toolStripMenuItem_twcCollapseAll,
-            this.toolStripMenuItem_twcRefresh});
-            this.contextMenuStrip_TreeViewControl.Name = "contextMenuStrip_TreeViewControl";
-            this.contextMenuStrip_TreeViewControl.Size = new System.Drawing.Size(211, 76);
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(174, 6);
             // 
-            // toolStripMenuItem_twcExpandAll
+            // tsmi_TrashcanItemDelete
             // 
-            this.toolStripMenuItem_twcExpandAll.Name = "toolStripMenuItem_twcExpandAll";
-            this.toolStripMenuItem_twcExpandAll.Size = new System.Drawing.Size(210, 24);
-            this.toolStripMenuItem_twcExpandAll.Text = "Развернуть дерево";
-            this.toolStripMenuItem_twcExpandAll.Click += new System.EventHandler(this.toolStripMenuItem_twcExpandAll_Click);
+            this.tsmi_TrashcanItemDelete.Image = global::Tasks.Properties.Resources.cross;
+            this.tsmi_TrashcanItemDelete.Name = "tsmi_TrashcanItemDelete";
+            this.tsmi_TrashcanItemDelete.Size = new System.Drawing.Size(177, 26);
+            this.tsmi_TrashcanItemDelete.Text = "Удалить";
+            this.tsmi_TrashcanItemDelete.Click += new System.EventHandler(this.tsmi_TrashcanItemDelete_Click);
             // 
-            // toolStripMenuItem_twcCollapseAll
+            // contextMenuStrip_TreeItemTrashcanRoot
             // 
-            this.toolStripMenuItem_twcCollapseAll.Name = "toolStripMenuItem_twcCollapseAll";
-            this.toolStripMenuItem_twcCollapseAll.Size = new System.Drawing.Size(210, 24);
-            this.toolStripMenuItem_twcCollapseAll.Text = "Свернуть дерево";
-            this.toolStripMenuItem_twcCollapseAll.Click += new System.EventHandler(this.toolStripMenuItem_twcCollapseAll_Click);
+            this.contextMenuStrip_TreeItemTrashcanRoot.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip_TreeItemTrashcanRoot.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_Prop,
+            this.toolStripSeparator6,
+            this.tsmi_RestoreAll,
+            this.toolStripSeparator7,
+            this.tsmi_TrashcanClear});
+            this.contextMenuStrip_TreeItemTrashcanRoot.Name = "contextMenuStrip_TreeItemTrashcanRoot";
+            this.contextMenuStrip_TreeItemTrashcanRoot.Size = new System.Drawing.Size(277, 94);
             // 
-            // toolStripMenuItem_twcRefresh
+            // tsmi_TrashcanClear
             // 
-            this.toolStripMenuItem_twcRefresh.Name = "toolStripMenuItem_twcRefresh";
-            this.toolStripMenuItem_twcRefresh.Size = new System.Drawing.Size(210, 24);
-            this.toolStripMenuItem_twcRefresh.Text = "Обновить";
-            this.toolStripMenuItem_twcRefresh.Click += new System.EventHandler(this.toolStripMenuItem_twcRefresh_Click);
+            this.tsmi_TrashcanClear.Image = global::Tasks.Properties.Resources.cross;
+            this.tsmi_TrashcanClear.Name = "tsmi_TrashcanClear";
+            this.tsmi_TrashcanClear.Size = new System.Drawing.Size(276, 26);
+            this.tsmi_TrashcanClear.Text = "Очистить Корзину...";
+            this.tsmi_TrashcanClear.Click += new System.EventHandler(this.tsmi_TrashcanClear_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(273, 6);
+            // 
+            // tsmi_Prop
+            // 
+            this.tsmi_Prop.Image = global::Tasks.Properties.Resources.property;
+            this.tsmi_Prop.Name = "tsmi_Prop";
+            this.tsmi_Prop.Size = new System.Drawing.Size(276, 26);
+            this.tsmi_Prop.Text = "Свойства...";
+            this.tsmi_Prop.Click += new System.EventHandler(this.tsmi_Prop_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(273, 6);
+            // 
+            // tsmi_RestoreAll
+            // 
+            this.tsmi_RestoreAll.Image = global::Tasks.Properties.Resources.arrowReturn;
+            this.tsmi_RestoreAll.Name = "tsmi_RestoreAll";
+            this.tsmi_RestoreAll.Size = new System.Drawing.Size(276, 26);
+            this.tsmi_RestoreAll.Text = "Восстановить все элементы";
+            this.tsmi_RestoreAll.Click += new System.EventHandler(this.tsmi_RestoreAll_Click);
             // 
             // MainForm
             // 
@@ -429,11 +752,15 @@
             this.MainStatusStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.contextMenuStrip_TreeViewControl.ResumeLayout(false);
             this.MenuStrip_MainMenuStrip.ResumeLayout(false);
             this.MenuStrip_MainMenuStrip.PerformLayout();
             this.contextMenuStrip_treeItemCategory.ResumeLayout(false);
             this.contextMenuStrip_treeItemNote.ResumeLayout(false);
-            this.contextMenuStrip_TreeViewControl.ResumeLayout(false);
+            this.contextMenuStrip_TreeItemTask.ResumeLayout(false);
+            this.contextMenuStrip_TreeItemTag.ResumeLayout(false);
+            this.contextMenuStrip_TreeItemTrashcanItem.ResumeLayout(false);
+            this.contextMenuStrip_TreeItemTrashcanRoot.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -459,7 +786,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.StatusStrip MainStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_MainStatus;
-        private System.Windows.Forms.ToolStrip MainToolStrip;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView_TaskTreeView;
         private System.Windows.Forms.ImageList imageList_treeViewMain;
@@ -478,5 +804,41 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_twcExpandAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_twcCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_twcRefresh;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_TreeItemTrashcanRoot;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TrashcanClear;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_Prop;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_RestoreAll;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TrashcanItemProp;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TrashcanItemRestore;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TrashcanItemDelete;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTagProp;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTaskProp;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTaskComplet;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTaskSubTask;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTaskSubNote;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTaskRemove;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiNote_SubNote;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiNote_SubTask;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiNote_Remove;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiCategory_SubCat;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiCategory_SubNote;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiCategory_SubTask;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiCategory_SubTag;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_cmstiCategory_Remove;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTag_SubNote;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTag_SubTag;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTag_Remove;
     }
 }

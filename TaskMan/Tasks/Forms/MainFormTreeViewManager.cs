@@ -19,7 +19,7 @@ namespace Tasks.Forms
         /// <summary>
         /// Словарь контекстных меню для нод элементов.
         /// </summary>
-        private NodeContextMenuCollection m_menus;
+        private NodeContextMenuCollection m_contextMenus;
 
         /// <summary>
         /// Объект корневой ноды Корзины, для нахождения ее в дереве.
@@ -33,7 +33,7 @@ namespace Tasks.Forms
         /// <param name="treeView">The tree view.</param>
         public MainFormTreeViewManager(CEngine engine, TreeView treeView, NodeContextMenuCollection menus) : base(engine, treeView)
         {
-            this.m_menus = menus;
+            this.m_contextMenus = menus;
             this.m_TrashcanRootNode = null;
 
             return;
@@ -242,7 +242,7 @@ namespace Tasks.Forms
             SelectNodeFontAndColor(tn, obj);
             //Добавить контекстное меню для элемента данного типа
             // Это отличие от функции из базового класса.
-            tn.ContextMenuStrip = this.m_menus.Get(obj.ElementType);
+            tn.ContextMenuStrip = this.m_contextMenus.Get(obj.ElementType);
             //ВАЖНО: нода содержит объект элемента в поле Tag
             tn.Tag = obj;
             //добавить пустую ноду, если надо
@@ -309,8 +309,10 @@ namespace Tasks.Forms
             tn.ToolTipText = "Все элементы, помеченные удаленными.";
             //выбрать цвет надписи ноды
             tn.ForeColor = TreeViewManagerBase.Color_NormalElement;
-            tn.NodeFont = this.m_FontNormal; 
+            tn.NodeFont = this.m_FontNormal;
             //контестного меню у ноды Корзина не будет, все делать через команды главного меню приложения.
+            //Иксперимент! добавим контекстное меню ноды Корзина, проверим удобство.
+            tn.ContextMenuStrip = this.m_contextMenus.TrashcanRootContextMenu;
             //ВАЖНО: нода НЕ содержит объект элемента в поле Tag
             //добавить пустую ноду, если надо
             if (addTempSubnode)
@@ -389,7 +391,7 @@ namespace Tasks.Forms
             SelectNodeFontAndColor(tn, obj);
             //Добавить контекстное меню элемента Корзины для элемента любого типа
             // Это отличие от функции из базового класса.
-            tn.ContextMenuStrip = this.m_menus.TrashcanItemContextMenu;
+            tn.ContextMenuStrip = this.m_contextMenus.TrashcanItemContextMenu;
             //ВАЖНО: нода содержит объект элемента в поле Tag
             tn.Tag = obj;
             //добавить пустую ноду, если надо

@@ -41,6 +41,7 @@ namespace Tasks
             //create context menu collection object
             Tasks.Forms.NodeContextMenuCollection nc = new Tasks.Forms.NodeContextMenuCollection();
             nc.TrashcanItemContextMenu = this.contextMenuStrip_TreeItemTrashcanItem;
+            nc.TrashcanRootContextMenu = this.contextMenuStrip_TreeItemTrashcanRoot;
             nc.Add(EnumElementType.Category, this.contextMenuStrip_treeItemCategory);
             nc.Add(EnumElementType.Note, this.contextMenuStrip_treeItemNote);
             nc.Add(EnumElementType.Task, this.contextMenuStrip_TreeItemTask);
@@ -64,7 +65,7 @@ namespace Tasks
         #endregion
 
         #region *** Form Load Closing Closed handlers ***   
-        
+
         /// <summary>
         /// NT-Handles the Load event of the MainForm control.
         /// </summary>
@@ -127,18 +128,18 @@ namespace Tasks
             //store setting files
             Properties.Settings.Default.Save();
             //close Storage if not closed now
-            if((this.m_Engine != null) && (this.m_Engine.Ready == true))
+            if ((this.m_Engine != null) && (this.m_Engine.Ready == true))
                 this.closeStorage();
 
             //TODO: Add closing application code here
-            return; 
+            return;
         }
 
         #endregion
 
 
         #region *** Обработчики меню Справка главного меню ***   
-        
+
         /// <summary>
         /// NT-Handles the Click event of the просмотрСправкиToolStripMenuItem control.
         /// </summary>
@@ -390,7 +391,7 @@ namespace Tasks
                 //TODO: обновить файл справки "Справка.chm" в каталоге проекта приложения, 
                 //сгенерировав его и скопировав из папки Documentation
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.showErrorMessageBox(null, "Файл справки приложения не найден или поврежден.\n" + ex.ToString());
             }
@@ -410,12 +411,12 @@ namespace Tasks
             this.treeView_TaskTreeView.EndUpdate();
             //disable treeview
             //this.treeView_TaskTreeView.SelectedNode = null;
-            this.treeView_TaskTreeView.Enabled = false; 
+            this.treeView_TaskTreeView.Enabled = false;
 
             return;
         }
 
-#region *** Функции открытия и закрытия Хранилища ***
+        #region *** Функции открытия и закрытия Хранилища ***
 
         /// <summary>
         /// NT-Creates the storage.
@@ -425,7 +426,7 @@ namespace Tasks
             //Этот код создания Хранилища кривой, наскоро надерган из других проектов.
             //TODO: Процесс создания Хранилища надо перепроектировать заново и реализовать правильно.
             //А сейчас он только для тестирования написан.
-            
+
             try
             {
                 String storageRootFolder = "";
@@ -476,7 +477,7 @@ namespace Tasks
                 //TODO: можно сразу и открыть это хранилище по всем этим данным.
                 //А лучше -открыть отдельным вызовом в вызывающей функции.
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //set status text
                 this.setStatusBarText("Ошибка создания Хранилища", true);
@@ -542,16 +543,16 @@ namespace Tasks
                 this.m_Engine.StorageOpen(storagePath, readOnlyMode);
                 //6 если движок открыт в режиме Только чтение, то вывести предупреждение об этом.
                 //если пользователь выберет Отмена, то завершить работу Движка и выйти в пустое главное окно.
-                if(this.m_Engine.ReadOnly == true)
+                if (this.m_Engine.ReadOnly == true)
                 {
                     DialogResult dr = MessageBox.Show(this,
                         "Хранилище открыто в режиме \"Только чтение\".\n" +
                         "Любые изменения в нем невозможны.\n" +
                         "Для продолжения работы нажмите OK.\n" +
-                        "Для закрытия Хранилища нажмите  Cancel.", 
+                        "Для закрытия Хранилища нажмите  Cancel.",
                         MainFormTitle + " Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     //
-                    if(dr != DialogResult.OK)
+                    if (dr != DialogResult.OK)
                         throw new Exception("Открытие Хранилища отменено пользователем.");
                     //else work next as readOnly mode
                 }
@@ -627,7 +628,7 @@ namespace Tasks
             return;
         }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// NT-Sets the main form empty.
@@ -647,10 +648,10 @@ namespace Tasks
                 this.setEmptyTreeItems();
                 //TODO: очистить правую панель главного окна как СписокСегодня
                 //update form
-                if(updateForm)
+                if (updateForm)
                     Application.DoEvents();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ;
             }
@@ -659,7 +660,7 @@ namespace Tasks
         }
 
         #region *** Обработчики событий Дерева элементов главного окна ***        
-        
+
         /// <summary>
         /// NR-Handles the NodeMouseClick event of the treeView_TaskTreeView control.
         /// </summary>
@@ -672,7 +673,7 @@ namespace Tasks
 
             return;
         }
-        
+
         /// <summary>
         /// NR-Handles the NodeMouseDoubleClick event of the treeView_TaskTreeView control.
         /// </summary>
@@ -683,8 +684,8 @@ namespace Tasks
             //для ноды корзины надо проверить, что кликнутая нода  - это нода корзины.
             TreeNode node = e.Node;
             if (node == null) return;
-            CElement elem = (CElement) node.Tag;
-            if(elem == null)
+            CElement elem = (CElement)node.Tag;
+            if (elem == null)
             {
                 //check node is Trashcan
                 if (this.m_TreeManager.IsTrashcanRootNode(node))
@@ -705,11 +706,11 @@ namespace Tasks
         /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
         private void treeView_TaskTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-           //skip startup selection
+            //skip startup selection
             if (e.Action == TreeViewAction.Unknown)
                 return;
             //
-            if(e.Node != null) 
+            if (e.Node != null)
                 e.Node.Toggle();
             //get element from selected node
             CElement elem = this.m_TreeManager.NodeSelected(e);
@@ -738,7 +739,7 @@ namespace Tasks
 
             return;
         }
-        
+
         /// <summary>
         /// NR-Handles the BeforeCollapse event of the treeView_TaskTreeView control.
         /// </summary>
@@ -759,7 +760,7 @@ namespace Tasks
 
         #endregion
 
-#region *** Функции событий левой панели с деревом элементов. ***
+        #region *** Функции событий левой панели с деревом элементов. ***
 
         /// <summary>
         /// NR-Обработать событие выделения Корзины в левой панели главного окна
@@ -810,10 +811,9 @@ namespace Tasks
             return;
         }
 
-
         #endregion
 
-#region *** Обработчики контекстного меню контрола дерева ***
+        #region *** Обработчики контекстного меню контрола дерева ***
 
         private void toolStripMenuItem_twcExpandAll_Click(object sender, EventArgs e)
         {
@@ -829,7 +829,153 @@ namespace Tasks
         {
             this.m_TreeManager.UpdateTree();
         }
-        
+
         #endregion
+
+        #region *** Обработчики контекстного меню дерева ноды Категория ***
+        private void toolStripMenuItem_cmstiCategory_Prop_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+        private void toolStripMenuItem_cmstiCategory_SubCat_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiCategory_SubNote_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiCategory_SubTask_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiCategory_SubTag_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiCategory_Remove_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region *** Обработчики контекстного меню дерева ноды Заметка ***
+        private void toolStripMenuItem_cmstiNote_Prop_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiNote_SubTask_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiNote_SubNote_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem_cmstiNote_Remove_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region *** Обработчики контекстного меню дерева ноды Задача ***
+        private void tsmi_TreeItemTaskProp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTaskComplet_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTaskSubTask_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTaskSubNote_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTaskRemove_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region *** Обработчики контекстного меню дерева ноды Тег ***
+
+        private void tsmi_TreeItemTagProp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTag_SubNote_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTag_SubTag_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TreeItemTag_Remove_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region *** Обработчики контекстного меню дерева ноды Корзина ***
+        private void tsmi_Prop_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TrashcanClear_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_RestoreAll_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region *** Обработчики контекстного меню дерева ноды Элемент Корзины  ***
+
+        private void tsmi_TrashcanItemProp_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TrashcanItemRestore_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsmi_TrashcanItemDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        #endregion
+
+
     }
+
 }
