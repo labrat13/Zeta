@@ -9,6 +9,10 @@ using Tasks.Forms;
 
 namespace Tasks
 {
+    /// <summary>
+    /// Главное окно приложения
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.Form" />
     public partial class MainForm : Form
     {
 
@@ -30,6 +34,7 @@ namespace Tasks
         private MainFormTreeViewManager m_TreeManager;
 
         #endregion        
+
         /// <summary>
         /// NT-Initializes a new instance of the <see cref="MainForm"/> class.
         /// </summary>
@@ -416,6 +421,35 @@ namespace Tasks
             return;
         }
 
+        /// <summary>
+        /// NT-Sets the main form empty.
+        /// </summary>
+        private void setMainFormEmpty(bool updateForm)
+        {
+            //TODO: clear all mainform items to Empty form.
+            try
+            {
+                //set default form title
+                this.setMainFormTitle(null, false);
+                ////do not change status text
+                //this.setStatusBarText("Для начала работы откройте Хранилище", false);
+                //disable some menu items
+                this.setEnableMainMenuItems(false);
+                //очистить дерево элементов и вставить надпись, что Хранилище не загружено.
+                this.setEmptyTreeItems();
+                //TODO: очистить правую панель главного окна как СписокСегодня
+                //update form
+                if (updateForm)
+                    Application.DoEvents();
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+
+            return;
+        }
+
         #region *** Функции открытия и закрытия Хранилища ***
 
         /// <summary>
@@ -630,34 +664,7 @@ namespace Tasks
 
         #endregion
 
-        /// <summary>
-        /// NT-Sets the main form empty.
-        /// </summary>
-        private void setMainFormEmpty(bool updateForm)
-        {
-            //TODO: clear all mainform items to Empty form.
-            try
-            {
-                //set default form title
-                this.setMainFormTitle(null, false);
-                ////do not change status text
-                //this.setStatusBarText("Для начала работы откройте Хранилище", false);
-                //disable some menu items
-                this.setEnableMainMenuItems(false);
-                //очистить дерево элементов и вставить надпись, что Хранилище не загружено.
-                this.setEmptyTreeItems();
-                //TODO: очистить правую панель главного окна как СписокСегодня
-                //update form
-                if (updateForm)
-                    Application.DoEvents();
-            }
-            catch (Exception ex)
-            {
-                ;
-            }
 
-            return;
-        }
 
         #region *** Обработчики событий Дерева элементов главного окна ***        
 

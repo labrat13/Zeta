@@ -24,46 +24,79 @@
 
 Контекстные меню дерева элементов (Левая панель окна приложения)
 
-Контекстное меню контрола дерева
-- Развернуть все
-- Свернуть все
-- Обновить
+Контекстное меню контрола дерева        
+- Развернуть все                    
+- Свернуть все                      
+- Обновить                          
 
-Контекстное меню ноды Категория
-- Свойства...
-- Создать под-Категорию... 
-- Создать Заметку...
-- Создать Задачу...
-- СоздатьТег...
-- Удалить в Корзину
+Контекстное меню ноды Категория     
+- Свойства...                      ShowElementProp(CElement element)            element = treeViewManager.SelectedElement;
+- Создать под-Категорию...         CreateSubCategory(CElement parent)           parent =  treeViewManager.SelectedElement;
+- Создать Заметку...               CreateSubNote(CElement parent)
+- Создать Задачу...                CreateSubTask(CElement parent) 
+- Создать Тег...                   CreateSubTag(Celement parent)    
+- Удалить в Корзину                MoveToTrashcan(CElement element)     
+    
+Контекстное меню ноды Заметка       
+- Свойства...                      ShowElementProp(CElement element) 
+- Создать под-Заметку...           CreateSubNote(CElement parent) 
+- Создать под-Задачу...            CreateSubTask(CElement parent) 
+- Удалить в Корзину                MoveToTrashcan(CElement element) 
 
-Контекстное меню ноды Заметка
-- Свойства...
-- Создать под-Заметку...
-- Создать под-Задачу...
-- Удалить в Корзину
+Контекстное меню ноды Задача        
+- Свойства...                       ShowElementProp(CElement element)
+- Пометить Завершено                MarkTaskComplete(CElement element)
+- Создать под-Заметку...            CreateSubNote(CElement parent)
+- Создать под-Задачу...             CreateSubTask(CElement parent)
+- Удалить в Корзину                 MoveToTrashcan(CElement element)
 
-Контекстное меню ноды Задача
-- Свойства...
-- Пометить Завершено
-- Создать под-Заметку...
-- Создать под-Задачу...
-- Удалить в Корзину
+Контекстное меню ноды Тег           
+- Свойства...                       ShowElementProp(CElement element)
+- Создать под-Заметку...            CreateSubNote(CElement parent)
+- Создать под-Задачу...             CreateSubTask(CElement parent)
+- Удалить в Корзину                 MoveToTrashcan(CElement element)    
 
-Контекстное меню ноды Тег
-- Свойства...
-- Создать под-Заметку... - нет в коде
-- Создать под-Задачу...  - нет в коде
-- Удалить в Корзину      - нет в коде
-
-Контекстное меню ноды Корзина
-- Свойства...
-- Восстановить все элементы
-- Очистить корзину
-
+Контекстное меню ноды Корзина       
+- Свойства...                       ShowTrashcanProp()                  - показать диалог свойств Корзины с настройками Корзины.
+- Восстановить все элементы         TrashcanRestoreAll()                - восстановить все элементы Корзины
+- Очистить корзину                  TrashcanDeleteAll()                 - удалить все элементы Корзины из БД.
+        
 Контекстное меню ноды Элемент Корзины
-- Свойства...
-- Восстановить
-- Удалить
+- Свойства...                       ShowElementProp(CElement element)
+- Восстановить                      TrashcanElementRestore(CElement element)    - Восстановить элемент. Если элемент не помечен удаленным, выдать сообщение об ошибке. 
+- Удалить                           TrashcanElementDelete(CElement element)     - Удалить элемент. Если элемент не помечен удаленным, выдать сообщение об ошибке.
+
+События непосредственно дерева элементов:
+- LeftPanelAction_TrashcanRootSelect           ShowTrashcanView()                   - В правой панели показать таблицу содержимого Корзины. 
+- LeftPanelAction_ElementSelect                ShowElementView(CElement element)    - В правой панели показать таблицу под-элементов текущего элемента.
+- LeftPanelAction_TrashcanRootDoubleClicked    ShowTrashcanProp()                   - показать диалог свойств Корзины с настройками Корзины.
+- LeftPanelAction_ElementDoubleClicked         ShowElementProp(CElement element)    - показать КарточкаЭлемента выделенного элемента.
 
 
+Все функции должны возвращать значение bool: 
+ - true  - функция изменила данные, нужно обновить дерево элементов и зависимые окна. 
+ - false - функция не изменила данные, обновлять дерево и прочее не требуется.
+
+ Общий список функций и количество использований:
+ - bool ShowElementProp(CElement element)   (6)      element = treeViewManager.SelectedElement;
+ - bool CreateSubCategory(CElement parent)  (1)      parent =  treeViewManager.SelectedElement;
+ - bool CreateSubNote(CElement parent)      (4)
+ - bool CreateSubTask(CElement parent)      (4)
+ - bool CreateSubTag(Celement parent)       (1)
+ - bool MoveToTrashcan(CElement element)    (4)
+ - bool MarkTaskComplete(CElement element)  (1)
+ - bool ShowTrashcanProp()                  (2)
+ - bool TrashcanRestoreAll()                (1)
+ - bool TrashcanDeleteAll()                 (1)
+ - bool TrashcanElementRestore(CElement element)    (1)
+ - bool TrashcanElementDelete(CElement element)     (1)
+ - bool ShowTrashcanView()                          (1)
+ - bool ShowElementView(CElement element)           (1)
+
+ Пример:
+ Если передавать все параметры, необходимые для вызова, их будет много.
+ Лучше перенести все функции в класс LeftPanelAction и добавить требуемые объекты в члены этого класса.
+ А сам объект этого класса добавить как член класса главной формы.
+ Тогда в главной форме можно оставить только обработчики событий контролов главной формы.
+
+ bool ShowElementProp(Iwin32Owner form, string title, CElement element, ...)
