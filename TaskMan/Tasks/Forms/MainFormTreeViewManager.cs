@@ -239,7 +239,9 @@ namespace Tasks.Forms
             tn.Text = obj.Title;
             tn.ToolTipText = obj.Description;
             //выбрать цвет надписи ноды
-            SelectNodeFontAndColor(tn, obj);
+            //SelectNodeFontAndColor(tn, obj); replaced to
+            tn.ForeColor = ElementColorsAndFonts.SelectElementColor(obj);
+            tn.NodeFont = ElementColorsAndFonts.SelectElementFont(obj);
             //Добавить контекстное меню для элемента данного типа
             // Это отличие от функции из базового класса.
             tn.ContextMenuStrip = this.m_contextMenus.Get(obj.ElementType);
@@ -308,8 +310,8 @@ namespace Tasks.Forms
             tn.Text = "Корзина";
             tn.ToolTipText = "Все элементы, помеченные удаленными.";
             //выбрать цвет надписи ноды
-            tn.ForeColor = TreeViewManagerBase.Color_NormalElement;
-            tn.NodeFont = this.m_FontNormal;
+            tn.ForeColor = ElementColorsAndFonts.Color_NormalElement;
+            tn.NodeFont = ElementColorsAndFonts.FontNormal;
             //контестного меню у ноды Корзина не будет, все делать через команды главного меню приложения.
             //Иксперимент! добавим контекстное меню ноды Корзина, проверим удобство.
             tn.ContextMenuStrip = this.m_contextMenus.TrashcanRootContextMenu;
@@ -388,7 +390,9 @@ namespace Tasks.Forms
             tn.Text = obj.Title;
             tn.ToolTipText = obj.Description;
             //выбрать цвет надписи ноды
-            SelectNodeFontAndColor(tn, obj);
+            //SelectNodeFontAndColor(tn, obj); replaced to
+            tn.ForeColor = ElementColorsAndFonts.SelectElementColor(obj);
+            tn.NodeFont = ElementColorsAndFonts.SelectElementFont(obj);
             //Добавить контекстное меню элемента Корзины для элемента любого типа
             // Это отличие от функции из базового класса.
             tn.ContextMenuStrip = this.m_contextMenus.TrashcanItemContextMenu;

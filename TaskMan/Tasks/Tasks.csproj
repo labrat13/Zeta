@@ -49,7 +49,10 @@
     <Compile Include="AboutBoxForm.Designer.cs">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ElementColorsAndFonts.cs" />
     <Compile Include="Forms\ElementTreeViewManager.cs" />
+    <Compile Include="Forms\ListViewManager.cs" />
+    <Compile Include="Forms\MainFormManager.cs" />
     <Compile Include="Forms\MainFormTreeViewManager.cs" />
     <Compile Include="Forms\SelectElementForm.cs">
       <SubType>Form</SubType>

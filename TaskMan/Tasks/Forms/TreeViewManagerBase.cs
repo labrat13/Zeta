@@ -8,33 +8,11 @@ using TaskEngine;
 namespace Tasks.Forms
 {
     /// <summary>
-    /// NR-базовый класс менеджера дерева
+    /// NT-базовый класс менеджера дерева
     /// </summary>
     public class TreeViewManagerBase
     {
         #region *** Constants and Fields ***
-
-        //----- Константы цвета текста для TreeView -----
-
-        /// <summary>
-        /// Цвет надписи обычных элементов
-        /// </summary>
-        public static Color Color_NormalElement = Color.Black;
-
-        /// <summary>
-        /// Цвет надписи неактивных элементов
-        /// </summary>
-        public static Color Color_InactiveElement = Color.Gray;
-
-        /// <summary>
-        /// Цвет надписи приоритетных задач
-        /// </summary>
-        public static Color Color_PriorityTask = Color.Red;
-
-        /// <summary>
-        /// Цвет надписи неприоритетных задач
-        /// </summary>
-        public static Color Color_NotPriorityTask = Color.Red;
 
         //----- Константы индексов иконок для TreeView -----
 
@@ -88,21 +66,22 @@ namespace Tasks.Forms
 
         //объекты шрифтов для нод дерева, зависят от потока.
         //Чтобы изменить шрифт дерева, измените его в контроле дерева.
+        //Перенесены в статический класс Tasks.Forms.ElementColorsAndFonts 
+        
+        ///// <summary>
+        /////Шрифт нормальный, используется по умолчанию для нод всех элементов.
+        ///// </summary>
+        //protected Font m_FontNormal;
 
-        /// <summary>
-        ///Шрифт нормальный, используется по умолчанию для нод всех элементов.
-        /// </summary>
-        protected Font m_FontNormal;
+        ///// <summary>
+        ///// Шрифт курсивный.
+        ///// </summary>
+        //protected Font m_FontItalic;
 
-        /// <summary>
-        /// Шрифт курсивный.
-        /// </summary>
-        protected Font m_FontItalic;
-
-        /// <summary>
-        /// Шрифт курсивный зачеркнутый.
-        /// </summary>
-        protected Font m_FontItalicStrike;
+        ///// <summary>
+        ///// Шрифт курсивный зачеркнутый.
+        ///// </summary>
+        //protected Font m_FontItalicStrike;
 
         #endregion
         /// <summary>
@@ -126,10 +105,10 @@ namespace Tasks.Forms
             this.m_engine = engine ?? throw new ArgumentNullException(nameof(engine));
             this.m_treeView = treeView ?? throw new ArgumentNullException(nameof(treeView));
 
-            //set fonts
-            this.m_FontNormal = new Font(treeView.Font, FontStyle.Regular);
-            this.m_FontItalic = new Font(treeView.Font, FontStyle.Italic);
-            this.m_FontItalicStrike = new Font(treeView.Font, FontStyle.Italic | FontStyle.Strikeout);
+            ////set fonts
+            //this.m_FontNormal = new Font(treeView.Font, FontStyle.Regular);
+            //this.m_FontItalic = new Font(treeView.Font, FontStyle.Italic);
+            //this.m_FontItalicStrike = new Font(treeView.Font, FontStyle.Italic | FontStyle.Strikeout);
 
             return;
         }
@@ -143,6 +122,14 @@ namespace Tasks.Forms
         {
             get { return m_result; }
             set { m_result = value; }
+        }
+        /// <summary>
+        /// Контрол дерева на форме
+        /// </summary>
+        public TreeView FormTreeView 
+        {
+            get => m_treeView;
+            set => m_treeView = value; 
         }
 
         #endregion
@@ -571,7 +558,9 @@ namespace Tasks.Forms
             tn.Text = obj.Title;
             tn.ToolTipText = obj.Description;
             //выбрать цвет надписи ноды
-            SelectNodeFontAndColor(tn, obj);
+            //SelectNodeFontAndColor(tn, obj); replaced to
+            tn.ForeColor = ElementColorsAndFonts.SelectElementColor(obj);
+            tn.NodeFont = ElementColorsAndFonts.SelectElementFont(obj);
             //ВАЖНО: нода содержит объект элемента в поле Tag
             tn.Tag = obj;
             //добавить пустую ноду, если надо
@@ -591,28 +580,28 @@ namespace Tasks.Forms
             //deleted element color
             if (obj.IsDeleted())
             {
-                tn.ForeColor = ElementTreeViewManager.Color_InactiveElement;
-                tn.NodeFont = this.m_FontItalic;//курсив серый
+                tn.ForeColor = ElementColorsAndFonts.Color_InactiveElement;
+                tn.NodeFont = ElementColorsAndFonts.FontItalic;//курсив серый
             }
             else
             {
                 //
-                tn.ForeColor = ElementTreeViewManager.Color_NormalElement;
-                tn.NodeFont = this.m_FontNormal;
+                tn.ForeColor = ElementColorsAndFonts.Color_NormalElement;
+                tn.NodeFont = ElementColorsAndFonts.FontNormal;
                 //если это Задача, то цвет определяется ее важностью.
                 if (obj.ElementType == EnumElementType.Task)
                 {
                     CTask ct = (CTask)obj;
                     //task priority
                     if (ct.TaskPriority == EnumTaskPriority.High)
-                        tn.ForeColor = ElementTreeViewManager.Color_PriorityTask;
+                        tn.ForeColor = ElementColorsAndFonts.Color_PriorityTask;
                     else if (ct.TaskPriority >= EnumTaskPriority.Low)
-                        tn.ForeColor = ElementTreeViewManager.Color_NotPriorityTask;
+                        tn.ForeColor = ElementColorsAndFonts.Color_NotPriorityTask;
                     //task state
                     if (ct.IsCompleted())
-                        tn.NodeFont = this.m_FontItalicStrike;//зачеркнутый курсив 
+                        tn.NodeFont = ElementColorsAndFonts.FontItalicStrike;//зачеркнутый курсив 
                     else if (ct.IsPaused())
-                        tn.NodeFont = this.m_FontItalic;//курсив 
+                        tn.NodeFont = ElementColorsAndFonts.FontItalic;//курсив 
                 }
             }
 

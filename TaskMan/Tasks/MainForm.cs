@@ -29,9 +29,9 @@ namespace Tasks
         private CEngine m_Engine;
 
         /// <summary>
-        /// TreeView control manager
+        /// MainForm manager engine
         /// </summary>
-        private MainFormTreeViewManager m_TreeManager;
+        private MainFormManager m_FormManager;
 
         #endregion        
 
@@ -43,6 +43,8 @@ namespace Tasks
             InitializeComponent();
             //create new engine object
             this.m_Engine = new CEngine();
+            //create form manager object
+            this.m_FormManager = new MainFormManager(this, this.m_Engine);
             //create context menu collection object
             Tasks.Forms.NodeContextMenuCollection nc = new Tasks.Forms.NodeContextMenuCollection();
             nc.TrashcanItemContextMenu = this.contextMenuStrip_TreeItemTrashcanItem;
@@ -51,8 +53,9 @@ namespace Tasks
             nc.Add(EnumElementType.Note, this.contextMenuStrip_treeItemNote);
             nc.Add(EnumElementType.Task, this.contextMenuStrip_TreeItemTask);
             nc.Add(EnumElementType.Tag, this.contextMenuStrip_TreeItemTag);
-            //create tree view manager
-            this.m_TreeManager = new MainFormTreeViewManager(this.m_Engine, this.treeView_TaskTreeView, nc);
+            //create tree view manager and add to FormManager object.
+            MainFormTreeViewManager tvm = new MainFormTreeViewManager(this.m_Engine, this.treeView_TaskTreeView, nc);
+            this.m_FormManager.TreeManager = tvm;
             //TODO: add code here
 
             return;
@@ -153,7 +156,18 @@ namespace Tasks
         private void просмотрСправкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //операции показа справки по программе
-            this.showHelp();
+            try
+            {
+                Help.ShowHelp(this, Path.Combine(Application.StartupPath, "Справка.chm"));
+                //TODO: обновить файл справки "Справка.chm" в каталоге проекта приложения, 
+                //сгенерировав его и скопировав из папки Documentation
+            }
+            catch (Exception ex)
+            {
+                this.showErrorMessageBox(null, "Файл справки приложения не найден или поврежден.\n" + ex.ToString());
+            }
+
+            return;
         }
 
         /// <summary>
@@ -287,6 +301,8 @@ namespace Tasks
 
         #endregion
 
+#region *** Form service functions ***
+
         /// <summary>
         /// NT-Установить новый текст статусбара
         /// </summary>
@@ -353,56 +369,38 @@ namespace Tasks
             return;
         }
 
-        /// <summary>
-        /// NT-изменить название формы чтобы оно отражало прогресс процесса
-        /// </summary>
-        /// <param name="operation">Название процесса или String.Empty или  null если процесс не выполняется</param>
-        /// <param name="storageTitle">Название открытого Хранилища или String.Empty или  null если Хранилище не используется.</param>
-        /// <param name="srcFolderPath">Путь к папке исходных файлов или String.Empty или  null если процесс не использует исходный каталог.</param>
-        /// <param name="percent">значение прогресса в процентах. Укажите значение -1 если прогресс не используется.</param>
-        private void SetFormTitle(String operation, String storageTitle, String srcFolderPath, int percent)
-        {
-            string result = "";
-            //сформировать строку вида 38% Добавление TXT - КнигиЛибрусек - С:\temp\librusek1\1
-            //если operation  = null, вывести только название приложения.
-            if (String.IsNullOrEmpty(operation))
-                result = Application.ProductName;
-            else
-            {
-                result = result + operation;
+        ///// <summary>
+        ///// NT-изменить название формы чтобы оно отражало прогресс процесса
+        ///// </summary>
+        ///// <param name="operation">Название процесса или String.Empty или  null если процесс не выполняется</param>
+        ///// <param name="storageTitle">Название открытого Хранилища или String.Empty или  null если Хранилище не используется.</param>
+        ///// <param name="srcFolderPath">Путь к папке исходных файлов или String.Empty или  null если процесс не использует исходный каталог.</param>
+        ///// <param name="percent">значение прогресса в процентах. Укажите значение -1 если прогресс не используется.</param>
+        //private void SetFormTitle(String operation, String storageTitle, String srcFolderPath, int percent)
+        //{
+        //    string result = "";
+        //    //сформировать строку вида 38% Добавление TXT - КнигиЛибрусек - С:\temp\librusek1\1
+        //    //если operation  = null, вывести только название приложения.
+        //    if (String.IsNullOrEmpty(operation))
+        //        result = Application.ProductName;
+        //    else
+        //    {
+        //        result = result + operation;
 
-                if (!String.IsNullOrEmpty(storageTitle))
-                    result = result + " - " + storageTitle;
-                if (!String.IsNullOrEmpty(srcFolderPath))
-                    result = result + " - " + srcFolderPath;
-                if (percent > -1)
-                    result = percent.ToString() + "% " + result;
-            }
-            //set form title
-            this.Text = result;
-            Application.DoEvents();
+        //        if (!String.IsNullOrEmpty(storageTitle))
+        //            result = result + " - " + storageTitle;
+        //        if (!String.IsNullOrEmpty(srcFolderPath))
+        //            result = result + " - " + srcFolderPath;
+        //        if (percent > -1)
+        //            result = percent.ToString() + "% " + result;
+        //    }
+        //    //set form title
+        //    this.Text = result;
+        //    Application.DoEvents();
 
-            return;
-        }
+        //    return;
+        //}
 
-        /// <summary>
-        /// NT-Показать файл справки
-        /// </summary>
-        private void showHelp()
-        {
-            try
-            {
-                Help.ShowHelp(this, Path.Combine(Application.StartupPath, "Справка.chm"));
-                //TODO: обновить файл справки "Справка.chm" в каталоге проекта приложения, 
-                //сгенерировав его и скопировав из папки Documentation
-            }
-            catch (Exception ex)
-            {
-                this.showErrorMessageBox(null, "Файл справки приложения не найден или поврежден.\n" + ex.ToString());
-            }
-
-            return;
-        }
 
         /// <summary>
         /// NT-Очистить дерево элементов и добавить одну пустую ноду-надпись.
@@ -449,6 +447,8 @@ namespace Tasks
 
             return;
         }
+
+#endregion
 
         #region *** Функции открытия и закрытия Хранилища ***
 
@@ -640,9 +640,10 @@ namespace Tasks
         private void ShowMainElementTree()
         {
             //enable treeview
-            this.treeView_TaskTreeView.Enabled = true;
+            //this.treeView_TaskTreeView.Enabled = true; replaced to
+            this.m_FormManager.TreeManager.FormTreeView.Enabled = true;
             //show tree content
-            this.m_TreeManager.ShowTree();
+            this.m_FormManager.TreeManager.ShowTree();
 
             return;
         }
@@ -682,7 +683,7 @@ namespace Tasks
         }
 
         /// <summary>
-        /// NR-Handles the NodeMouseDoubleClick event of the treeView_TaskTreeView control.
+        /// NT-Handles the NodeMouseDoubleClick event of the treeView_TaskTreeView control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="TreeNodeMouseClickEventArgs"/> instance containing the event data.</param>
@@ -695,19 +696,19 @@ namespace Tasks
             if (elem == null)
             {
                 //check node is Trashcan
-                if (this.m_TreeManager.IsTrashcanRootNode(node))
-                    LeftPanelAction_TrashcanRootDoubleClicked(node);
+                if (this.m_FormManager.TreeManager.IsTrashcanRootNode(node))
+                    this.m_FormManager.LeftPanelAction_TrashcanRootDoubleClicked(node);
             }
             else
             {
-                LeftPanelAction_ElementDoubleClicked(elem);
+                this.m_FormManager.LeftPanelAction_ElementDoubleClicked(elem);
             }
 
             return;
         }
 
         /// <summary>
-        /// ТК-Handles the AfterSelect event of the treeView_TaskTreeView control.
+        /// NT-Handles the AfterSelect event of the treeView_TaskTreeView control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
@@ -720,101 +721,42 @@ namespace Tasks
             if (e.Node != null)
                 e.Node.Toggle();
             //get element from selected node
-            CElement elem = this.m_TreeManager.NodeSelected(e);
+            CElement elem = this.m_FormManager.TreeManager.NodeSelected(e);
             if (elem == null)
             {
                 //check node is Trashcan
-                if (this.m_TreeManager.IsTrashcanRootNode(e.Node))
-                    LeftPanelAction_TrashcanRootSelect(e.Node);
+                if (this.m_FormManager.TreeManager.IsTrashcanRootNode(e.Node))
+                    this.m_FormManager.LeftPanelAction_TrashcanRootSelect(e.Node);
             }
             else
             {
-                LeftPanelAction_ElementSelect(elem);
+                this.m_FormManager.LeftPanelAction_ElementSelect(elem);
             }
 
             return;
         }
 
         /// <summary>
-        /// NR-Handles the BeforeExpand event of the treeView_TaskTreeView control.
+        /// NT-Handles the BeforeExpand event of the treeView_TaskTreeView control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         private void treeView_TaskTreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            this.m_TreeManager.NodeBeforeExpand(e);
+            this.m_FormManager.TreeManager.NodeBeforeExpand(e);
 
             return;
         }
 
         /// <summary>
-        /// NR-Handles the BeforeCollapse event of the treeView_TaskTreeView control.
+        /// NT-Handles the BeforeCollapse event of the treeView_TaskTreeView control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="TreeViewCancelEventArgs"/> instance containing the event data.</param>
         private void treeView_TaskTreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            this.m_TreeManager.NodeBeforeCollapse(e);
+            this.m_FormManager.TreeManager.NodeBeforeCollapse(e);
 
-            return;
-        }
-
-        /// <summary>
-        /// NR-Handles the AfterSelect event of the treeView_TaskTreeView control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
-
-        #endregion
-
-        #region *** Функции событий левой панели с деревом элементов. ***
-
-        /// <summary>
-        /// NR-Обработать событие выделения Корзины в левой панели главного окна
-        /// </summary>
-        /// <param name="node">The node.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void LeftPanelAction_TrashcanRootSelect(TreeNode node)
-        {
-            String msg = node.Text;
-            MessageBox.Show(msg, "Selected Trashcan");
-            //TODO: add code here
-            return;
-        }
-
-        /// <summary>
-        /// NR-Обработать событие выделения элемента в левой панели главного окна
-        /// </summary>
-        /// <param name="elem">Элемент.</param>
-        private void LeftPanelAction_ElementSelect(CElement elem)
-        {
-            String msg = elem.GetStringElementIdentifier(true);
-            MessageBox.Show(msg, "Selected element");
-            //TODO: add code here
-            return;
-        }
-
-        /// <summary>
-        /// NR-Обработать событие двойного клика Корзины в левой панели главного окна
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void LeftPanelAction_TrashcanRootDoubleClicked(TreeNode node)
-        {
-            String msg = node.Text;
-            MessageBox.Show(msg, "Double clicked Trashcan");
-            //TODO: add code here
-            return;
-        }
-        /// <summary>
-        /// NR-Обработать событие двойного клика элемента в левой панели главного окна
-        /// </summary>
-        /// <param name="elem">The elem.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private void LeftPanelAction_ElementDoubleClicked(CElement elem)
-        {
-            String msg = elem.GetStringElementIdentifier(true);
-            MessageBox.Show(msg, "Double clicked element");
-            //TODO: add code here
             return;
         }
 
@@ -849,7 +791,7 @@ namespace Tasks
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void toolStripMenuItem_twcRefresh_Click(object sender, EventArgs e)
         {
-            this.m_TreeManager.UpdateTree();
+            this.m_FormManager.TreeManager.UpdateTree();
         }
 
         #endregion

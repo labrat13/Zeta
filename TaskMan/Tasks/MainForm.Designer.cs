@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Нет элементов");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Empty Today");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Empty Content");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Empty Search");
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.MainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel_MainStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -104,12 +107,21 @@
             this.tsmi_RestoreAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_TrashcanClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl_RightPanel = new System.Windows.Forms.TabControl();
+            this.tabPage_Today = new System.Windows.Forms.TabPage();
+            this.tabPage_Content = new System.Windows.Forms.TabPage();
+            this.tabPage_Search = new System.Windows.Forms.TabPage();
+            this.listView_Today = new System.Windows.Forms.ListView();
+            this.listView_Content = new System.Windows.Forms.ListView();
+            this.listView_Saearch = new System.Windows.Forms.ListView();
+            this.tableLayoutPanelOnTabSearch = new System.Windows.Forms.TableLayoutPanel();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.MainStatusStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.contextMenuStrip_TreeViewControl.SuspendLayout();
             this.MenuStrip_MainMenuStrip.SuspendLayout();
@@ -119,6 +131,11 @@
             this.contextMenuStrip_TreeItemTag.SuspendLayout();
             this.contextMenuStrip_TreeItemTrashcanItem.SuspendLayout();
             this.contextMenuStrip_TreeItemTrashcanRoot.SuspendLayout();
+            this.tabControl_RightPanel.SuspendLayout();
+            this.tabPage_Today.SuspendLayout();
+            this.tabPage_Content.SuspendLayout();
+            this.tabPage_Search.SuspendLayout();
+            this.tableLayoutPanelOnTabSearch.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -169,6 +186,10 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.treeView_TaskTreeView);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl_RightPanel);
             this.splitContainer1.Size = new System.Drawing.Size(800, 396);
             this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 0;
@@ -735,6 +756,108 @@
             this.tsmi_TrashcanClear.Text = "Очистить Корзину...";
             this.tsmi_TrashcanClear.Click += new System.EventHandler(this.tsmi_TrashcanClear_Click);
             // 
+            // tabControl_RightPanel
+            // 
+            this.tabControl_RightPanel.Controls.Add(this.tabPage_Today);
+            this.tabControl_RightPanel.Controls.Add(this.tabPage_Content);
+            this.tabControl_RightPanel.Controls.Add(this.tabPage_Search);
+            this.tabControl_RightPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl_RightPanel.Location = new System.Drawing.Point(0, 0);
+            this.tabControl_RightPanel.Name = "tabControl_RightPanel";
+            this.tabControl_RightPanel.SelectedIndex = 0;
+            this.tabControl_RightPanel.Size = new System.Drawing.Size(530, 396);
+            this.tabControl_RightPanel.TabIndex = 0;
+            // 
+            // tabPage_Today
+            // 
+            this.tabPage_Today.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_Today.Controls.Add(this.listView_Today);
+            this.tabPage_Today.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_Today.Name = "tabPage_Today";
+            this.tabPage_Today.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_Today.Size = new System.Drawing.Size(522, 367);
+            this.tabPage_Today.TabIndex = 0;
+            this.tabPage_Today.Text = "Сегодня";
+            // 
+            // tabPage_Content
+            // 
+            this.tabPage_Content.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_Content.Controls.Add(this.listView_Content);
+            this.tabPage_Content.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_Content.Name = "tabPage_Content";
+            this.tabPage_Content.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_Content.Size = new System.Drawing.Size(522, 367);
+            this.tabPage_Content.TabIndex = 1;
+            this.tabPage_Content.Text = "Содержимое";
+            // 
+            // tabPage_Search
+            // 
+            this.tabPage_Search.Controls.Add(this.tableLayoutPanelOnTabSearch);
+            this.tabPage_Search.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_Search.Name = "tabPage_Search";
+            this.tabPage_Search.Size = new System.Drawing.Size(522, 367);
+            this.tabPage_Search.TabIndex = 2;
+            this.tabPage_Search.Text = "Поиск";
+            this.tabPage_Search.UseVisualStyleBackColor = true;
+            // 
+            // listView_Today
+            // 
+            this.listView_Today.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView_Today.HideSelection = false;
+            this.listView_Today.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
+            this.listView_Today.Location = new System.Drawing.Point(3, 3);
+            this.listView_Today.Name = "listView_Today";
+            this.listView_Today.Size = new System.Drawing.Size(516, 361);
+            this.listView_Today.TabIndex = 0;
+            this.listView_Today.UseCompatibleStateImageBehavior = false;
+            // 
+            // listView_Content
+            // 
+            this.listView_Content.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView_Content.HideSelection = false;
+            this.listView_Content.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem2});
+            this.listView_Content.Location = new System.Drawing.Point(3, 3);
+            this.listView_Content.Name = "listView_Content";
+            this.listView_Content.Size = new System.Drawing.Size(516, 361);
+            this.listView_Content.TabIndex = 0;
+            this.listView_Content.UseCompatibleStateImageBehavior = false;
+            // 
+            // listView_Saearch
+            // 
+            this.tableLayoutPanelOnTabSearch.SetColumnSpan(this.listView_Saearch, 5);
+            this.listView_Saearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView_Saearch.HideSelection = false;
+            this.listView_Saearch.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem3});
+            this.listView_Saearch.Location = new System.Drawing.Point(3, 166);
+            this.listView_Saearch.Name = "listView_Saearch";
+            this.listView_Saearch.Size = new System.Drawing.Size(516, 157);
+            this.listView_Saearch.TabIndex = 0;
+            this.listView_Saearch.UseCompatibleStateImageBehavior = false;
+            // 
+            // tableLayoutPanelOnTabSearch
+            // 
+            this.tableLayoutPanelOnTabSearch.BackColor = System.Drawing.SystemColors.Control;
+            this.tableLayoutPanelOnTabSearch.ColumnCount = 5;
+            this.tableLayoutPanelOnTabSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.5F));
+            this.tableLayoutPanelOnTabSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.5F));
+            this.tableLayoutPanelOnTabSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelOnTabSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelOnTabSearch.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelOnTabSearch.Controls.Add(this.listView_Saearch, 0, 1);
+            this.tableLayoutPanelOnTabSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelOnTabSearch.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanelOnTabSearch.Name = "tableLayoutPanelOnTabSearch";
+            this.tableLayoutPanelOnTabSearch.RowCount = 4;
+            this.tableLayoutPanelOnTabSearch.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelOnTabSearch.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelOnTabSearch.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelOnTabSearch.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelOnTabSearch.Size = new System.Drawing.Size(522, 367);
+            this.tableLayoutPanelOnTabSearch.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -756,6 +879,7 @@
             this.MainStatusStrip.ResumeLayout(false);
             this.MainStatusStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.contextMenuStrip_TreeViewControl.ResumeLayout(false);
             this.MenuStrip_MainMenuStrip.ResumeLayout(false);
@@ -766,6 +890,11 @@
             this.contextMenuStrip_TreeItemTag.ResumeLayout(false);
             this.contextMenuStrip_TreeItemTrashcanItem.ResumeLayout(false);
             this.contextMenuStrip_TreeItemTrashcanRoot.ResumeLayout(false);
+            this.tabControl_RightPanel.ResumeLayout(false);
+            this.tabPage_Today.ResumeLayout(false);
+            this.tabPage_Content.ResumeLayout(false);
+            this.tabPage_Search.ResumeLayout(false);
+            this.tableLayoutPanelOnTabSearch.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -845,5 +974,13 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTag_SubTag;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private System.Windows.Forms.ToolStripMenuItem tsmi_TreeItemTag_Remove;
+        private System.Windows.Forms.TabControl tabControl_RightPanel;
+        private System.Windows.Forms.TabPage tabPage_Today;
+        private System.Windows.Forms.ListView listView_Today;
+        private System.Windows.Forms.TabPage tabPage_Content;
+        private System.Windows.Forms.ListView listView_Content;
+        private System.Windows.Forms.TabPage tabPage_Search;
+        private System.Windows.Forms.ListView listView_Saearch;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelOnTabSearch;
     }
 }
