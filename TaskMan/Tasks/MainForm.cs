@@ -797,6 +797,7 @@ namespace Tasks
         #endregion
 
         #region *** Обработчики контекстного меню дерева ноды Категория ***        
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_Prop control.
         /// </summary>
@@ -806,7 +807,9 @@ namespace Tasks
         {
             //TODO: показать карточку выделенного в дереве элемента.
             //Если данные элемента былиизменены, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_ShowElementProp();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubCat control.
         /// </summary>
@@ -816,7 +819,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой категории, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubCategory();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubNote control.
         /// </summary>
@@ -826,7 +831,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой заметки, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubNote();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubTask control.
         /// </summary>
@@ -836,7 +843,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой задачи, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubTask();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_SubTag control.
         /// </summary>
@@ -846,7 +855,10 @@ namespace Tasks
         {
             //TODO: показать карточку создания нового тега, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubTag();
+
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiCategory_Remove control.
         /// </summary>
@@ -855,10 +867,13 @@ namespace Tasks
         private void toolStripMenuItem_cmstiCategory_Remove_Click(object sender, EventArgs e)
         {
             //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
+            this.m_FormManager.LeftPanelAction_MoveToTrashcan();
         }
+        
         #endregion
 
         #region *** Обработчики контекстного меню дерева ноды Заметка ***        
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_Prop control.
         /// </summary>
@@ -868,7 +883,10 @@ namespace Tasks
         {
             //TODO: показать карточку выделенного в дереве элемента
             //Если данные элемента былиизменены, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_ShowElementProp();
+            //TODO: if return true then update all views
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_SubTask control.
         /// </summary>
@@ -878,7 +896,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой Задачи, где выделенная в дереве Заметка является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubTask();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_SubNote control.
         /// </summary>
@@ -888,7 +908,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой Заметки, где выделенная в дереве Заметка является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubNote();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the toolStripMenuItem_cmstiNote_Remove control.
         /// </summary>
@@ -897,10 +919,13 @@ namespace Tasks
         private void toolStripMenuItem_cmstiNote_Remove_Click(object sender, EventArgs e)
         {
             //TODO: пометить текущий выделенный элемент неактивным и обновить дерево.
+            this.m_FormManager.LeftPanelAction_MoveToTrashcan();
+        
         }
         #endregion
 
         #region *** Обработчики контекстного меню дерева ноды Задача ***        
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTaskProp control.
         /// </summary>
@@ -909,8 +934,10 @@ namespace Tasks
         private void tsmi_TreeItemTaskProp_Click(object sender, EventArgs e)
         {
             //TODO: показать карточку выделенного в дереве элемента
-            //Если данные элемента былиизменены, обновить дерево элементов.
+            //Если данные элемента были изменены, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_ShowElementProp();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTaskComplet control.
         /// </summary>
@@ -920,7 +947,9 @@ namespace Tasks
         {
             //TODO: отметить выделенный элемент - задачу выполненной. Если это Задача.
             //И обновить дерево элементов. 
+            this.m_FormManager.LeftPanelAction_MarkTaskComplete();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTaskSubTask control.
         /// </summary>
@@ -930,7 +959,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой задачи, где выделенная в дереве Задача является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubTask();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTaskSubNote control.
         /// </summary>
@@ -940,7 +971,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой Заметки, где выделенная в дереве Задача является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubNote();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTaskRemove control.
         /// </summary>
@@ -949,10 +982,13 @@ namespace Tasks
         private void tsmi_TreeItemTaskRemove_Click(object sender, EventArgs e)
         {
             //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
+            this.m_FormManager.LeftPanelAction_MoveToTrashcan();
         }
+        
         #endregion
 
         #region *** Обработчики контекстного меню дерева ноды Тег ***        
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTagProp control.
         /// </summary>
@@ -961,8 +997,10 @@ namespace Tasks
         private void tsmi_TreeItemTagProp_Click(object sender, EventArgs e)
         {
             //TODO: показать карточку выделенного в дереве элемента
-            //Если данные элемента былиизменены, обновить дерево элементов.
+            //Если данные элемента были изменены, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_ShowElementProp();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTag_SubNote control.
         /// </summary>
@@ -972,7 +1010,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания новой Заметки, где выделенный в дереве Тег является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubNote();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTag_SubTag control.
         /// </summary>
@@ -982,7 +1022,9 @@ namespace Tasks
         {
             //TODO: показать карточку создания нового Тега, где выделенный в дереве Тег является над-элементом
             //Если элемент был создан, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_CreateSubTag();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TreeItemTag_Remove control.
         /// </summary>
@@ -991,10 +1033,13 @@ namespace Tasks
         private void tsmi_TreeItemTag_Remove_Click(object sender, EventArgs e)
         {
             //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
+            this.m_FormManager.LeftPanelAction_MoveToTrashcan();
         }
+        
         #endregion
 
         #region *** Обработчики контекстного меню дерева ноды Корзина ***        
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_Prop control.
         /// </summary>
@@ -1003,7 +1048,9 @@ namespace Tasks
         private void tsmi_Prop_Click(object sender, EventArgs e)
         {
             //TODO: показать Диалог настроек Корзины
+            this.m_FormManager.LeftPanelAction_ShowTrashcanProp();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TrashcanClear control.
         /// </summary>
@@ -1013,7 +1060,9 @@ namespace Tasks
         {
             //TODO: запросить подтверждение операции и очистить Корзину
             //обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_TrashcanDeleteAll();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_RestoreAll control.
         /// </summary>
@@ -1023,11 +1072,13 @@ namespace Tasks
         {
             //TODO: запросить подтверждение операции и восстановить все удаленные элементы
             //Обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_TrashcanRestoreAll();
         }
 
         #endregion
 
         #region *** Обработчики контекстного меню дерева ноды Элемент Корзины  ***        
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TrashcanItemProp control.
         /// </summary>
@@ -1036,8 +1087,10 @@ namespace Tasks
         private void tsmi_TrashcanItemProp_Click(object sender, EventArgs e)
         {
             //TODO: показать карточку выделенного в дереве элемента
-            //Если данные элемента былиизменены, обновить дерево элементов.
+            //Если данные элемента были изменены, обновить дерево элементов.
+            this.m_FormManager.LeftPanelAction_ShowElementProp();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TrashcanItemRestore control.
         /// </summary>
@@ -1047,8 +1100,9 @@ namespace Tasks
         {
             //TODO: Запросить подтверждение операции и восстановить выделенный в дереве элемент 
             //проверить, что элемент был помечен удаленным.
-            //Обновить дерево элементов, чтобы отразить изменения.
+            this.m_FormManager.LeftPanelAction_TrashcanElementRestore();
         }
+        
         /// <summary>
         /// NR-Handles the Click event of the tsmi_TrashcanItemDelete control.
         /// </summary>
@@ -1059,6 +1113,8 @@ namespace Tasks
             //TODO: Запросить подтверждение операции и удалить из БД выделенный в дереве элемент 
             //проверить, что элемент был помечен удаленным.
             //Обновить дерево элементов, чтобы отразить изменения.
+            this.m_FormManager.LeftPanelAction_TrashcanElementDelete();
+            
         }
 
         #endregion

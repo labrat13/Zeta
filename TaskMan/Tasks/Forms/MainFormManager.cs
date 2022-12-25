@@ -82,8 +82,7 @@ namespace Tasks.Forms
         /// <param name="node">The node.</param>
         public void LeftPanelAction_TrashcanRootSelect(TreeNode node)
         {
-            String msg = node.Text;
-            MessageBox.Show(msg, "Selected Trashcan");
+            this.LeftPanelAction_ShowTrashcanView();
             //TODO: add code here
             return;
         }
@@ -94,8 +93,7 @@ namespace Tasks.Forms
         /// <param name="elem">Элемент.</param>
         public void LeftPanelAction_ElementSelect(CElement elem)
         {
-            String msg = elem.GetStringElementIdentifier(true);
-            MessageBox.Show(msg, "Selected element");
+            this.ShowElementView(elem);
             //TODO: add code here
             return;
         }
@@ -103,11 +101,9 @@ namespace Tasks.Forms
         /// <summary>
         /// NR-Обработать событие двойного клика Корзины в левой панели главного окна
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         public void LeftPanelAction_TrashcanRootDoubleClicked(TreeNode node)
         {
-            String msg = node.Text;
-            MessageBox.Show(msg, "Double clicked Trashcan");
+            this.LeftPanelAction_ShowTrashcanProp();
             //TODO: add code here
             return;
         }
@@ -118,26 +114,214 @@ namespace Tasks.Forms
         /// <exception cref="System.NotImplementedException"></exception>
         public void LeftPanelAction_ElementDoubleClicked(CElement elem)
         {
-            String msg = elem.GetStringElementIdentifier(true);
-            MessageBox.Show(msg, "Double clicked element");
+            bool isChanged = this.LeftPanelAction_ShowElementProp();
+            if (isChanged == true)
+                this.UpdateViews();
             //TODO: add code here
             return;
         }
 
-        #endregion
 
-        #region *** ***
-
-        #endregion
-
-        #region *** ***
 
         #endregion
 
+        #region *** Обработчики контекстного меню дерева ***        
+        
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_ShowElementProp()
+        {
+            //TODO: показать карточку выделенного в дереве элемента.
+            //Если данные элемента были изменены, обновить дерево элементов.
+        }
 
-        #region *** ***
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_CreateSubCategory()
+        {
+            //TODO: показать карточку создания новой категории, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_CreateSubNote()
+        {
+            //TODO: показать карточку создания новой заметки, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_CreateSubTask()
+        {
+            //TODO: показать карточку создания новой задачи, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_CreateSubTag()
+        {
+            //TODO: показать карточку создания нового тега, где выделенная в дереве категория является над-элементом.
+            //Если элемент был создан, обновить дерево элементов.
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_MoveToTrashcan()
+        {
+            //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        private bool LeftPanelAction_ShowTaskProp()
+        {
+            //TODO: показать карточку выделенного в дереве элемента
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_MarkTaskComplete()
+        {
+            //TODO: отметить выделенный элемент - задачу выполненной. Если это Задача.
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_ShowTrashcanProp()
+        {
+            //TODO: показать Диалог настроек Корзины
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_TrashcanDeleteAll()
+        {
+            //TODO: запросить подтверждение операции и очистить Корзину
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_TrashcanRestoreAll()
+        {
+            //TODO: запросить подтверждение операции и восстановить все удаленные элементы
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_TrashcanElementRestore()
+        {
+            //TODO: Запросить подтверждение операции и восстановить выделенный в дереве элемент 
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_TrashcanElementDelete()
+        {
+            //TODO: Запросить подтверждение операции и удалить из БД выделенный в дереве элемент 
+            //проверить, что элемент был помечен удаленным.
+        }
 
         #endregion
+
+        #region *** ShowElementProp() субфункции ***
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        private bool LeftPanelAction_ShowCategoryProp()
+        {
+            //TODO: показать карточку выделенного в дереве элемента.
+            //Если данные элемента были изменены, обновить дерево элементов.
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        private bool LeftPanelAction_ShowNoteProp()
+        {
+            //TODO: показать карточку выделенного в дереве элемента
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        private bool LeftPanelAction_ShowTaskProp()
+        {
+            //TODO: показать карточку выделенного в дереве элемента
+        }
+
+        /// <summary>
+        /// NR-
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        private bool LeftPanelAction_ShowTagProp()
+        {
+            //TODO: показать карточку выделенного в дереве элемента
+        }
+
+        #endregion
+
+#region *** sub functions for left panel ***
+
+        /// <summary>
+        /// Lefts the panel action show trashcan view.
+        /// </summary>
+        private void LeftPanelAction_ShowTrashcanView()
+        {
+            throw new NotImplementedException();//TODO: add code here
+        }
+
+        /// <summary>
+        /// Shows the element view.
+        /// </summary>
+        /// <param name="elem">The elem.</param>
+        private void ShowElementView(CElement elem)
+        {
+            throw new NotImplementedException();//TODO: add code here
+        }
+
+        /// <summary>
+        /// Updates the views.
+        /// </summary>
+        public void UpdateViews()
+        {
+            //update all views in application because changes of database data/
+            throw new NotImplementedException();//TODO: add code here
+        }
+
+#endregion
 
     }
 }
