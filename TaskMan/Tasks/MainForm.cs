@@ -342,6 +342,7 @@ namespace Tasks
         /// <param name="title">Заголовок окна сообщения. Если title = String.Empty или null, используется MainForm.MainFormTitle.</param>
         private void showErrorMessageBox(string title, string text)
         {
+            //TODO: заменить на MainFormManager.ShowMessageError(...)
             String title1 = title;
             if (String.IsNullOrEmpty(title))
                 title1 = MainForm.MainFormTitle;
@@ -1048,7 +1049,7 @@ namespace Tasks
         private void tsmi_Prop_Click(object sender, EventArgs e)
         {
             //TODO: показать Диалог настроек Корзины
-            this.m_FormManager.LeftPanelAction_ShowTrashcanProp();
+            this.m_FormManager.LeftPanelAction_TrashcanShowProp();
         }
         
         /// <summary>

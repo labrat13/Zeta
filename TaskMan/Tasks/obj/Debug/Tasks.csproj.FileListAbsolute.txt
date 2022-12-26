@@ -23,3 +23,8 @@ C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.SelectElem
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\MyControlsLibrary.dll
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\bin\Debug\MyControlsLibrary.pdb
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.SettingTemplatesForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.CategoryPropForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.NotePropForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.TagPropForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.TaskPropForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.TrashcanPropForm.resources

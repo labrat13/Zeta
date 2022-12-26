@@ -49,11 +49,23 @@
     <Compile Include="AboutBoxForm.Designer.cs">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CategoryPropForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CategoryPropForm.Designer.cs">
+      <DependentUpon>CategoryPropForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ElementColorsAndFonts.cs" />
     <Compile Include="Forms\ElementTreeViewManager.cs" />
     <Compile Include="Forms\ListViewManager.cs" />
     <Compile Include="Forms\MainFormManager.cs" />
     <Compile Include="Forms\MainFormTreeViewManager.cs" />
+    <Compile Include="Forms\NotePropForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NotePropForm.Designer.cs">
+      <DependentUpon>NotePropForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SelectElementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +90,24 @@
     <Compile Include="Forms\StorageShortInfoForm.Designer.cs">
       <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TagPropForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TagPropForm.Designer.cs">
+      <DependentUpon>TagPropForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TaskPropForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TaskPropForm.Designer.cs">
+      <DependentUpon>TaskPropForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TrashcanPropForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TrashcanPropForm.Designer.cs">
+      <DependentUpon>TrashcanPropForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TreeViewManagerBase.cs" />
     <Compile Include="Forms\NodeContextMenuCollection.cs" />
     <Compile Include="Utilities\FormUtility.cs" />
@@ -93,6 +123,12 @@
     <EmbeddedResource Include="AboutBoxForm.resx">
       <DependentUpon>AboutBoxForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CategoryPropForm.resx">
+      <DependentUpon>CategoryPropForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NotePropForm.resx">
+      <DependentUpon>NotePropForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectElementForm.resx">
       <DependentUpon>SelectElementForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -101,6 +137,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StorageShortInfoForm.resx">
       <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TagPropForm.resx">
+      <DependentUpon>TagPropForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TaskPropForm.resx">
+      <DependentUpon>TaskPropForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TrashcanPropForm.resx">
+      <DependentUpon>TrashcanPropForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

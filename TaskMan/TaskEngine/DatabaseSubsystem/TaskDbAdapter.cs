@@ -1324,6 +1324,57 @@ namespace TaskEngine
             return true;
         }
 
+        /// <summary>
+        /// NT-Проверка, что все элементы в списке помечены удаленными.
+        /// </summary>
+        /// <param name="idChain">Цепочка (или просто список) идентификаторов элементов.</param>
+        /// <returns>
+        ///  Функция возвращает <c>true</c>, если все элементы, указанные в списке, помечены удаленными; в противном случае, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// </remarks>
+        public bool IsAllElementDeleted(List<int> idChain)
+        {
+            //if active element found, return false immediately
+            foreach (int id in idChain)
+            {
+                //Если ид соответствует любому из предопределенных элементов, защищенных от удаления, то пропускаем проверку - экономим время на запрос к БД.
+                //TODO: добавить сюда константы идентификаторов сех предопределенных элементов, защищенных от удаления.
+                if ((id == TaskDbAdapter.ElementId_Root) || (id == TaskDbAdapter.ElementId_TaskRoot) || (id == TaskDbAdapter.ElementId_TagRoot))
+                    return false;
+                //if active element found, return true immediately
+                EnumElementState s = this.GetElementStateByElementId(id);
+                if (s != EnumElementState.Deleted)
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// NT-Определить, имеет ли элемент хотя бы один активный под-элемент.
+        /// </summary>
+        /// <param name="id">Идентификатор Элемента.</param>
+        /// <returns>
+        ///  Функция возвращает <c>true</c>, если указанный элемент имеет хотя бы один активный под-элемент; в противном случает, возвращается <c>false</c>.
+        /// </returns>
+        public bool IsElementHasActiveChild(int id)
+        {
+            //получить список ид под-элементов данного элемента
+            List<CElement> elements = this.intSelectElementsByParent(id);
+            //если список пустой, вернуть Нет.
+            if(elements.Count == 0)
+                return false;
+            //для каждого элемента списка получить состояние активности элемента
+            foreach (CElement element in elements)
+                //если встретилось активное состояние, вернуть Да.
+                if (element.ElementState != EnumElementState.Deleted)
+                    return true;
+            
+            //иначе вернуть Нет.
+            return false;
+        }
+
         #endregion
 
 

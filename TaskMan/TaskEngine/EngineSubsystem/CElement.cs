@@ -155,6 +155,18 @@ namespace TaskEngine
         }
 
         /// <summary>
+        /// NT-пометить элемент как удаленный, без проверок.
+        /// </summary>
+        /// <param name="v">Если <c>true</c> то пометить элемент как удаленный, иначе - пометить элемент как нормальный.</param>
+        public void SetDeleted(bool v)
+        {
+            if (v == true)
+                this.m_ElementState = EnumElementState.Deleted;
+            else 
+                this.m_ElementState = EnumElementState.Normal;
+        }
+
+        /// <summary>
         /// NT-Converts to string.
         /// </summary>
         /// <returns>
@@ -557,6 +569,8 @@ namespace TaskEngine
                 }
             }
         }
+
+
 
 
         #endregion

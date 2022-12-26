@@ -128,6 +128,18 @@ namespace TaskEngine
         }
 
         /// <summary>
+        /// NT-Пометить Задачу выполненной.
+        /// </summary>
+        /// <param name="v">Если <c>true</c>, то пометить задачу выполненной, иначе - пометить Задачу работающей. </param>
+        public void SetCompleted(bool v)
+        {
+            if (v == true)
+                this.m_TaskState = EnumTaskState.Completed;
+            else
+                this.m_TaskState = EnumTaskState.Run;
+        }
+        
+        /// <summary>
         /// Determines whether this Task is paused.
         /// </summary>
         /// <returns>
@@ -137,6 +149,19 @@ namespace TaskEngine
         {
             return this.m_TaskState == EnumTaskState.Paused;
         }
+
+        /// <summary>
+        /// NT-Пометить Задачу выполненной.
+        /// </summary>
+        /// <param name="v">Если <c>true</c>, то пометить задачу остановленной, иначе - пометить Задачу работающей. </param>
+        public void SetPaused(bool v)
+        {
+            if (v == true)
+                this.m_TaskState = EnumTaskState.Paused;
+            else
+                this.m_TaskState = EnumTaskState.Run;
+        }
+
 
         /// <summary>
         /// NT-Получить степень заполненности карточки элемента.
@@ -203,6 +228,7 @@ namespace TaskEngine
 
             return sb.ToString();
         }
+
 
     }
 }

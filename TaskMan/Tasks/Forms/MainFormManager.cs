@@ -56,21 +56,57 @@ namespace Tasks.Forms
         }
 
         #region *** Properties ***
+
         /// <summary>
         /// TreeView control manager
         /// </summary>
         public MainFormTreeViewManager TreeManager { get => m_TreeManager; internal set => m_TreeManager = value; }
+
         /// <summary>
         /// Task engine object reference
         /// </summary>
         public CEngine Engine { get => m_Engine; internal set => m_Engine = value; }
+
         /// <summary>
         /// Main form object reference
         /// </summary>
         public MainForm MainForm { get => m_MainForm; internal set => m_MainForm = value; }
+        
         #endregion
 
         #region *** Service functions ***
+
+        /// <summary>
+        /// NT-Показать всплывающее сообщение - предупреждение.
+        /// </summary>
+        /// <param name="title">Текст заголовка окна.</param>
+        /// <param name="msg">Текст сообщения.</param>
+        public void ShowMessageWarning(string title, string msg)
+        {
+            String t;
+            //make title
+            if (String.IsNullOrEmpty(title))
+                t = MainForm.MainFormTitle + " - Предупреждение";
+            else t = MainForm.MainFormTitle + " - " + title;
+            //show message box
+            MessageBox.Show(MainForm, msg, t, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        /// <summary>
+        /// NT-Показать всплывающее сообщение об ошибке.
+        /// </summary>
+        /// <param name="title">Текст заголовка окна.</param>
+        /// <param name="msg">Текст сообщения.</param>
+        public void ShowMessageError(string title, string msg)
+        {
+            String t;
+            //make title
+            if (String.IsNullOrEmpty(title))
+                t = MainForm.MainFormTitle + " - Ошибка";
+            else t = MainForm.MainFormTitle + " - " + title;
+            //show message box
+            MessageBox.Show(MainForm, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
         #endregion
 
@@ -103,7 +139,7 @@ namespace Tasks.Forms
         /// </summary>
         public void LeftPanelAction_TrashcanRootDoubleClicked(TreeNode node)
         {
-            this.LeftPanelAction_ShowTrashcanProp();
+            this.LeftPanelAction_TrashcanShowProp();
             //TODO: add code here
             return;
         }
@@ -126,15 +162,41 @@ namespace Tasks.Forms
         #endregion
 
         #region *** Обработчики контекстного меню дерева ***        
-        
+
         /// <summary>
-        /// NR-
+        /// NT-Показать карточку выделенного в дереве элемента.
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
         public bool LeftPanelAction_ShowElementProp()
         {
-            //TODO: показать карточку выделенного в дереве элемента.
-            //Если данные элемента были изменены, обновить дерево элементов.
+            //показать карточку выделенного в дереве элемента.
+            CElement elem = this.m_TreeManager.Result;
+            if (elem == null)
+                return false;//Нет выделенного элемента
+            //switch
+            bool result = false;
+            EnumElementType ett = elem.ElementType;
+            switch (ett)
+            {
+                case EnumElementType.Category:
+                    result = this.LeftPanelAction_ShowCategoryProp(elem);
+                    break;
+                case EnumElementType.Tag:
+                    result = this.LeftPanelAction_ShowTagProp(elem);
+                    break;
+                case EnumElementType.Task:
+                    result = this.LeftPanelAction_ShowTaskProp((CTask)elem);
+                    break;
+                case EnumElementType.Note:
+                    result = this.LeftPanelAction_ShowNoteProp(elem);
+                    break;
+                default:
+                case EnumElementType.Default:
+                    throw new Exception(String.Format("Неподдерживаемый тип элемента {0}: {1}", elem.GetStringElementIdentifier(false), ett));
+                    //break;
+            }
+            //Если данные элемента были изменены, обновить дерево элементов - в вызывающем коде.
+            return result;
         }
 
         /// <summary>
@@ -145,6 +207,7 @@ namespace Tasks.Forms
         {
             //TODO: показать карточку создания новой категории, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            return false;
         }
 
         /// <summary>
@@ -155,6 +218,7 @@ namespace Tasks.Forms
         {
             //TODO: показать карточку создания новой заметки, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            return false;
         }
 
         /// <summary>
@@ -165,6 +229,7 @@ namespace Tasks.Forms
         {
             //TODO: показать карточку создания новой задачи, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            return false;
         }
 
         /// <summary>
@@ -175,42 +240,107 @@ namespace Tasks.Forms
         {
             //TODO: показать карточку создания нового тега, где выделенная в дереве категория является над-элементом.
             //Если элемент был создан, обновить дерево элементов.
+            return false;
         }
 
         /// <summary>
-        /// NR-
+        /// NT-пометить текущий выделенный элемент неактивным и обновить дерево
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
         public bool LeftPanelAction_MoveToTrashcan()
-        {
-            //TODO: пометить текущий выделенный элемент неактивным и обновить дерево
+        {            
+            //Получить выделенный элемент
+            CElement elem = this.m_TreeManager.Result;
+            if (elem == null)
+                return false;//Нет выделенного элемента
+            //Пометить элемент неактивным, если он активен
+            //- если элемент защищен от удаления, выдать предупреждение.
+            if (elem.ElementState == EnumElementState.ProtectedFromDelete)
+            {
+                this.ShowMessageWarning(null, "Элемент защищен от удаления!");
+                return false;
+            }
+            //- если элемент уже неактивен, выдать предупреждение.
+            if (elem.ElementState != EnumElementState.Normal)
+            {
+                this.ShowMessageWarning(null, "Неправильное состояние элемента или элемент уже помечен неактивным!");
+                return false;
+            }
+            //- если элемент имеет активный суб-элемент, выдать предупреждение
+            if (this.m_Engine.DbAdapter.IsElementHasActiveChild(elem.Id))
+            {
+                this.ShowMessageWarning(null, "Элемент не может быть удален, поскольку содержит активные подчиненные элементы!\nСначала удалите все подчиненные элементы.");
+                return false;
+            }
+            //- пометить элемент удаленным.
+            elem.SetDeleted(true);
+            //записать изменения в БД
+            this.Engine.DbAdapter.UpdateElementWithTransaction(elem);
+            //Обновить дерево элементов в вызывающем коде
+            return true;
         }
 
         /// <summary>
-        /// NR-
-        /// </summary>
-        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowTaskProp()
-        {
-            //TODO: показать карточку выделенного в дереве элемента
-        }
-
-        /// <summary>
-        /// NR-
+        /// NT-Отметить выделенный элемент - задачу выполненной. Если это Задача.
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
         public bool LeftPanelAction_MarkTaskComplete()
         {
-            //TODO: отметить выделенный элемент - задачу выполненной. Если это Задача.
+            //TODO: 
+            //Получить выделенный элемент
+            CElement elem = this.m_TreeManager.Result;
+            if (elem == null)
+                return false;//Нет выделенного элемента
+            //проверить что это Задача
+            if (elem.ElementType != EnumElementType.Task)
+            {
+                this.ShowMessageError(null, "Указанный элемент не является Задачей!");
+                return false;
+            }
+            //Пометить Задачу выполненной
+            CTask task = (CTask)elem;
+            task.SetCompleted(true);
+            //записать изменения в БД
+            this.Engine.DbAdapter.UpdateElementWithTransaction(elem);
+            //Обновить дерево элементов в вызывающем коде
+            return true;
+        }
+
+        /// <summary>
+        /// NT-Отметить выделенный элемент - задачу приостановленной. Если это Задача.
+        /// </summary>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool LeftPanelAction_MarkTaskPaused()
+        {
+            //TODO: добавить пункт приостановки в контекстное меню задачи позже.
+            //Получить выделенный элемент
+            CElement elem = this.m_TreeManager.Result;
+            if (elem == null)
+                return false;//Нет выделенного элемента
+            //проверить что это Задача
+            if (elem.ElementType != EnumElementType.Task)
+            {
+                this.ShowMessageError(null, "Указанный элемент не является Задачей!");
+                return false;
+            }
+            //Пометить Задачу выполненной
+            CTask task = (CTask)elem;
+            task.SetPaused(true);
+            //записать изменения в БД
+            this.Engine.DbAdapter.UpdateElementWithTransaction(elem);
+            //Обновить дерево элементов в вызывающем коде
+            return true;
         }
 
         /// <summary>
         /// NR-
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        public bool LeftPanelAction_ShowTrashcanProp()
+        public bool LeftPanelAction_TrashcanShowProp()
         {
             //TODO: показать Диалог настроек Корзины
+            DialogResult dr = TrashcanPropForm.ShowTrashcanPropForm(this.m_MainForm);
+            return false;
         }
 
         /// <summary>
@@ -220,6 +350,7 @@ namespace Tasks.Forms
         public bool LeftPanelAction_TrashcanDeleteAll()
         {
             //TODO: запросить подтверждение операции и очистить Корзину
+            return false;
         }
 
         /// <summary>
@@ -229,6 +360,7 @@ namespace Tasks.Forms
         public bool LeftPanelAction_TrashcanRestoreAll()
         {
             //TODO: запросить подтверждение операции и восстановить все удаленные элементы
+            return false;
         }
 
         /// <summary>
@@ -238,6 +370,7 @@ namespace Tasks.Forms
         public bool LeftPanelAction_TrashcanElementRestore()
         {
             //TODO: Запросить подтверждение операции и восстановить выделенный в дереве элемент 
+            return false;
         }
 
         /// <summary>
@@ -248,6 +381,7 @@ namespace Tasks.Forms
         {
             //TODO: Запросить подтверждение операции и удалить из БД выделенный в дереве элемент 
             //проверить, что элемент был помечен удаленным.
+            return false;
         }
 
         #endregion
@@ -258,49 +392,58 @@ namespace Tasks.Forms
         /// NR-
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowCategoryProp()
+        private bool LeftPanelAction_ShowCategoryProp(CElement category)
         {
             //TODO: показать карточку выделенного в дереве элемента.
+            DialogResult dr = CategoryPropForm.ShowCategoryPropForm(this.m_MainForm);
             //Если данные элемента были изменены, обновить дерево элементов.
+            return false;
+
         }
 
         /// <summary>
         /// NR-
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowNoteProp()
+        private bool LeftPanelAction_ShowNoteProp(CElement note)
         {
             //TODO: показать карточку выделенного в дереве элемента
+            DialogResult dr = NotePropForm.ShowNotePropForm(this.m_MainForm);
+            return false;
         }
 
         /// <summary>
         /// NR-
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowTaskProp()
+        private bool LeftPanelAction_ShowTaskProp(CTask task)
         {
             //TODO: показать карточку выделенного в дереве элемента
+            DialogResult dr = TaskPropForm.ShowTaskPropForm(this.m_MainForm);
+            return false;
         }
 
         /// <summary>
         /// NR-
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowTagProp()
+        private bool LeftPanelAction_ShowTagProp(CElement tag)
         {
             //TODO: показать карточку выделенного в дереве элемента
+            DialogResult dr = TagPropForm.ShowTagPropForm(this.m_MainForm);
+            return false;
         }
 
         #endregion
 
-#region *** sub functions for left panel ***
+#region *** Sub functions for left panel ***
 
         /// <summary>
         /// Lefts the panel action show trashcan view.
         /// </summary>
         private void LeftPanelAction_ShowTrashcanView()
         {
-            throw new NotImplementedException();//TODO: add code here
+            //throw new NotImplementedException();//TODO: add code here
         }
 
         /// <summary>
@@ -309,7 +452,7 @@ namespace Tasks.Forms
         /// <param name="elem">The elem.</param>
         private void ShowElementView(CElement elem)
         {
-            throw new NotImplementedException();//TODO: add code here
+            //throw new NotImplementedException();//TODO: add code here
         }
 
         /// <summary>
@@ -318,7 +461,7 @@ namespace Tasks.Forms
         public void UpdateViews()
         {
             //update all views in application because changes of database data/
-            throw new NotImplementedException();//TODO: add code here
+            //throw new NotImplementedException();//TODO: add code here
         }
 
 #endregion
