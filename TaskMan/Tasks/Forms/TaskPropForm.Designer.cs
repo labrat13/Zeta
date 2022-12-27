@@ -37,6 +37,9 @@
             this.ClientSize = new System.Drawing.Size(437, 439);
             this.Name = "TaskPropForm";
             this.Text = "TaskPropForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TaskPropForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TaskPropForm_FormClosed);
+            this.Load += new System.EventHandler(this.TaskPropForm_Load);
             this.ResumeLayout(false);
 
         }

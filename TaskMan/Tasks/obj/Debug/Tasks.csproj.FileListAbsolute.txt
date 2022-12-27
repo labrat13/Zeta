@@ -28,3 +28,4 @@ C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.NotePropFo
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.TagPropForm.resources
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.TaskPropForm.resources
 C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.TrashcanPropForm.resources
+C:\Users\1\Documents\gitrepo\Zeta\TaskMan\Tasks\obj\Debug\Tasks.Forms.StorageCreateForm.resources

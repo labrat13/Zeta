@@ -118,21 +118,13 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SelectElementForm_Load(object sender, EventArgs e)
         {
-            //DONE: добавить загрузку размера и позиции формы из файла настроек приложения
+            //загрузить размеры и позицию формы из файла настроек приложения
             Size formSize = Properties.Settings.Default.SelectElementFormSize;
-            //limit min size
-            if (formSize.Height < this.MinimumSize.Height)
-                formSize.Height = this.MinimumSize.Height;
-            if (formSize.Width < this.MinimumSize.Width)
-                formSize.Width = this.MinimumSize.Width;
-            //set form size
-            this.Size = formSize;
+            MainFormManager.SetFormSize(this, formSize);
             //поместить окно в позицию из настроек приложения.
             Point pt = Properties.Settings.Default.SelectElementFormPosition;
-            //TODO: проверить координаты окна, чтобы его не потерять за пределами дисплея 
-            if (pt.X > 1000) pt.X = 1000;
-            if (pt.Y > 1000) pt.Y = 1000;
-            this.Location = pt;
+            MainFormManager.SetFormPosition(this, pt);
+
             //тут заполнить дерево элементов
             this.m_treeManager.ShowTree();
 
@@ -146,6 +138,16 @@ namespace Tasks.Forms
         /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
         private void SelectElementForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            return;
+        }
+
+        /// <summary>
+        /// NT-Handles the FormClosed event of the SelectElementForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosedEventArgs"/> instance containing the event data.</param>
+        private void SelectElementForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
             //тут очистить дерево элементов и коллекцию иконок
             //для следующего запуска диалога
             this.m_treeManager.ClearTree();
@@ -153,6 +155,8 @@ namespace Tasks.Forms
             //DONE: добавить сохранение размера и позиции формы в файл настроек приложения 
             Properties.Settings.Default.SelectElementFormSize = this.Size;
             Properties.Settings.Default.SelectElementFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
 
             return;
         }
@@ -236,6 +240,7 @@ namespace Tasks.Forms
         }
 
         #endregion
+
 
     }
 }

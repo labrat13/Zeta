@@ -67,6 +67,12 @@ namespace Tasks.Forms
 
         private void StorageInfoForm_Load(object sender, EventArgs e)
         {
+            //загрузить размеры и позицию формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.StorageCreateFormSize;
+            MainFormManager.SetFormSize(this, formSize);
+            //поместить окно в позицию из настроек приложения.
+            Point pt = Properties.Settings.Default.StorageCreateFormPosition;
+            MainFormManager.SetFormPosition(this, pt);
 
             this.textBoxDescr.Text = m_info.Description;
             this.textBoxPath.Text = m_info.StoragePath;
@@ -77,5 +83,15 @@ namespace Tasks.Forms
             return;
         }
 
+        private void StorageCreateForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Сохранить позицию и размер формы в настройки приложения
+            Properties.Settings.Default.StorageCreateFormSize = this.Size;
+            Properties.Settings.Default.StorageCreateFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
+
+            return;
+        }
     }
 }

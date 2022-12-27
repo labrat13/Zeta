@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using TaskEngine;
@@ -108,7 +109,43 @@ namespace Tasks.Forms
             MessageBox.Show(MainForm, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        /// <summary>
+        /// NT-Установить размер окна формы по настройкам приложения.
+        /// </summary>
+        /// <param name="f">Объект формы.</param>
+        /// <param name="formSize">Новый размер формы.</param>
+        public static void SetFormSize(Form f, Size formSize)
+        {
+            //limit min size
+            if (formSize.Height < f.MinimumSize.Height)
+                formSize.Height = f.MinimumSize.Height;
+            if (formSize.Width < f.MinimumSize.Width)
+                formSize.Width = f.MinimumSize.Width;
+            //set form size
+            f.Size = formSize;
+
+            return;
+        }
+
+        /// <summary>
+        /// NT-Установить позицию окна формы по настройкам приложения.
+        /// </summary>
+        /// <param name="f">Объект формы.</param>
+        /// <param name="formpos">Новая позиция формы.</param>
+        public static void SetFormPosition(Form f, Point formpos)
+        {
+            // проверить координаты окна, чтобы его не потерять за пределами дисплея 
+            if (formpos.X > 1000) formpos.X = 1000;
+            if (formpos.Y > 1000) formpos.Y = 1000;
+            f.Location = formpos;
+
+            return;
+        }
+
+
         #endregion
+
+
 
         #region *** Функции событий дерева элементов левой панели. ***
 

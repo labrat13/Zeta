@@ -267,5 +267,197 @@ namespace Tasks.Properties {
                 this["TemplateTagRemarks"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point CategoryPropFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["CategoryPropFormPosition"]));
+            }
+            set {
+                this["CategoryPropFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size CategoryPropFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["CategoryPropFormSize"]));
+            }
+            set {
+                this["CategoryPropFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point NotePropFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["NotePropFormPosition"]));
+            }
+            set {
+                this["NotePropFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size NotePropFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["NotePropFormSize"]));
+            }
+            set {
+                this["NotePropFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point TaskPropFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["TaskPropFormPosition"]));
+            }
+            set {
+                this["TaskPropFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size TaskPropFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["TaskPropFormSize"]));
+            }
+            set {
+                this["TaskPropFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point TagPropFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["TagPropFormPosition"]));
+            }
+            set {
+                this["TagPropFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size TagPropFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["TagPropFormSize"]));
+            }
+            set {
+                this["TagPropFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point TrashcanPropFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["TrashcanPropFormPosition"]));
+            }
+            set {
+                this["TrashcanPropFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size TrashcanPropFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["TrashcanPropFormSize"]));
+            }
+            set {
+                this["TrashcanPropFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size StorageCreateFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["StorageCreateFormSize"]));
+            }
+            set {
+                this["StorageCreateFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point StorageCreateFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["StorageCreateFormPosition"]));
+            }
+            set {
+                this["StorageCreateFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size StorageShortInfoFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["StorageShortInfoFormSize"]));
+            }
+            set {
+                this["StorageShortInfoFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point StorageShortInfoFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["StorageShortInfoFormPosition"]));
+            }
+            set {
+                this["StorageShortInfoFormPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size SettingTemplatesFormSize {
+            get {
+                return ((global::System.Drawing.Size)(this["SettingTemplatesFormSize"]));
+            }
+            set {
+                this["SettingTemplatesFormSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Point SettingTemplatesFormPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["SettingTemplatesFormPosition"]));
+            }
+            set {
+                this["SettingTemplatesFormPosition"] = value;
+            }
+        }
     }
 }

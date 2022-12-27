@@ -37,6 +37,9 @@
             this.ClientSize = new System.Drawing.Size(459, 400);
             this.Name = "TagPropForm";
             this.Text = "TagPropForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TagPropForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TagPropForm_FormClosed);
+            this.Load += new System.EventHandler(this.TagPropForm_Load);
             this.ResumeLayout(false);
 
         }

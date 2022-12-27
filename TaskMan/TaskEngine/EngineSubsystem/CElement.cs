@@ -216,7 +216,6 @@ namespace TaskEngine
         /// NT-Получить степень заполненности карточки элемента.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         public virtual EnumCardState GetCardState()
         {
             //автоматически заполняемые поля
@@ -497,7 +496,7 @@ namespace TaskEngine
             return result;
         }
 
-        //А это функции-компараторы дляч сортировки списков по разным критериям.
+        //А это функции-компараторы для сортировки списков по разным критериям.
 
         /// <summary>
         /// NT-Comparison: Sorts the elements by title.

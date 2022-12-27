@@ -37,6 +37,9 @@
             this.ClientSize = new System.Drawing.Size(424, 425);
             this.Name = "TrashcanPropForm";
             this.Text = "TrashcanPropForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrashcanPropForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TrashcanPropForm_FormClosed);
+            this.Load += new System.EventHandler(this.TrashcanPropForm_Load);
             this.ResumeLayout(false);
 
         }

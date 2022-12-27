@@ -28,5 +28,32 @@ namespace Tasks.Forms
             return dr;
         }
 
+        private void TaskPropForm_Load(object sender, EventArgs e)
+        {
+            //загрузить размеры и позицию формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.TaskPropFormSize;
+            MainFormManager.SetFormSize(this, formSize);
+            //поместить окно в позицию из настроек приложения.
+            Point pt = Properties.Settings.Default.TaskPropFormPosition;
+            MainFormManager.SetFormPosition(this, pt);
+        }
+
+        private void TaskPropForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Сохранить позицию и размер формы в настройки приложения
+            Properties.Settings.Default.TaskPropFormSize = this.Size;
+            Properties.Settings.Default.TaskPropFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
+
+            //TODO: add code here
+
+            return;
+        }
+
+        private void TaskPropForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
     }
 }

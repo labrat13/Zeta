@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		Документация\Database.txt = Документация\Database.txt
 		..\Справочники\Wiki-TaskMan\Wiki-TaskMan.wiki = ..\Справочники\Wiki-TaskMan\Wiki-TaskMan.wiki
+		Документация\Карточка Элемента.txt = Документация\Карточка Элемента.txt
 		Документация\МенюПриложения.txt = Документация\МенюПриложения.txt
 	EndProjectSection
 EndProject

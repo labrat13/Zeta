@@ -135,6 +135,9 @@
     <EmbeddedResource Include="Forms\SettingTemplatesForm.resx">
       <DependentUpon>SettingTemplatesForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StorageCreateForm.resx">
+      <DependentUpon>StorageCreateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\StorageShortInfoForm.resx">
       <DependentUpon>StorageShortInfoForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -71,7 +71,7 @@
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -82,7 +82,7 @@
             // button_OK
             // 
             this.button_OK.Location = new System.Drawing.Point(234, 282);
-            this.button_OK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_OK.Margin = new System.Windows.Forms.Padding(4);
             this.button_OK.Name = "button_OK";
             this.button_OK.Size = new System.Drawing.Size(100, 28);
             this.button_OK.TabIndex = 1;
@@ -95,7 +95,7 @@
             // 
             this.button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_Cancel.Location = new System.Drawing.Point(347, 282);
-            this.button_Cancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_Cancel.Margin = new System.Windows.Forms.Padding(4);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(100, 28);
             this.button_Cancel.TabIndex = 2;
@@ -111,7 +111,7 @@
             this.tabControl1.Controls.Add(this.tabPage_Other);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(4, 4);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(448, 270);
@@ -121,9 +121,9 @@
             // 
             this.tabPage_Main.Controls.Add(this.tableLayoutPanel2);
             this.tabPage_Main.Location = new System.Drawing.Point(4, 25);
-            this.tabPage_Main.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage_Main.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage_Main.Name = "tabPage_Main";
-            this.tabPage_Main.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage_Main.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage_Main.Size = new System.Drawing.Size(440, 241);
             this.tabPage_Main.TabIndex = 0;
             this.tabPage_Main.Text = "Основные";
@@ -152,7 +152,7 @@
             this.tableLayoutPanel2.Controls.Add(this.button_Path, 2, 4);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 8;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
@@ -207,7 +207,7 @@
             this.checkBox_ReadOnly.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.tableLayoutPanel2.SetColumnSpan(this.checkBox_ReadOnly, 2);
             this.checkBox_ReadOnly.Location = new System.Drawing.Point(4, 102);
-            this.checkBox_ReadOnly.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox_ReadOnly.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox_ReadOnly.Name = "checkBox_ReadOnly";
             this.checkBox_ReadOnly.Size = new System.Drawing.Size(129, 20);
             this.checkBox_ReadOnly.TabIndex = 3;
@@ -255,7 +255,7 @@
             this.tableLayoutPanel2.SetColumnSpan(this.textBox_Version, 2);
             this.textBox_Version.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Version.Location = new System.Drawing.Point(131, 196);
-            this.textBox_Version.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Version.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Version.Name = "textBox_Version";
             this.textBox_Version.ReadOnly = true;
             this.textBox_Version.Size = new System.Drawing.Size(297, 22);
@@ -266,7 +266,7 @@
             this.tableLayoutPanel2.SetColumnSpan(this.textBox_Title, 2);
             this.textBox_Title.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Title.Location = new System.Drawing.Point(131, 4);
-            this.textBox_Title.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Title.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Title.Name = "textBox_Title";
             this.textBox_Title.Size = new System.Drawing.Size(297, 22);
             this.textBox_Title.TabIndex = 0;
@@ -278,7 +278,7 @@
             this.tableLayoutPanel2.SetColumnSpan(this.textBox_Descr, 2);
             this.textBox_Descr.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Descr.Location = new System.Drawing.Point(131, 36);
-            this.textBox_Descr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Descr.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Descr.Name = "textBox_Descr";
             this.textBox_Descr.Size = new System.Drawing.Size(297, 22);
             this.textBox_Descr.TabIndex = 1;
@@ -291,7 +291,7 @@
             this.tableLayoutPanel2.SetColumnSpan(this.textBox_Creator, 2);
             this.textBox_Creator.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Creator.Location = new System.Drawing.Point(131, 68);
-            this.textBox_Creator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Creator.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Creator.Name = "textBox_Creator";
             this.textBox_Creator.Size = new System.Drawing.Size(297, 22);
             this.textBox_Creator.TabIndex = 2;
@@ -302,7 +302,7 @@
             // 
             this.textBox_Directory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Directory.Location = new System.Drawing.Point(131, 132);
-            this.textBox_Directory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Directory.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Directory.Name = "textBox_Directory";
             this.textBox_Directory.ReadOnly = true;
             this.textBox_Directory.Size = new System.Drawing.Size(244, 22);
@@ -315,7 +315,7 @@
             this.tableLayoutPanel2.SetColumnSpan(this.textBox_Class, 2);
             this.textBox_Class.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_Class.Location = new System.Drawing.Point(131, 164);
-            this.textBox_Class.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox_Class.Margin = new System.Windows.Forms.Padding(4);
             this.textBox_Class.Name = "textBox_Class";
             this.textBox_Class.ReadOnly = true;
             this.textBox_Class.Size = new System.Drawing.Size(297, 22);
@@ -337,9 +337,9 @@
             // tabPage_Other
             // 
             this.tabPage_Other.Location = new System.Drawing.Point(4, 25);
-            this.tabPage_Other.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage_Other.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage_Other.Name = "tabPage_Other";
-            this.tabPage_Other.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage_Other.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage_Other.Size = new System.Drawing.Size(440, 241);
             this.tabPage_Other.TabIndex = 1;
             this.tabPage_Other.Text = "Другие";
@@ -365,12 +365,12 @@
             this.CancelButton = this.button_Cancel;
             this.ClientSize = new System.Drawing.Size(456, 315);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(461, 346);
             this.Name = "StorageShortInfoForm";
             this.Text = "EngineSettingForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EngineSettingForm_FormClosing);
-            this.Load += new System.EventHandler(this.EngineSettingForm_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StorageShortInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.StorageShortInfoForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tabControl1.ResumeLayout(false);

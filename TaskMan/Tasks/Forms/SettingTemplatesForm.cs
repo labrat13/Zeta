@@ -32,6 +32,13 @@ namespace Tasks.Forms
 
         private void SettingTemplatesForm_Load(object sender, EventArgs e)
         {
+            //загрузить размеры и позицию формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.SettingTemplatesFormSize;
+            MainFormManager.SetFormSize(this, formSize);
+            //поместить окно в позицию из настроек приложения.
+            Point pt = Properties.Settings.Default.SettingTemplatesFormPosition;
+            MainFormManager.SetFormPosition(this, pt);
+
             //Fill tree with settings nodes
             UpdateTreeView();
             EnableSaveButtons(false);
@@ -113,7 +120,15 @@ namespace Tasks.Forms
 
         private void SettingTemplatesForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            
+            //Сохранить позицию и размер формы в настройки приложения
+            Properties.Settings.Default.SettingTemplatesFormSize = this.Size;
+            Properties.Settings.Default.SettingTemplatesFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
+
+            //TODO: add code here
+
+            return;
         }
 
         /// <summary>

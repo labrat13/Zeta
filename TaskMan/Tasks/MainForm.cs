@@ -83,19 +83,11 @@ namespace Tasks
         {
             //загрузить размеры и позицию формы из файла настроек приложения
             Size formSize = Properties.Settings.Default.MainFormSize;
-            //limit min size
-            if (formSize.Height < this.MinimumSize.Height)
-                formSize.Height = this.MinimumSize.Height;
-            if (formSize.Width < this.MinimumSize.Width)
-                formSize.Width = this.MinimumSize.Width;
-            //set form size
-            this.Size = formSize;
+            MainFormManager.SetFormSize(this, formSize);
             //поместить окно в позицию из настроек приложения.
             Point pt = Properties.Settings.Default.MainFormPosition;
-            // проверить координаты окна, чтобы его не потерять за пределами дисплея 
-            if (pt.X > 1000) pt.X = 1000;
-            if (pt.Y > 1000) pt.Y = 1000;
-            this.Location = pt;
+            MainFormManager.SetFormPosition(this, pt);
+
             //set default form title
             this.setMainFormTitle(null, false);
             //set default status text

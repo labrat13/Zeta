@@ -168,6 +168,7 @@
             this.Name = "SelectElementForm";
             this.Text = "SelectElementForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SelectElementForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SelectElementForm_FormClosed);
             this.Load += new System.EventHandler(this.SelectElementForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

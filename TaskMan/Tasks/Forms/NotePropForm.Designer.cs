@@ -37,6 +37,9 @@
             this.ClientSize = new System.Drawing.Size(447, 447);
             this.Name = "NotePropForm";
             this.Text = "NotePropForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NotePropForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NotePropForm_FormClosed);
+            this.Load += new System.EventHandler(this.NotePropForm_Load);
             this.ResumeLayout(false);
 
         }

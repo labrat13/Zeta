@@ -27,5 +27,33 @@ namespace Tasks.Forms
 
             return dr;
         }
+
+        private void TrashcanPropForm_Load(object sender, EventArgs e)
+        {
+            //загрузить размеры и позицию формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.TrashcanPropFormSize;
+            MainFormManager.SetFormSize(this, formSize);
+            //поместить окно в позицию из настроек приложения.
+            Point pt = Properties.Settings.Default.TrashcanPropFormPosition;
+            MainFormManager.SetFormPosition(this, pt);
+        }
+
+        private void TrashcanPropForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Сохранить позицию и размер формы в настройки приложения
+            Properties.Settings.Default.TrashcanPropFormSize = this.Size;
+            Properties.Settings.Default.TrashcanPropFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
+
+            //TODO: add code here
+
+            return;
+        }
+
+        private void TrashcanPropForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
     }
 }

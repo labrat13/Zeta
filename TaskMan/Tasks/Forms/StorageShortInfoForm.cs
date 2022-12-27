@@ -85,8 +85,15 @@ namespace Tasks.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EngineSettingForm_Load(object sender, EventArgs e)
+        private void StorageShortInfoForm_Load(object sender, EventArgs e)
         {
+            //загрузить размеры и позицию формы из файла настроек приложения
+            Size formSize = Properties.Settings.Default.StorageShortInfoFormSize;
+            MainFormManager.SetFormSize(this, formSize);
+            //поместить окно в позицию из настроек приложения.
+            Point pt = Properties.Settings.Default.StorageShortInfoFormPosition;
+            MainFormManager.SetFormPosition(this, pt);
+
             //вписать данные в контролы формы
             //вкладка TabPageMain:
             this.textBox_Class.Text = m_Item.EngineClass;
@@ -106,14 +113,19 @@ namespace Tasks.Forms
 
             return;
         }
-        /// <summary>
-        /// NT-Обработчик события Форма закрывается
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EngineSettingForm_FormClosing(object sender, FormClosingEventArgs e)
+
+
+        private void StorageShortInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //тут вроде нечего делать...
+            //Сохранить позицию и размер формы в настройки приложения
+            Properties.Settings.Default.StorageShortInfoFormSize = this.Size;
+            Properties.Settings.Default.StorageShortInfoFormPosition = this.Location;
+            //store setting files
+            Properties.Settings.Default.Save();
+
+            //TODO: add code here
+
+            return;
         }
         /// <summary>
         /// NT-Обработчик события Нажата кнопка Отмена или крестик в заголовке окна
@@ -216,5 +228,7 @@ namespace Tasks.Forms
             //TODO: тут установить режим только чтение для новых контролов формы
             return;
         }
+
+
     }
 }

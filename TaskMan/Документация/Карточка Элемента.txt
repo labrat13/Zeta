@@ -1,0 +1,44 @@
+
+Свойства Элемента:
+
+- Int32 Id
+- string Title
+- string Description
+- string Remarks
+- DateTime CreaTime
+- DateTime ModiTime
+- EnumElementType ElementType
+- CElementRef Parent
+- CElementRefCollection Tags
+- EnumElementState ElementState
+- public string GetStringElementIdentifier(bool withTitle)
+- public virtual EnumCardState GetCardState()
+
+Дополнительно, свойства Задачи:
+- EnumTaskState TaskState
+- EnumTaskPriority TaskPriority
+- string TaskResult
+- DateTime TaskCompletionDate
+- DateTime TaskStartDate
+
+
+Форма элемента:
+- вкладка Основное
+  - Название: 		текстбокс
+  - Корень:		линк и кнопка ...
+  - Описание:		текстбокс на 3 строки
+  - ИД:			текстбокс ридонли, чтобы можно было скопировать ид элемента
+  - Дата создания:	лейбл
+  - Дата изменения:	лейбл
+  - Состояние:		комбобокс или чекбокс?
+  - Теги: 		линки и кнопка вызова диалога редактирования списка тегов.
+- кнопки ОК Отмена
+- строка  состояния: состояние карточки
+- Вкладка Заметки 
+  - текстбокс на всю вкладку
+  - 
+  - 
+
+
+
+
