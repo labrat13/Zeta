@@ -21,16 +21,31 @@ namespace TaskEngine.Utilities
         /// </summary>
         public static CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
         /// <summary>
-        /// NT-Возвращает "Null" текст если строка=null. Иначе возвращает строку после Trim().
+        /// NT-Возвращает "Null" текст если s=null. Иначе возвращает строку после Trim().
         /// </summary>
-        /// <param name="s">The s.</param>
+        /// <param name="s">Проверяемая строка.</param>
         /// <returns></returns>
-        internal static string GetStringTextNull(string s)
+        public static string GetStringTextNull(string s)
         {
             if (s == null)
 
-                return "Null";
+                return "[Null]";
             else return s.Trim();
+        }
+
+        /// <summary>
+        /// NT-Возвращает "[Null]" текст если s=null; "[Empty]" для пустой строки. Иначе возвращает строку после Trim().
+        /// </summary>
+        /// <param name="s">Проверяемая строка.</param>
+        /// <returns></returns>
+        public static string GetStringTextEmptyNull(string s)
+        {
+            if (s == null)
+                return "[Null]";
+            String t = s.Trim();
+            if (String.IsNullOrEmpty(t))
+                return "[Empty]";
+            else return t;
         }
 
         /// <summary>
@@ -51,7 +66,7 @@ namespace TaskEngine.Utilities
         /// </summary>
         /// <param name="s">The unsafe title string</param>
         /// <returns></returns>
-        internal static String MakeSafeTitle(String s)
+        public static String MakeSafeTitle(String s)
         {
             StringBuilder sb = new StringBuilder(s.Length);
             Char lastchar = 's';
@@ -265,7 +280,7 @@ namespace TaskEngine.Utilities
         /// NT-Deletes the file.
         /// </summary>
         /// <param name="filePath">File path.</param>
-        internal static void DeleteFile(string filePath)
+        public static void DeleteFile(string filePath)
         {
             //remove file atttributes
             File.SetAttributes(filePath, FileAttributes.Normal);

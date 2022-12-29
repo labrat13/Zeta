@@ -155,16 +155,36 @@ namespace TaskEngine
         }
 
         /// <summary>
-        /// NT-пометить элемент как удаленный, без проверок.
+        /// NT-пометить элемент как удаленный, если он не имеет состояние <see cref="EnumElementState.ProtectedFromDelete"/>.
         /// </summary>
         /// <param name="v">Если <c>true</c> то пометить элемент как удаленный, иначе - пометить элемент как нормальный.</param>
         public void SetDeleted(bool v)
         {
-            if (v == true)
-                this.m_ElementState = EnumElementState.Deleted;
-            else 
-                this.m_ElementState = EnumElementState.Normal;
+            if (this.m_ElementState != EnumElementState.ProtectedFromDelete)
+            {
+                if (v == true)
+                    this.m_ElementState = EnumElementState.Deleted;
+                else
+                    this.m_ElementState = EnumElementState.Normal;
+            }
+
+            return;
         }
+
+        /// <summary>
+        /// NT-Возвращает true если элемент помечен как Защищен от удаления.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> если элемент помечен как Защищен от удаления; в противном случае, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// Эта функция упрощает проверки состояния активности элемента в некоторых функциях.
+        /// </remarks>
+        public bool IsProtected()
+        {
+            return this.ElementState == EnumElementState.ProtectedFromDelete;
+        }.
+
 
         /// <summary>
         /// NT-Converts to string.

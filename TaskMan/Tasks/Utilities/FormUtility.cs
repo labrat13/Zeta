@@ -11,9 +11,9 @@ namespace Tasks.Utilities
 
         #region Forms functions
         /// <summary>
-        /// Цвет для выделения неправильного веб-имени  фоном текстового поля
+        /// Цвет для выделения неправильного значения  фоном текстового поля
         /// </summary>
-        internal static Color InvalidWebNameBackColor = Color.MistyRose;
+        internal static Color WrongTextBoxBackColor = Color.MistyRose;
 
         /// <summary>
         /// NT-Установить цвет ошибки для текстбокса и вывести сообщение в строке состояния, если она есть
@@ -28,25 +28,19 @@ namespace Tasks.Utilities
             //set error color for textbox
             if (wrong)
             {
-                backColor = InvalidWebNameBackColor;
-
+                backColor = WrongTextBoxBackColor;
             }
             else
             {
-                backColor = Color.White;
+                backColor = SystemColors.Window;//typical white?
             }
             control.BackColor = backColor;
 
             //set new status bar message text
-            String msg;
             if (statusBarLabel != null)
             {
-                if (wrong)
-                    msg = statusMsg;
-                else
-                    msg = String.Empty;
-                //set new text
-                statusBarLabel.Text = msg;
+                if (wrong)  //set new text
+                statusBarLabel.Text = statusMsg;;
             }
 
             return;
@@ -60,7 +54,7 @@ namespace Tasks.Utilities
         /// <param name="parentForm">Родительская форма.</param>
         /// <param name="text">Текст сообщения</param>
         /// <param name="title">Заголовок окна сообщения</param>
-        public void showErrorMessageBox(IWin32Window parentForm, string title, string text)
+        public static void showErrorMessageBox(IWin32Window parentForm, string title, string text)
         {
             MessageBox.Show(parentForm, text, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -71,7 +65,7 @@ namespace Tasks.Utilities
         /// <param name="parentForm">Родительская форма.</param>
         /// <param name="text">Текст сообщения</param>
         /// <param name="title">Заголовок окна сообщения</param>
-        public void showWarningMessageBox(IWin32Window parentForm, string title, string text)
+        public static void showWarningMessageBox(IWin32Window parentForm, string title, string text)
         {
             MessageBox.Show(parentForm, text, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
