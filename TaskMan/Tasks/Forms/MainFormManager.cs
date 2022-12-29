@@ -426,14 +426,15 @@ namespace Tasks.Forms
         #region *** ShowElementProp() субфункции ***
 
         /// <summary>
-        /// NR-
+        /// NR-Показать карточку выделенного в дереве элемента.
         /// </summary>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
         private bool LeftPanelAction_ShowCategoryProp(CElement category)
         {
             //TODO: показать карточку выделенного в дереве элемента.
-            DialogResult dr = CategoryPropForm.ShowCategoryPropForm(this.m_MainForm);
-            //Если данные элемента были изменены, обновить дерево элементов.
+            bool changed = CategoryPropForm.ShowCategoryPropForm(this.m_MainForm, "Свойства Категории", false,  category, this.Engine);
+            //Если данные элемента были изменены, Записать их в Бд и обновить дерево элементов.
+
             return false;
 
         }

@@ -94,7 +94,7 @@
             this.tableLayoutPanel_Base.ColumnCount = 3;
             this.tableLayoutPanel_Base.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel_Base.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel_Base.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tableLayoutPanel_Base.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel_Base.Controls.Add(this.button_Cancel, 2, 1);
             this.tableLayoutPanel_Base.Controls.Add(this.button_OK, 1, 1);
             this.tableLayoutPanel_Base.Controls.Add(this.tabControl1, 0, 0);
@@ -104,16 +104,17 @@
             this.tableLayoutPanel_Base.Name = "tableLayoutPanel_Base";
             this.tableLayoutPanel_Base.RowCount = 2;
             this.tableLayoutPanel_Base.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel_Base.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel_Base.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel_Base.Size = new System.Drawing.Size(397, 455);
             this.tableLayoutPanel_Base.TabIndex = 1;
             // 
             // button_Cancel
             // 
             this.button_Cancel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.button_Cancel.Location = new System.Drawing.Point(319, 428);
+            this.button_Cancel.Location = new System.Drawing.Point(306, 423);
+            this.button_Cancel.Margin = new System.Windows.Forms.Padding(1);
             this.button_Cancel.Name = "button_Cancel";
-            this.button_Cancel.Size = new System.Drawing.Size(75, 23);
+            this.button_Cancel.Size = new System.Drawing.Size(90, 28);
             this.button_Cancel.TabIndex = 0;
             this.button_Cancel.Text = "Отмена";
             this.button_Cancel.UseVisualStyleBackColor = true;
@@ -122,9 +123,10 @@
             // button_OK
             // 
             this.button_OK.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.button_OK.Location = new System.Drawing.Point(229, 428);
+            this.button_OK.Location = new System.Drawing.Point(208, 423);
+            this.button_OK.Margin = new System.Windows.Forms.Padding(1);
             this.button_OK.Name = "button_OK";
-            this.button_OK.Size = new System.Drawing.Size(75, 23);
+            this.button_OK.Size = new System.Drawing.Size(88, 28);
             this.button_OK.TabIndex = 1;
             this.button_OK.Text = "ОК";
             this.button_OK.UseVisualStyleBackColor = true;
@@ -139,7 +141,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(391, 419);
+            this.tabControl1.Size = new System.Drawing.Size(391, 413);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage_General
@@ -149,7 +151,7 @@
             this.tabPage_General.Location = new System.Drawing.Point(4, 27);
             this.tabPage_General.Name = "tabPage_General";
             this.tabPage_General.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_General.Size = new System.Drawing.Size(383, 388);
+            this.tabPage_General.Size = new System.Drawing.Size(383, 382);
             this.tabPage_General.TabIndex = 0;
             this.tabPage_General.Text = "Основное";
             // 
@@ -192,7 +194,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(377, 382);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(377, 376);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // button_EditTags
@@ -334,14 +336,14 @@
             // 
             // textBox_ElementDescription
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.textBox_ElementDescription, 3);
+            this.tableLayoutPanel1.SetColumnSpan(this.textBox_ElementDescription, 2);
             this.textBox_ElementDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox_ElementDescription.Location = new System.Drawing.Point(3, 85);
             this.textBox_ElementDescription.MinimumSize = new System.Drawing.Size(100, 70);
             this.textBox_ElementDescription.Multiline = true;
             this.textBox_ElementDescription.Name = "textBox_ElementDescription";
             this.textBox_ElementDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_ElementDescription.Size = new System.Drawing.Size(371, 70);
+            this.textBox_ElementDescription.Size = new System.Drawing.Size(321, 70);
             this.textBox_ElementDescription.TabIndex = 11;
             this.textBox_ElementDescription.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
@@ -396,12 +398,12 @@
             // panel_ElementTagPanel
             // 
             this.panel_ElementTagPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.tableLayoutPanel1.SetColumnSpan(this.panel_ElementTagPanel, 3);
+            this.tableLayoutPanel1.SetColumnSpan(this.panel_ElementTagPanel, 2);
             this.panel_ElementTagPanel.Controls.Add(this.flowLayoutPanel_Tags);
             this.panel_ElementTagPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_ElementTagPanel.Location = new System.Drawing.Point(3, 187);
             this.panel_ElementTagPanel.Name = "panel_ElementTagPanel";
-            this.panel_ElementTagPanel.Size = new System.Drawing.Size(371, 68);
+            this.panel_ElementTagPanel.Size = new System.Drawing.Size(321, 68);
             this.panel_ElementTagPanel.TabIndex = 19;
             // 
             // flowLayoutPanel_Tags
@@ -410,7 +412,7 @@
             this.flowLayoutPanel_Tags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel_Tags.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel_Tags.Name = "flowLayoutPanel_Tags";
-            this.flowLayoutPanel_Tags.Size = new System.Drawing.Size(367, 64);
+            this.flowLayoutPanel_Tags.Size = new System.Drawing.Size(317, 64);
             this.flowLayoutPanel_Tags.TabIndex = 0;
             // 
             // linkLabel_TagExample

@@ -1351,12 +1351,14 @@ namespace TaskEngine
             return true;
         }
 
+        //TODO: Поскольку эи функции непосредственно с БД не работают, может, целесообразно будет их перенести в Движок?  
+
         /// <summary>
         /// NT-Определить, имеет ли элемент хотя бы один активный под-элемент.
         /// </summary>
         /// <param name="id">Идентификатор Элемента.</param>
         /// <returns>
-        ///  Функция возвращает <c>true</c>, если указанный элемент имеет хотя бы один активный под-элемент; в противном случает, возвращается <c>false</c>.
+        ///  Функция возвращает <c>true</c>, если указанный элемент имеет хотя бы один активный под-элемент; в противном случае возвращается <c>false</c>.
         /// </returns>
         public bool IsElementHasActiveChild(int id)
         {
@@ -1373,6 +1375,30 @@ namespace TaskEngine
             
             //иначе вернуть Нет.
             return false;
+        }
+
+        /// <summary>
+        /// NT-Определить, Имеет ли элемент в цепочке от корня до себя хотя бы один неактивный элемент.
+        /// </summary>
+        /// <param name="id">Идентификатор Элемента</param>
+        /// <returns>
+        ///  Функция возвращает <c>true</c>, если указанный элемент имеет хотя бы один неактивный над-элемент; в противном случае возвращается <c>false</c>.
+        /// </returns>
+        public Boolean IsElementHasDeletedParent(Int32 id)
+        {            
+            //получить цепочку парентов данного элемента
+            List<Int32> chain = this.GetChainOfElementIds(id, false);
+
+            //если список пустой, вернуть Нет
+            if (chain.Count == 0)
+                return false;
+            //первый элемент списка должен быть ид самого элемента. Его проверять нельзя.
+            if (chain[0] == id)
+                chain.RemoveAt(0);
+            else
+                throw new Exception("Invalid chain of elements!");
+            //проверить что все элементы активны
+            return this.IsAllElementDeleted(chain);
         }
 
         #endregion

@@ -183,7 +183,7 @@ namespace TaskEngine
         public bool IsProtected()
         {
             return this.ElementState == EnumElementState.ProtectedFromDelete;
-        }.
+        }
 
 
         /// <summary>

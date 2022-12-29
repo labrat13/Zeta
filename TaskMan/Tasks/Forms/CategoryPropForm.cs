@@ -16,7 +16,7 @@ namespace Tasks.Forms
         #region *** Constants and fields ***  
 
         /// <summary>
-        /// Флаг что состочние данных было изменено
+        /// Флаг что состояние данных было изменено
         /// </summary>
         private bool m_Changed;
 
@@ -43,28 +43,15 @@ namespace Tasks.Forms
         public CategoryPropForm()
         {
             InitializeComponent();
+            this.m_Changed = false;
+            this.m_Element = null;
+            this.m_Engine = null;
+            this.m_ReadOnly = false;
+
+            return;
         }
 
-        /// <summary>
-        /// NR-Shows this form as modal dialog.
-        /// </summary>
-        /// <param name="owner">The owner window.</param>
-        /// <returns>Function returns <c>DialogResult</c> code.</returns>
-        public static DialogResult ShowCategoryPropForm(IWin32Window owner, String title, bool readOnly, CElement element, CEngine engine)
-        {
-            CategoryPropForm form = new CategoryPropForm();
-            //set form properties
-            form.Text = title;//TODO: заменить заголовок формы на название формы + название элемента.
-            form.m_ReadOnly = readOnly;
-            form.m_Element = element;
-            form.m_Engine = engine;
-            //show form
-            DialogResult dr = form.ShowDialog(owner);
-            //TODO: add code here
-            //Если диалог завершен с ОК, сохранить элемент в БД?
-            //- элемент обновляется или создается? Здесь это неизвестно.
-            return dr;
-        }
+
 
         #region *** Properties ***
 
@@ -82,13 +69,55 @@ namespace Tasks.Forms
         /// Флаг, что данные элемента не должны быть изменены, форма только для просмотра.
         /// </summary>
         public bool ReadOnly { get => m_ReadOnly; set => m_ReadOnly = value; }
+        /// <summary>
+        /// Флаг что состояние данных было изменено
+        /// </summary>
+        public bool Changed
+        {
+            get
+            {
+                return m_Changed;
+            }
+
+            //set
+            //{
+            //    m_Changed = value;
+            //}
+        }
 
         #endregion
+
+        /// <summary>
+        /// NT-Shows this form as modal dialog.
+        /// </summary>
+        /// <param name="owner">The owner window.</param>
+        /// <returns>Function returns <c>DialogResult</c> code.</returns>
+        public static bool ShowCategoryPropForm(IWin32Window owner, String title, bool readOnly, CElement element, CEngine engine)
+        {
+            CategoryPropForm form = new CategoryPropForm();
+            //set form properties
+            form.Text = title;//TODO: заменить заголовок формы на название формы + название элемента.
+            form.m_ReadOnly = readOnly;
+            form.m_Element = element;
+            form.m_Engine = engine;
+            //show form
+            DialogResult dr = form.ShowDialog(owner);
+            //TODO: add code here
+            //Если диалог завершен с ОК, сохранить элемент в БД?
+            //- элемент обновляется или создается? Здесь это неизвестно.
+            //TODO: для определения, были ли данные элемента изменены, создано проперти Changed.
+            //Хотя, диалог нельзя закрыть с ОК, если данные элемента не были изменены.
+            //Но - надо четко проследить, чтобы везде, где данные элемента изменяются, флаг изменения тоже устанавливался!
+            bool result = form.m_Changed;
+
+            return result; 
+        }
+
 
         #region *** Form button event handlers ***
 
         /// <summary>
-        /// NR-Handles the Load event of the CategoryPropForm control.
+        /// NT-Handles the Load event of the CategoryPropForm control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -121,7 +150,7 @@ namespace Tasks.Forms
         }
 
         /// <summary>
-        /// NR-Handles the FormClosed event of the CategoryPropForm control.
+        /// NT-Handles the FormClosed event of the CategoryPropForm control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="FormClosedEventArgs"/> instance containing the event data.</param>
@@ -163,10 +192,8 @@ namespace Tasks.Forms
 
         }
 
-
-
         /// <summary>
-        /// NR-Handles the CheckedChanged event of the checkBox_ElementActiveState control.
+        /// NT-Handles the CheckedChanged event of the checkBox_ElementActiveState control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -182,9 +209,9 @@ namespace Tasks.Forms
             if (checkBox_ElementActiveState.Checked == false)//новое значение, когда флаг снимается
             {
                 //Если флаг снимается, надо проверить, что удаление возможно, при помощи функций БД.
-                //TODO: add code here
+                bool hasActiveChild = this.m_Engine.DbAdapter.IsElementHasActiveChild(this.m_Element.Id);
                 //Если невозможно, выдать предупреждение и восстановить флаг.
-                if (true)
+                if (hasActiveChild)
                 {
                     FormUtility.showErrorMessageBox(this, "Ошибка", 
                         "Невозможно удалить этот элемент,\n" +
@@ -201,9 +228,9 @@ namespace Tasks.Forms
             else //checkBox_ElementActiveState.Checked == true //новое значение, когда флаг устанавливается
             {
                 //Если флаг устанавливается, надо проверить через БД, что восстановление элемента возможно.
-                //TODO: add code here
+                bool hasDeletedParent = this.m_Engine.DbAdapter.IsElementHasDeletedParent(this.m_Element.Id);
                 //Если невозможно, выдать предупреждение и восстановить флаг.
-                if (true)
+                if (hasDeletedParent)
                 {
                     FormUtility.showErrorMessageBox(this, "Ошибка", 
                         "Невозможно восстановить этот элемент, поскольку\n" +
@@ -219,15 +246,12 @@ namespace Tasks.Forms
             }
             //тут присоединить этот обработчик к чекбоксу обратно
             this.checkBox_ElementActiveState.CheckedChanged += this.checkBox_ElementActiveState_CheckedChanged;
-            
-            //TODO: Эти операции уже следует вынести в отдельный класс-менеджер, их накопилось многовато.
-            //- можно добавить их в MainFormManager или подобный класс со всеми необходимыми переменными объектов. 
 
             return;
         }
 
         /// <summary>
-        /// NR-Handles the Click event of the button_OK control.
+        /// NT-Handles the Click event of the button_OK control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -256,6 +280,7 @@ namespace Tasks.Forms
         {
             //set form result Cancel
             this.DialogResult = DialogResult.Cancel;
+            this.Close();
 
             return;
         }
@@ -274,6 +299,8 @@ namespace Tasks.Forms
 
             return;
         }
+
+        //Функции тегов решено отложить на потом.
 
         /// <summary>
         /// NR-Handles the Click event of the button_EditTags control.
@@ -302,9 +329,10 @@ namespace Tasks.Forms
 
         #endregion
 
-
-
         #region *** Service functions ***
+
+        //TODO: Эти операции уже следует вынести в отдельный класс-менеджер, их накопилось многовато.
+        //- можно добавить их в MainFormManager или подобный класс со всеми необходимыми переменными объектов.
 
         /// <summary>
         /// NT-Sets the form data change flag.
@@ -403,6 +431,7 @@ namespace Tasks.Forms
                 FormUtility.showErrorMessageBox(this, "Ошибка", "Недопустимое название Категории!");
                 return false;
             }
+            //store text values
             this.m_Element.Title = title;
             this.m_Element.Description = this.textBox_ElementDescription.Text.Trim();
             this.m_Element.Remarks = this.myRichTextControl_Remarks.TextBox.Text;//not trimmed, for final endline save.
