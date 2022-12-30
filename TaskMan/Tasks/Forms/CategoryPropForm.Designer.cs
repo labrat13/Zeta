@@ -433,7 +433,7 @@
             this.tabPage_Remarks.Location = new System.Drawing.Point(4, 27);
             this.tabPage_Remarks.Name = "tabPage_Remarks";
             this.tabPage_Remarks.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_Remarks.Size = new System.Drawing.Size(383, 388);
+            this.tabPage_Remarks.Size = new System.Drawing.Size(383, 382);
             this.tabPage_Remarks.TabIndex = 1;
             this.tabPage_Remarks.Text = "Заметки";
             // 
@@ -443,7 +443,7 @@
             this.myRichTextControl_Remarks.Location = new System.Drawing.Point(3, 3);
             this.myRichTextControl_Remarks.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.myRichTextControl_Remarks.Name = "myRichTextControl_Remarks";
-            this.myRichTextControl_Remarks.Size = new System.Drawing.Size(377, 382);
+            this.myRichTextControl_Remarks.Size = new System.Drawing.Size(377, 376);
             this.myRichTextControl_Remarks.TabIndex = 0;
             this.myRichTextControl_Remarks.TextReadOnly = false;
             this.myRichTextControl_Remarks.ToolStrip_Visible = false;

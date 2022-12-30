@@ -20,12 +20,12 @@ namespace Tasks.Forms
         /// </summary>
         /// <param name="owner">The owner window.</param>
         /// <returns>Function returns <c>DialogResult</c> code.</returns>
-        public static DialogResult ShowTagPropForm(IWin32Window owner)
+        public static bool ShowTagPropForm(IWin32Window owner)
         {
             TagPropForm form = new TagPropForm();
             DialogResult dr = form.ShowDialog(owner);
 
-            return dr;
+            return false;
         }
 
         private void TagPropForm_Load(object sender, EventArgs e)

@@ -20,12 +20,12 @@ namespace Tasks.Forms
         /// </summary>
         /// <param name="owner">The owner window.</param>
         /// <returns>Function returns <c>DialogResult</c> code.</returns>
-        public static DialogResult ShowNotePropForm(IWin32Window owner)
+        public static bool ShowNotePropForm(IWin32Window owner)
         {
             NotePropForm form = new NotePropForm();
             DialogResult dr = form.ShowDialog(owner);
 
-            return dr;
+            return false;
         }
 
         private void NotePropForm_Load(object sender, EventArgs e)

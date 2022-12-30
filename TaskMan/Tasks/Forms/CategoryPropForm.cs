@@ -11,6 +11,20 @@ using static System.Windows.Forms.LinkLabel;
 
 namespace Tasks.Forms
 {
+    //TODO: Для категории надо проверить работу в режиме создания нового элемента.
+    // - идентификатор получить из менеджера идентификаторов движка.
+    // - в БД элемент еще не записан, цепочку пути вычислить нельзя.
+    // - парент элемента уже первоначально назначен, но связей в БД нет.
+    // - галочка Активен должна быть установлена и заблокирована.
+    //    Снять ее нельзя до сохранения элемента, то есть, на все время показа диалога.
+    //   - это требует передавать в форму флаг m_isCreating, что объект создается, а не редактируется
+    // - для тестирования режима создания элементов надо создать вызывающий код.
+
+
+    /// <summary>
+    /// NR-Форма свойств Категории
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.Form" />
     public partial class CategoryPropForm : Form
     {
         #region *** Constants and fields ***  
@@ -35,6 +49,16 @@ namespace Tasks.Forms
         /// </summary>
         private CEngine m_Engine;
 
+        /// <summary>
+        /// Объект менеджера формы для вызова функций и диалогов
+        /// </summary>
+        private MainFormManager m_MainFormManager;
+
+        /// <summary>
+        /// Флаг, что элемент создается и еще не записан в БД.
+        /// </summary>
+        private bool m_isCreating;
+
         #endregion
 
         /// <summary>
@@ -47,16 +71,18 @@ namespace Tasks.Forms
             this.m_Element = null;
             this.m_Engine = null;
             this.m_ReadOnly = false;
+            this.m_MainFormManager = null;
+            this.m_isCreating = false;
 
             return;
         }
 
-
+        
 
         #region *** Properties ***
 
         /// <summary>
-        /// Элемент, отображаемый в форме.
+        /// Элемент, отображаемый в форме. 
         /// </summary>
         public CElement Element { get => m_Element; set => m_Element = value; }
 
@@ -69,6 +95,7 @@ namespace Tasks.Forms
         /// Флаг, что данные элемента не должны быть изменены, форма только для просмотра.
         /// </summary>
         public bool ReadOnly { get => m_ReadOnly; set => m_ReadOnly = value; }
+
         /// <summary>
         /// Флаг что состояние данных было изменено
         /// </summary>
@@ -85,14 +112,53 @@ namespace Tasks.Forms
             //}
         }
 
+        /// <summary>
+        /// Объект менеджера формы для вызова функций и диалогов
+        /// </summary>
+        public MainFormManager FormManager
+        {
+            get
+            {
+                return m_MainFormManager;
+            }
+
+            set
+            {
+                m_MainFormManager = value;
+            }
+        }
+
+        /// <summary>
+        /// Флаг, что элемент создается и еще не записан в БД.
+        /// </summary>
+        public bool IsCreating
+        {
+            get
+            {
+                return m_isCreating;
+            }
+
+            set
+            {
+                m_isCreating = value;
+            }
+        }
+
         #endregion
+
 
         /// <summary>
         /// NT-Shows this form as modal dialog.
         /// </summary>
         /// <param name="owner">The owner window.</param>
-        /// <returns>Function returns <c>DialogResult</c> code.</returns>
-        public static bool ShowCategoryPropForm(IWin32Window owner, String title, bool readOnly, CElement element, CEngine engine)
+        /// <param name="title">Текст названия формы.</param>
+        /// <param name="readOnly">Запретить пользователю изменять данные элемента.</param>
+        /// <param name="element">Отображаемый элемент.</param>
+        /// <param name="engine">Объект Движка.</param>
+        /// <param name="formManager">Объект Менеджера функций форм.</param>
+        /// <param name="creating">Элемент создается, а не редактируется, нет записи в БД.</param>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        public static bool ShowCategoryPropForm(IWin32Window owner, String title, bool readOnly, CElement element, CEngine engine, MainFormManager formManager, bool creating)
         {
             CategoryPropForm form = new CategoryPropForm();
             //set form properties
@@ -100,6 +166,8 @@ namespace Tasks.Forms
             form.m_ReadOnly = readOnly;
             form.m_Element = element;
             form.m_Engine = engine;
+            form.m_MainFormManager = formManager;
+            form.m_isCreating = creating;
             //show form
             DialogResult dr = form.ShowDialog(owner);
             //TODO: add code here
@@ -168,28 +236,48 @@ namespace Tasks.Forms
         }
 
         /// <summary>
-        /// NR-Handles the Click event of the button_SelectParent control.
+        /// NT-Handles the Click event of the button_SelectParent control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void button_SelectParent_Click(object sender, EventArgs e)
         {
-            //TODO: тут показать диалог выбора над-элемента, вписать его в линк и установить флаг изменения данных. 
+            //тут показать диалог выбора над-элемента, вписать его в линк и установить флаг изменения данных. 
+            CElement result = SelectElementForm.ShowSelectElementForm(this, "Выбрать над-категорию:", this.m_Engine, EnumElementType.Category, this.m_Element.Parent.Id, true, "Выберите над-Категорию для текущей Категории:");
+            if (result != null)
+            {
+                //Установить новые данные для linklabel
+                this.linkLabel_Parent.Text = result.GetStringElementIdentifier(true);
+                this.linkLabel_Parent.Tag = result.Id;
+                //включить линк если он выключен
+                this.linkLabel_Parent.Enabled = true;
+                //установить флаг изменения данных
+                this.setChangeFlag(true);
+            }
 
-            //Установить новые данные для linklabel
-            //link.Text = parent.GetStringElementIdentifier(true);
-            //link.Tag = parent id;
+            return;
         }
 
         /// <summary>
-        /// NR-Handles the LinkClicked event of the linkLabel_Parent control.
+        /// NT-Handles the LinkClicked event of the linkLabel_Parent control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void linkLabel_Parent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            //TODO: тут открыть для просмотра Карточку Элемента кликнутого элемента.
+            //тут открыть для просмотра или изменения Карточку Элемента кликнутого элемента.
+            if (this.linkLabel_Parent.Tag == null)
+                throw new Exception("LinkLabel.Tag = null");//TODO: я пока не знаю, что делать
+            //get parent id from linklabel
+            Int32 id = (Int32)this.linkLabel_Parent.Tag;
+            //показать карточку элемента по его ид.
+            //сохранить изменения карточки в БД.
+            bool result = this.m_MainFormManager.ShowElementProp(id, false, true);
+            //обновить дерево элементов если были изменения
+            if(result)
+                this.m_MainFormManager.UpdateLeftPanel();
 
+            return;
         }
 
         /// <summary>
@@ -201,6 +289,9 @@ namespace Tasks.Forms
         {
             //Если элемент имеет состояние Защищен, то игнорировать все события.
             if (this.m_Element.IsProtected())
+                return;
+            //Если элемент только создается и еще не записан в БД, то игнорировать все события.
+            if (this.m_isCreating)
                 return;
             //тут отсоединить этот обработчик от чекбокса, чтобы избежать рекурсии при изменении чекстате
             this.checkBox_ElementActiveState.CheckedChanged -= this.checkBox_ElementActiveState_CheckedChanged;
@@ -368,8 +459,8 @@ namespace Tasks.Forms
             //prevent checkbox checkedchanged event now
             this.checkBox_ElementActiveState.CheckedChanged -= this.checkBox_ElementActiveState_CheckedChanged;
             this.checkBox_ElementActiveState.Checked = !this.m_Element.IsDeleted();
-            //чекбокс включен, если флаг толькоЧтение сброшен И элемент не защищен от удаления
-            this.checkBox_ElementActiveState.Enabled = ((this.m_ReadOnly == false) && (this.m_Element.IsProtected() == false));
+            //чекбокс включен, если флаг толькоЧтение сброшен И элемент не защищен от удаления И элемент не создается, а редактируется
+            this.checkBox_ElementActiveState.Enabled = ((this.m_ReadOnly == false) && (this.m_Element.IsProtected() == false) && (this.m_isCreating == false));
             this.checkBox_ElementActiveState.CheckedChanged += this.checkBox_ElementActiveState_CheckedChanged;
 
             //add myRichTextBox events to this form
@@ -403,6 +494,8 @@ namespace Tasks.Forms
             {
                 link.Text = "Корень дерева элементов";
                 link.Tag = (Int32)0;
+                //сделать ссылку неактивной, чтобы избежать кликов по ней
+                link.Enabled = false;
             }
             else
             {

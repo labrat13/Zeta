@@ -16,7 +16,7 @@ namespace Tasks.Forms
     /// Чтобы в классе формы остались только обработчики событий и код, создаваемый автоматически.
     /// Иначе класс формы станет очень большим и студия начнет глючить или тормозить.
     /// </remarks>
-    internal class MainFormManager
+    public class MainFormManager
     {
 
         #region *** Constants and fields ***
@@ -210,30 +210,9 @@ namespace Tasks.Forms
             CElement elem = this.m_TreeManager.Result;
             if (elem == null)
                 return false;//Нет выделенного элемента
-            //switch
-            bool result = false;
-            EnumElementType ett = elem.ElementType;
-            switch (ett)
-            {
-                case EnumElementType.Category:
-                    result = this.LeftPanelAction_ShowCategoryProp(elem);
-                    break;
-                case EnumElementType.Tag:
-                    result = this.LeftPanelAction_ShowTagProp(elem);
-                    break;
-                case EnumElementType.Task:
-                    result = this.LeftPanelAction_ShowTaskProp((CTask)elem);
-                    break;
-                case EnumElementType.Note:
-                    result = this.LeftPanelAction_ShowNoteProp(elem);
-                    break;
-                default:
-                case EnumElementType.Default:
-                    throw new Exception(String.Format("Неподдерживаемый тип элемента {0}: {1}", elem.GetStringElementIdentifier(false), ett));
-                    //break;
-            }
-            //Если данные элемента были изменены, обновить дерево элементов - в вызывающем коде.
-            return result;
+
+            return this.ShowElementProp(elem, false, true);
+            //TODO: обновить дерево элементов в вызывающем коде или здесь.
         }
 
         /// <summary>
@@ -423,52 +402,119 @@ namespace Tasks.Forms
 
         #endregion
 
+        //TODO: добавить функции специально для создания новых элементов.
+
         #region *** ShowElementProp() субфункции ***
 
         /// <summary>
-        /// NR-Показать карточку выделенного в дереве элемента.
+        /// NT-Показать карточку выделенного в дереве элемента.
         /// </summary>
+        /// <param name="elementId">Идентификатор элемента.</param>
+        /// <param name="readOnly">Открыть элемент в КарточкаЭлемента без возможности изменения.</param>
+        /// <param name="saveChanges">Сохранить изменения элемента в БД, если элемент был изменен в КарточкаЭлемента.</param>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool ShowElementProp(Int32 elementId, bool readOnly, bool saveChanges)
+        {
+            CElement elem = this.m_Engine.DbAdapter.SelectElementWithoutTransaction(elementId); 
+
+            return this.ShowElementProp(elem, readOnly, saveChanges);
+        }
+
+        /// <summary>
+        /// NT-Показать карточку выделенного в дереве элемента.
+        /// </summary>
+        /// <param name="elem">Объект элемента.</param>
+        /// <param name="readOnly">Открыть элемент в КарточкаЭлемента без возможности изменения.</param>
+        /// <param name="saveChanges">Сохранить изменения элемента в БД, если элемент был изменен в КарточкаЭлемента.</param>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обновить представления данных, <c>false</c> в противном случае.</returns>
+        public bool ShowElementProp(CElement elem, bool readOnly, bool saveChanges)
+        {
+            if (elem == null)
+            {
+                this.ShowMessageWarning("Ошибка", "Элемент не может быть null!");
+                return false;//Нет выделенного элемента
+            }
+            //switch
+            bool changed = false;
+            EnumElementType ett = elem.ElementType;
+            switch (ett)
+            {
+                case EnumElementType.Category:
+                    changed = this.ShowCategoryProp(elem, readOnly);
+                    break;
+                case EnumElementType.Tag:
+                    changed = this.ShowTagProp(elem, readOnly);
+                    break;
+                case EnumElementType.Task:
+                    changed = this.ShowTaskProp((CTask)elem, readOnly);
+                    break;
+                case EnumElementType.Note:
+                    changed = this.ShowNoteProp(elem, readOnly);
+                    break;
+                default:
+                case EnumElementType.Default:
+                    throw new Exception(String.Format("Неподдерживаемый тип элемента {0}: {1}", elem.GetStringElementIdentifier(false), ett));
+                    //break;
+            }
+            //store element if changed
+            if((readOnly == false) && (changed == true) && (saveChanges == true))
+                this.m_Engine.DbAdapter.UpdateElementWithTransaction(elem);
+            //Если данные элемента были изменены, обновить дерево элементов - в вызывающем коде.
+            return changed;
+        }
+
+
+        /// <summary>
+        /// NR-Показать карточку элемента.
+        /// </summary>
+        /// <param name="category">Отображаемый и существующий в БД элемент типа Категория.</param>
+        /// <param name="readOnly">Открыть элемент в КарточкаЭлемента без возможности изменения.</param>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowCategoryProp(CElement category)
+        private bool ShowCategoryProp(CElement category, bool readOnly)
         {
             //TODO: показать карточку выделенного в дереве элемента.
-            bool changed = CategoryPropForm.ShowCategoryPropForm(this.m_MainForm, "Свойства Категории", false,  category, this.Engine);
-            //Если данные элемента были изменены, Записать их в Бд и обновить дерево элементов.
+            bool changed = CategoryPropForm.ShowCategoryPropForm(this.m_MainForm, "Свойства Категории", readOnly,  category, this.Engine, this, false);
+            //В вызывающем коде: Если данные элемента были изменены, Записать их в Бд и обновить дерево элементов.
 
-            return false;
-
+            return changed;
         }
 
         /// <summary>
-        /// NR-
+        /// NR-Показать карточку элемента.
         /// </summary>
+        /// <param name="note">Отображаемый и существующий в БД элемент типа Заметка.</param>
+        /// <param name="readOnly">Открыть элемент в КарточкаЭлемента без возможности изменения.</param>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowNoteProp(CElement note)
+        private bool ShowNoteProp(CElement note, bool readOnly)
         {
             //TODO: показать карточку выделенного в дереве элемента
-            DialogResult dr = NotePropForm.ShowNotePropForm(this.m_MainForm);
-            return false;
-        }
-
-        /// <summary>
-        /// NR-
-        /// </summary>
-        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowTaskProp(CTask task)
-        {
-            //TODO: показать карточку выделенного в дереве элемента
-            DialogResult dr = TaskPropForm.ShowTaskPropForm(this.m_MainForm);
+            bool changed = NotePropForm.ShowNotePropForm(this.m_MainForm);
             return false;
         }
 
         /// <summary>
-        /// NR-
+        /// NR-Показать карточку элемента.
         /// </summary>
+        /// <param name="task">Отображаемый и существующий в БД элемент типа Задача.</param>
+        /// <param name="readOnly">Открыть элемент в КарточкаЭлемента без возможности изменения.</param>
         /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
-        private bool LeftPanelAction_ShowTagProp(CElement tag)
+        private bool ShowTaskProp(CTask task, bool readOnly)
         {
             //TODO: показать карточку выделенного в дереве элемента
-            DialogResult dr = TagPropForm.ShowTagPropForm(this.m_MainForm);
+            bool changed = TaskPropForm.ShowTaskPropForm(this.m_MainForm);
+            return false;
+        }
+
+        /// <summary>
+        /// NR-Показать карточку элемента.
+        /// </summary>
+        /// <param name="tag">Отображаемый и существующий в БД элемент типа Тег.</param>
+        /// <param name="readOnly">Открыть элемент в КарточкаЭлемента без возможности изменения.</param>
+        /// <returns>Функция возвращает <c>true</c>, если изменения были произведены, и нужно обоновить представления данных, <c>false</c> в противном случае.</returns>
+        private bool ShowTagProp(CElement tag, bool readOnly)
+        {
+            //TODO: показать карточку выделенного в дереве элемента
+            bool changed = TagPropForm.ShowTagPropForm(this.m_MainForm);
             return false;
         }
 
@@ -477,7 +523,7 @@ namespace Tasks.Forms
 #region *** Sub functions for left panel ***
 
         /// <summary>
-        /// Lefts the panel action show trashcan view.
+        /// NR-Lefts the panel action show trashcan view.
         /// </summary>
         private void LeftPanelAction_ShowTrashcanView()
         {
@@ -485,7 +531,7 @@ namespace Tasks.Forms
         }
 
         /// <summary>
-        /// Shows the element view.
+        /// NR-Shows the element view.
         /// </summary>
         /// <param name="elem">The elem.</param>
         private void ShowElementView(CElement elem)
@@ -494,11 +540,18 @@ namespace Tasks.Forms
         }
 
         /// <summary>
-        /// Updates the views.
+        /// NR-Updates the views.
         /// </summary>
         public void UpdateViews()
         {
             //update all views in application because changes of database data/
+            
+        }
+        /// <summary>
+        /// NR-Обновить дерево элементов.
+        /// </summary>
+        public void UpdateLeftPanel()
+        {
             //throw new NotImplementedException();//TODO: add code here
         }
 
