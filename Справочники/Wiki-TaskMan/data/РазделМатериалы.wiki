@@ -1,0 +1,16 @@
+﻿++ Раздел Материалы
+
+ * Формы карточек элементов: [rel://files/Формы карточек элементов Движка.doc]
+ * Старый код из проекта Инвентарь: [rel://files/Materials-Inventory]
+     * [rel://files/Materials-Inventory/Reports]    - код бумажного списка предметов
+        * [rel://files/Materials-Inventory/Reports/ReportElement.cs]
+        * [rel://files/Materials-Inventory/Reports/ItemReportForm.cs] 
+        * [rel://files/Materials-Inventory/Reports/ReportData.cs]  
+     * [rel://files/Materials-Inventory/CImageProcessor.cs] - обработка изображений
+     * [rel://files/Materials-Inventory/ClipboardManager.cs]  - работа с клипбордом
+     * [rel://files/Materials-Inventory/CWebNameLink.cs] - обработка  ссылок
+     * [rel://files/Materials-Inventory/CSearchPanelManager.cs] - панель поиска и поиск
+     * [rel://files/Materials-Inventory/SearchFields.cs] - для поиска
+     * [rel://files/Materials-Inventory/Form1.cs]  - главная форма приложения
+     * [rel://files/Materials-Inventory/Program.cs] - объект приложения
+     * [rel://files/Materials-Inventory/SelectTreeForm2.cs] - форма выбора элементов дерева
